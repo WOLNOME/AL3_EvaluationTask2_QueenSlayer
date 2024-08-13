@@ -1,6 +1,37 @@
 #pragma once
+
+#define _USE_MATH_DEFINES
+#include <math.h>
+#include "Vector2.h"
 #include "Vector3.h"
+#include "Vector4.h"
 #include "Matrix4x4.h"
+
+//よく使う数値
+const float pi =(float)M_PI;
+
+// 列挙型
+enum SCENE {
+	TITLE,
+	STAGE, 
+	RESULT 
+};
+
+// 構造体
+struct Matrix3x3 {
+	float m[3][3];
+};
+
+struct Transform {
+	Vector3 scale;
+	Vector3 rotate;
+	Vector3 translate;
+};
+
+struct Sphere {
+	Vector3 center;
+	float radius;
+};
 
 //関数
 Vector3 Add(const Vector3& v1, const Vector3& v2);
@@ -46,3 +77,5 @@ Vector3 Cross(const Vector3& a, const Vector3& b);
 float Length(const Vector3& v);
 
 Vector3 Normalize(const Vector3& v);
+
+Vector3 Transform(const Vector3& vecotor, const Matrix4x4& matrix);

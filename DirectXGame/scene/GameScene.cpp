@@ -1,8 +1,11 @@
 #include "GameScene.h"
 #include "AxisIndicator.h"
+#include "BaseScene.h"
 #include "ImGuiManager.h"
 #include "PrimitiveDrawer.h"
+#include "StageScene.h"
 #include "TextureManager.h"
+#include "TitleScene.h"
 #include <cassert>
 
 GameScene::GameScene() {}
@@ -15,112 +18,70 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	// ファイル名を指定してテクスチャを読み込む
-	textureHandle_ = TextureManager::Load("mario.jpg");
-	// スプライトの生成
-	sprite_.reset(Sprite::Create(textureHandle_, {100, 50}));
-	// 3Dモデルの生成
-	model_.reset(Model::Create());
-	// ワールドトランスフォームの初期化
-	worldTransform_.Initialize();
-	// ビュープロジェクションの初期化
-	viewProjection_.Initialize();
-	// サウンドデータの読み込み
-	soundDataHandle_ = audio_->LoadWave("fanfare.wav");
-	// 音声再生
-	audio_->PlayWave(soundDataHandle_);
-	// 音声再生
-	voiceHandle_ = audio_->PlayWave(soundDataHandle_, true);
-	// デバッグカメラの生成
-	debugCamera_ = std::make_unique<DebugCamera>(WinApp::kWindowWidth, WinApp::kWindowHeight);
-	debugCamera_->SetFarZ(2000.0f);
-	// ライン描画が参照するビュープロジェクションを指定する(アドレス渡し)
-	PrimitiveDrawer::GetInstance()->SetViewProjection(&debugCamera_->GetViewProjection());
-	// 軸方向表示の表示を有効にする
-	AxisIndicator::GetInstance()->SetVisible(true);
-	// 軸方向表示が参照するビュープロジェクションを指定する（アドレス渡し）
-	AxisIndicator::GetInstance()->SetTargetViewProjection(&debugCamera_->GetViewProjection());
-	//シーンマネージャーの生成
-	sceneManager_ = std::make_unique<SceneManager>();
+	// シーンの生成
+	m_pScene = std::make_unique<TitleScene>();
+	//シーンの初期化
+	m_pScene->Init(input_);
+	CurrentScene_ = TITLE;
+	NextScene_ = TITLE;
 }
 
 void GameScene::Update() {
-
-	// スプライトの今の座標を取得
-	Vector2 position = sprite_->GetPosition();
-	// 座標を{2,1}移動
-	position.x += 2.0f;
-	position.y += 1.0f;
-	// 移動した座標をスプライトに反映
-	sprite_->SetPosition(position);
-	// スペースキーを押した瞬間
-	if (input_->TriggerKey(DIK_SPACE)) {
-		// 音声停止
-		audio_->StopWave(voiceHandle_);
+	// シーンの更新処理
+	m_pScene->Update();
+	// 各シーンからNextSceneの情報を受け取る
+	if (NextScene_ != m_pScene->GetNextScene()) {
+		NextScene_ = m_pScene->GetNextScene();
 	}
-	// デバッグテキストの表示
-	ImGui::Begin("Debug1");
-	/*ImGui::Text("Kamata Tarou %d.%d.%d", 2050, 12, 31);*/
-	// float3入力ボックス
-	ImGui::InputFloat3("InputFloat3", inputFloat3);
-	// float3スライダー
-	ImGui::SliderFloat3("SliderFloat3", inputFloat3, 0.0f, 1.0f);
+	// シーンの切り替え処理
+	ChangeScene();
+
+
+	
+#ifdef _DEBUG
+	ImGui::Begin("debug");
+	int nowScene = CurrentScene_;
+	ImGui::Text("nowScene:%d", nowScene);
+
 	ImGui::End();
-	// デモウィンドウの表示を有効化
-	ImGui::ShowDemoWindow();
-	// デバッグカメラの更新
-	debugCamera_->Update();
+#endif // _DEBUG
+
 }
 
 void GameScene::Draw() {
-
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
+	// シーンの描画処理
+	m_pScene->Draw(commandList, dxCommon_);
 
-#pragma region 背景スプライト描画
-	// 背景スプライト描画前処理
-	Sprite::PreDraw(commandList);
 
-	/// <summary>
-	/// ここに背景スプライトの描画処理を追加できる
-	/// </summary>
+}
 
-	// スプライト描画後処理
-	Sprite::PostDraw();
-	// 深度バッファクリア
-	dxCommon_->ClearDepthBuffer();
-#pragma endregion
+void GameScene::ChangeScene() {
+	// シーン切り替えアニメーションとか作るならこの関数に書く
 
-#pragma region 3Dオブジェクト描画
-	// 3Dオブジェクト描画前処理
-	Model::PreDraw(commandList);
-
-	/// <summary>
-	/// ここに3Dオブジェクトの描画処理を追加できる
-	/// </summary>
-
-	// 3Dモデル描画
-	model_->Draw(worldTransform_, debugCamera_->GetViewProjection(), textureHandle_);
-
-	// 3Dオブジェクト描画後処理
-	Model::PostDraw();
-
-	// ラインを描画する
-	PrimitiveDrawer::GetInstance()->DrawLine3d({0, 0, 0}, {0, 10, 0}, {1.0f, 0.0f, 0.0f, 1.0f});
-#pragma endregion
-
-#pragma region 前景スプライト描画
-	// 前景スプライト描画前処理
-	Sprite::PreDraw(commandList);
-
-	/// <summary>
-	/// ここに前景スプライトの描画処理を追加できる
-	/// </summary>
-
-	sprite_->Draw();
-
-	// スプライト描画後処理
-	Sprite::PostDraw();
-
-#pragma endregion
+	// 切り替え
+	if (NextScene_ != CurrentScene_) {
+		// 現在のシーンの削除
+		if (m_pScene != NULL) {
+			m_pScene.reset();
+		}
+		// 次のシーンの挿入
+		switch (NextScene_) { // 引数のシーン
+		case SCENE::TITLE:
+			m_pScene = std::make_unique<TitleScene>(); // タイトルシーンを現在のシーンにする
+			m_pScene->Init(input_);
+			CurrentScene_ = m_pScene->GetNextScene();
+			;
+			break;
+		case SCENE::STAGE:
+			m_pScene = std::make_unique<StageScene>(); // タイトルシーンを現在のシーンにする
+			m_pScene->Init(input_);
+			CurrentScene_ = m_pScene->GetNextScene();
+			;
+			break;
+		default:
+			break;
+		}
+	}
 }

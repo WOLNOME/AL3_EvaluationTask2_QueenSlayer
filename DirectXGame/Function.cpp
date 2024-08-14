@@ -2,9 +2,8 @@
 
 #include <cassert>
 #include <cmath>
-#include <vector>
 #include <string>
-
+#include <vector>
 
 // 関数
 Vector3 Add(const Vector3& v1, const Vector3& v2) {
@@ -390,9 +389,21 @@ Vector3 Cross(const Vector3& a, const Vector3& b) {
 	return c;
 }
 
+float Cross(const Vector2& a, const Vector2& b) {
+	float result;
+	result = a.x * b.y - a.y * b.x;
+	return result;
+}
+
 float Length(const Vector3& v) {
 	float c;
 	c = sqrtf(powf(v.x, 2) + powf(v.y, 2) + powf(v.z, 2));
+	return c;
+}
+
+float Length(const Vector2& v) {
+	float c;
+	c = sqrtf(powf(v.x, 2) + powf(v.y, 2));
 	return c;
 }
 
@@ -411,6 +422,20 @@ Vector3 Normalize(const Vector3& v) {
 	return c;
 }
 
+Vector2 Normalize(const Vector2& v) {
+	Vector2 c = {0.0f,0.0f};
+	// 長さを求める
+	float length = Length(v);
+	// length=0で無ければ正規化
+	if (length != 0) {
+		c.x = v.x / length;
+		c.y = v.y / length;
+	} else {
+		assert("正規化できません");
+	}
+	return c;
+}
+
 Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix) {
 	Vector3 result;
 	result.x = vector.x * matrix.m[0][0] + vector.y * matrix.m[1][0] + vector.z * matrix.m[2][0] + 1.0f * matrix.m[3][0];
@@ -422,4 +447,49 @@ Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix) {
 	result.y /= w;
 	result.z /= w;
 	return result;
+}
+
+Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m) { 
+	Vector3 result{v.x * m.m[0][0] + v.y * m.m[1][0] + v.z * m.m[2][0], v.x * m.m[0][1] + v.y * m.m[1][1] + v.z * m.m[2][1], v.x * m.m[0][2] + v.y * m.m[1][2] + v.z * m.m[2][2]};
+	return result;
+}
+
+float Dot(const Vector3& v1, const Vector3& v2) {
+	float c;
+	c = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+	return c;
+}
+
+float AngleOf2Vector(const Vector3& v1, const Vector3& v2) {
+	// ベクトルAとBの長さを計算する
+	float length_v1 = Length(v1);
+	float length_v2 = Length(v2);
+	// 内積とベクトル長さを使ってcosθを求める
+	float cos_theta = Dot(v1, v2) / (length_v1 * length_v2);
+	// cosθからθを求める
+	float theta = std::acos(cos_theta);
+	// 2ベクトルの外積を求める
+	Vector2 longHand = Normalize(Vector2(v1.x, v1.z));
+	Vector2 hourHand = Normalize(Vector2(v2.x, v2.z));
+	// 2つ目のベクトルが左向きなら、なす角にマイナスを掛ける
+	if (Cross(longHand, hourHand) > 0.0f) {
+		theta = -theta;
+	}
+	//cosθの値で場合分け(NAN回避処理)
+	if (cos_theta >= 1.0f) {
+		theta = 0.0f;
+	} else if (cos_theta <= -1.0f) {
+		theta = pi;
+	}
+
+
+	return theta;
+}
+
+Vector3 Multiply(const float& s, const Vector3& v) {
+	Vector3 c;
+	c.x = s * v.x;
+	c.y = s * v.y;
+	c.z = s * v.z;
+	return c;
 }

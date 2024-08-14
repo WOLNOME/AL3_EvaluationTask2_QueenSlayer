@@ -10,20 +10,25 @@ void ShootingStand::Initialize(Model* model) {
 	assert(model);
 	model_ = model;
 	worldTransform_.Initialize();
+	//ローカルポジション初期化
+	localPosition_ = worldTransform_.translation_;
 }
 
-void ShootingStand::Update(const Vector3 underPosition) {
+void ShootingStand::Update(const Vector3 underPosition, const Vector3 cameraDir) {
 	// 砲台の位置を更新(常に車両部と合わせる)
 	worldTransform_.translation_ = underPosition;
 	worldTransform_.translation_.y += ssPos;
 
 	// 砲台の回転を更新(レティクルに合わせる)
-	//worldTransform_.rotation_.y += 0.03f;
+	worldTransform_.rotation_.y = std::atan2(cameraDir.x, cameraDir.z);
+	Matrix4x4 rotateYMatrix = MakeRotateYMatrix(-worldTransform_.rotation_.y);
+	Vector3 velocityZ = Transform(cameraDir, rotateYMatrix);
+	worldTransform_.rotation_.x = std::atan2(-velocityZ.y, velocityZ.z);
 
-	//行列の再計算
-	worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
-	// 行列を定数バッファに転送
-	worldTransform_.TransferMatrix();
+	//ローカル座標更新
+	localPosition_ = worldTransform_.translation_;
+	// 行列の更新と転送
+	worldTransform_.UpdateMatrix();
 }
 
 void ShootingStand::Draw(const ViewProjection& viewProjection) {

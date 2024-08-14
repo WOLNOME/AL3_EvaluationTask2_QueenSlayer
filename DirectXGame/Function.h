@@ -74,8 +74,22 @@ Matrix4x4 makeViewportMatrix(float left, float top, float width, float height, f
 
 Vector3 Cross(const Vector3& a, const Vector3& b);
 
+float Cross(const Vector2& a, const Vector2& b);
+
 float Length(const Vector3& v);
+
+float Length(const Vector2& v);
 
 Vector3 Normalize(const Vector3& v);
 
+Vector2 Normalize(const Vector2& v);
+
 Vector3 Transform(const Vector3& vecotor, const Matrix4x4& matrix);
+
+Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
+
+float Dot(const Vector3& v1, const Vector3& v2);
+
+float AngleOf2Vector(const Vector3& v1, const Vector3& v2);
+
+Vector3 Multiply(const float& s, const Vector3& v);

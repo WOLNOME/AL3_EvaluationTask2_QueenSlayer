@@ -1,0 +1,34 @@
+#pragma once
+#include "Model.h"
+#include "WorldTransform.h"
+
+class PlayerBullet {
+public:
+	PlayerBullet();
+	~PlayerBullet();
+
+	void Initialize(Model* model, const Vector3& position, const Vector3& velocity);
+	void Update();
+	void Draw(const ViewProjection& viewProjection);
+
+public:
+	bool isDead() const { return isDead_; }
+
+private:
+	// ワールド変換データ
+	WorldTransform worldTransform_;
+	// モデル
+	Model* model_ = nullptr;
+
+private:
+	// 速度
+	Vector3 velocity_;
+	// 寿命
+	static const int32_t kLifeTime = 60 * 5;
+	// デスタイマー
+	int32_t deathTimer_ = kLifeTime;
+	// デスフラグ
+	bool isDead_ = false;
+	// 半径
+	const float rad_ = 1.0f;
+};

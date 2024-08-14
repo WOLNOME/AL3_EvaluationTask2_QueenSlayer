@@ -5,145 +5,92 @@
 
 Player::Player() {}
 
-Player::~Player() {}
+Player::~Player() {
+	// 解放
+	for (PlayerBullet* bullet : bullets_) {
+		delete bullet;
+	}
+}
 
-void Player::Initialize(Model* model, const Vector3& position, Input* input) {
+void Player::Initialize(const Vector3& position, Input* input) {
 	// 入力
 	input_ = input;
-	// NULLポインタチェック
-	assert(model);
-	model_ = model;
+	// 車両モデルの生成
+	modelVehicle_.reset(Model::CreateFromOBJ("playerUnder", true));
 	// 砲台モデルの生成
 	modelStand_.reset(Model::CreateFromOBJ("playerAbove", true));
-	worldTransform_.Initialize();
-	// 引数で受け取った初期座標をセット
-	worldTransform_.translation_ = position;
+	// 弾モデルの生成
+	modelBullet_.reset(Model::CreateFromOBJ("playerBullet", true));
+	// 車両の生成
+	vehicle_ = std::make_unique<Vehicle>();
+	//車両にstageSceneをセット
+	vehicle_->SetStageScene(stageScene_);
+	// 車両の初期化
+	vehicle_->Initialize(input_, modelVehicle_.get(), position);
 	// 砲台の生成
 	stand_ = std::make_unique<ShootingStand>();
 	// 砲台の初期化
 	stand_->Initialize(modelStand_.get());
+
+
 }
 
 void Player::Update() {
-	// 位置の更新
-	Vector3 velocity;
-	velocity = Normalize({stageScene_->GetTPSCamera()->GetDirectionToPlayer().x, 0.0f, stageScene_->GetTPSCamera()->GetDirectionToPlayer().z});
-	velocity.x *= speed_;
-	velocity.y *= speed_;
-	velocity.z *= speed_;
-	if (input_->PushKey(DIK_W) && input_->PushKey(DIK_A) && input_->PushKey(DIK_S)&&input_->PushKey(DIK_D)) {
-		
-	} 
-	else if (input_->PushKey(DIK_W) && input_->PushKey(DIK_D) && input_->PushKey(DIK_S)) {
-		float radian = (2.0f / 4.0f) * pi;
-		velocity = Transform(velocity, MakeRotateYMatrix(radian));
-		worldTransform_.translation_.x += velocity.x;
-		worldTransform_.translation_.y += velocity.y;
-		worldTransform_.translation_.z += velocity.z;
-	} 
-	else if (input_->PushKey(DIK_D) && input_->PushKey(DIK_S) && input_->PushKey(DIK_A)) {
-		float radian = (4.0f / 4.0f) * pi;
-		velocity = Transform(velocity, MakeRotateYMatrix(radian));
-		worldTransform_.translation_.x += velocity.x;
-		worldTransform_.translation_.y += velocity.y;
-		worldTransform_.translation_.z += velocity.z;
-	} 
-	else if (input_->PushKey(DIK_S) && input_->PushKey(DIK_A) && input_->PushKey(DIK_W)) {
-		float radian = (6.0f / 4.0f) * pi;
-		velocity = Transform(velocity, MakeRotateYMatrix(radian));
-		worldTransform_.translation_.x += velocity.x;
-		worldTransform_.translation_.y += velocity.y;
-		worldTransform_.translation_.z += velocity.z;
-	} 
-	else if (input_->PushKey(DIK_A) && input_->PushKey(DIK_W) && input_->PushKey(DIK_D)) {
-		float radian = (0.0f / 4.0f) * pi;
-		velocity = Transform(velocity, MakeRotateYMatrix(radian));
-		worldTransform_.translation_.x += velocity.x;
-		worldTransform_.translation_.y += velocity.y;
-		worldTransform_.translation_.z += velocity.z;
-	} 
-	else if (input_->PushKey(DIK_W) && input_->PushKey(DIK_D)) {
-		float radian = (1.0f / 4.0f) * pi;
-		velocity = Transform(velocity, MakeRotateYMatrix(radian));
-		worldTransform_.translation_.x += velocity.x;
-		worldTransform_.translation_.y += velocity.y;
-		worldTransform_.translation_.z += velocity.z;
-	}
-	else if (input_->PushKey(DIK_D) && input_->PushKey(DIK_S)) {
-		float radian = (3.0f / 4.0f) * pi;
-		velocity = Transform(velocity, MakeRotateYMatrix(radian));
-		worldTransform_.translation_.x += velocity.x;
-		worldTransform_.translation_.y += velocity.y;
-		worldTransform_.translation_.z += velocity.z;
-	}
-	else if (input_->PushKey(DIK_S) && input_->PushKey(DIK_A)) {
-		float radian = (5.0f / 4.0f) * pi;
-		velocity = Transform(velocity, MakeRotateYMatrix(radian));
-		worldTransform_.translation_.x += velocity.x;
-		worldTransform_.translation_.y += velocity.y;
-		worldTransform_.translation_.z += velocity.z;
-	} 
-	else if (input_->PushKey(DIK_A) && input_->PushKey(DIK_W)) {
-		float radian = (7.0f / 4.0f) * pi;
-		velocity = Transform(velocity, MakeRotateYMatrix(radian));
-		worldTransform_.translation_.x += velocity.x;
-		worldTransform_.translation_.y += velocity.y;
-		worldTransform_.translation_.z += velocity.z;
-	} 
-	else if (input_->PushKey(DIK_W)) {
-		float radian = (0.0f / 4.0f) * pi;
-		velocity = Transform(velocity, MakeRotateYMatrix(radian));
-		worldTransform_.translation_.x += velocity.x;
-		worldTransform_.translation_.y += velocity.y;
-		worldTransform_.translation_.z += velocity.z;
-	} 
-	else if (input_->PushKey(DIK_D)) {
-		float radian = (2.0f / 4.0f) * pi;
-		velocity = Transform(velocity, MakeRotateYMatrix(radian));
-		worldTransform_.translation_.x += velocity.x;
-		worldTransform_.translation_.y += velocity.y;
-		worldTransform_.translation_.z += velocity.z;
-	} 
-	else if (input_->PushKey(DIK_S)) {
-		float radian = (4.0f / 4.0f) * pi;
-		velocity = Transform(velocity, MakeRotateYMatrix(radian));
-		worldTransform_.translation_.x += velocity.x;
-		worldTransform_.translation_.y += velocity.y;
-		worldTransform_.translation_.z += velocity.z;
-	}
-	else if (input_->PushKey(DIK_A)) {
-		float radian = (6.0f / 4.0f) * pi;
-		velocity = Transform(velocity, MakeRotateYMatrix(radian));
-		worldTransform_.translation_.x += velocity.x;
-		worldTransform_.translation_.y += velocity.y;
-		worldTransform_.translation_.z += velocity.z;
-	}
+	// デスフラグの立った弾を削除
+	bullets_.remove_if([](PlayerBullet* bullet) {
+		if (bullet->isDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
 
+	//攻撃処理
+	Attack();
 
-	// 回転の更新
-	worldTransform_.rotation_.y = std::atan2(velocity.x, velocity.z);
-	Matrix4x4 rotateYMatrix = MakeRotateYMatrix(-worldTransform_.rotation_.y);
-	Vector3 velocityZ = Transform(velocity, rotateYMatrix);
-	worldTransform_.rotation_.x = std::atan2(-velocityZ.y, velocityZ.z);
-
+	// 車両の更新
+	vehicle_->Update();
 	// 砲台の更新
-	stand_->Update(worldTransform_.translation_);
-	// 行列の再計算
-	worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
-	// 行列を定数バッファに転送
-	worldTransform_.TransferMatrix();
+	Vector3 cameraDir = {stageScene_->GetTPSCamera()->GetDirectionToPlayer().x, 0.0f, stageScene_->GetTPSCamera()->GetDirectionToPlayer().z};
+	stand_->Update(vehicle_->GetLocalPosition(), cameraDir);
+	//弾更新
+	for (PlayerBullet* bullet : bullets_) {
+		bullet->Update();
+	}
 
 #ifdef _DEBUG
-	ImGui::Begin("debugPlayer");
 
-	ImGui::SliderFloat3("translate", &worldTransform_.translation_.x, -10.0f, 10.0f);
-	ImGui::End();
 #endif // _DEBUG
 }
 
 void Player::Draw(ViewProjection& viewProjection) {
 	// 砲台描画
 	stand_->Draw(viewProjection);
-	// プレイヤー本体描画
-	model_->Draw(worldTransform_, viewProjection);
+	// 車両描画
+	vehicle_->Draw(viewProjection);
+	// 弾描画
+	for (PlayerBullet* bullet : bullets_) {
+		bullet->Draw(viewProjection);
+	}
+		
 }
+
+void Player::Attack() {
+	if (input_->TriggerKey(DIK_SPACE)) {
+
+		// 弾の速度
+		Vector3 velocity(0, 0, kBulletSpeed_);
+
+		// 速度ベクトルを自機の向きに合わせて回転させる
+		velocity = TransformNormal(velocity, stand_->GetWorldTransform().matWorld_);
+
+		// 弾を生成し、初期化
+		PlayerBullet* newBullet = new PlayerBullet();
+		Vector3 bulletInitPosition = Transform({0.0f,0.0f,3.0f},stand_->GetWorldTransform().matWorld_);
+		newBullet->Initialize(modelBullet_.get(), bulletInitPosition, velocity);
+
+		// 弾を登録する
+		bullets_.push_back(newBullet);
+	}
+}
+

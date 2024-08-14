@@ -58,6 +58,18 @@
     <Filter Include="ヘッダー ファイル\program">
       <UniqueIdentifier>{6ef2bc97-aaf6-4b0a-87b2-242336fceb41}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\program\player">
+      <UniqueIdentifier>{69f5caac-ff2c-4c4b-83ab-8e9ade6f7b06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\program\player">
+      <UniqueIdentifier>{581b14c8-ccd4-4832-8394-ab20961f35ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\program\enemy">
+      <UniqueIdentifier>{351ff791-09d8-40a8-81c1-ac3dfc01877f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\program\enemy">
+      <UniqueIdentifier>{c47a233e-1e92-401d-9817-a0bd6b2d5e7e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="base\DirectXCommon.cpp">
@@ -78,9 +90,6 @@
     <ClCompile Include="Function.cpp">
       <Filter>ソース ファイル\math</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>ソース ファイル\program</Filter>
-    </ClCompile>
     <ClCompile Include="StageScene.cpp">
       <Filter>ソース ファイル\scene</Filter>
     </ClCompile>
@@ -89,9 +98,6 @@
     </ClCompile>
     <ClCompile Include="WorldTransformEx.cpp">
       <Filter>ソース ファイル\base</Filter>
-    </ClCompile>
-    <ClCompile Include="ShootingStand.cpp">
-      <Filter>ソース ファイル\program</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル\program</Filter>
@@ -104,6 +110,30 @@
     </ClCompile>
     <ClCompile Include="TPSCamera.cpp">
       <Filter>ソース ファイル\program</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>ソース ファイル\program\player</Filter>
+    </ClCompile>
+    <ClCompile Include="Vehicle.cpp">
+      <Filter>ソース ファイル\program\player</Filter>
+    </ClCompile>
+    <ClCompile Include="ShootingStand.cpp">
+      <Filter>ソース ファイル\program\player</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>ソース ファイル\program\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Stomach.cpp">
+      <Filter>ソース ファイル\program\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Chest.cpp">
+      <Filter>ソース ファイル\program\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Head.cpp">
+      <Filter>ソース ファイル\program\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerBullet.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -200,17 +230,11 @@
     <ClInclude Include="Function.h">
       <Filter>ヘッダー ファイル\math</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>ヘッダー ファイル\program</Filter>
-    </ClInclude>
     <ClInclude Include="StageScene.h">
       <Filter>ヘッダー ファイル\scene</Filter>
     </ClInclude>
     <ClInclude Include="TitleScene.h">
       <Filter>ヘッダー ファイル\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="ShootingStand.h">
-      <Filter>ヘッダー ファイル\program</Filter>
     </ClInclude>
     <ClInclude Include="Skydome.h">
       <Filter>ヘッダー ファイル\program</Filter>
@@ -220,6 +244,30 @@
     </ClInclude>
     <ClInclude Include="TPSCamera.h">
       <Filter>ヘッダー ファイル\program</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>ヘッダー ファイル\program\player</Filter>
+    </ClInclude>
+    <ClInclude Include="ShootingStand.h">
+      <Filter>ヘッダー ファイル\program\player</Filter>
+    </ClInclude>
+    <ClInclude Include="Vehicle.h">
+      <Filter>ヘッダー ファイル\program\player</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>ヘッダー ファイル\program\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Stomach.h">
+      <Filter>ヘッダー ファイル\program\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Chest.h">
+      <Filter>ヘッダー ファイル\program\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Head.h">
+      <Filter>ヘッダー ファイル\program\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerBullet.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -4,6 +4,7 @@
 #include "ViewProjection.h"
 #include "BaseScene.h"
 #include "Player.h"
+#include "Enemy.h"
 #include "DebugCamera.h"
 #include "Skydome.h"
 #include "Ground.h"
@@ -22,13 +23,13 @@ public:
 
 public://ゲッター
 	SCENE GetNextScene()override { return NextScene; }
+	Player* GetPlayer() { return player_.get(); }
 	TPSCamera* GetTPSCamera() { return tpsCamera_.get(); }
 
 private:
 	//入力
 	Input* input_ = nullptr;
 	//3Dモデル
-	std::unique_ptr<Model> modelPlayer_ = nullptr;
 	std::unique_ptr<Model> modelSkydome_ = nullptr;
 	std::unique_ptr<Model> modelGround_ = nullptr;
 	//ビュープロジェクション
@@ -42,6 +43,8 @@ private:
 
 	//自キャラ
 	std::unique_ptr<Player> player_ = nullptr;
+	//敵キャラ
+	std::unique_ptr<Enemy> enemy_ = nullptr;
 	//天球
 	std::unique_ptr<Skydome> skydome_ = nullptr;
 	//地面

@@ -9,6 +9,7 @@
 #include "Skydome.h"
 #include "Ground.h"
 #include "TPSCamera.h"
+#include "CollisionManager.h"
 
 
 class StageScene :	public BaseScene
@@ -20,6 +21,9 @@ public:
 	void Init(Input* input) override;
 	void Update() override;
 	void Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* dxCommon_) override;
+
+public://関数
+	void CheckAllCollision();
 
 public://ゲッター
 	SCENE GetNextScene()override { return NextScene; }
@@ -50,5 +54,7 @@ private:
 	//地面
 	std::unique_ptr<Ground> ground_ = nullptr;
 
+	// 衝突マネージャー
+	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
 };
 

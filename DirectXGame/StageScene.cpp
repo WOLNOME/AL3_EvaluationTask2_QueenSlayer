@@ -26,6 +26,10 @@ void StageScene::Init(Input* input) {
 	skydome_ = std::make_unique<Skydome>();
 	//地面の生成
 	ground_ = std::make_unique<Ground>();
+	// 衝突マネージャの生成
+	collisionManager_ = std::make_unique<CollisionManager>();
+
+
 
 	//プレイヤーにシーンを渡す
 	player_->SetStageScene(this);
@@ -43,6 +47,8 @@ void StageScene::Init(Input* input) {
 	// 地面の初期化
 	ground_->Initialize(modelGround_.get(), {0.0f, 0.0f, 0.0f});
 
+
+
 }
 
 void StageScene::Update() {
@@ -55,6 +61,8 @@ void StageScene::Update() {
 	// 地面の更新
 	ground_->Update();
 
+	//当たり判定処理
+	CheckAllCollision();
 
 
 #ifdef _DEBUG
@@ -134,4 +142,31 @@ void StageScene::Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* dxC
 	Sprite::PostDraw();
 
 #pragma endregion
+}
+
+void StageScene::CheckAllCollision() {
+	//衝突マネージャーのクリア
+	collisionManager_->ClearColliders();
+
+	//自弾リストの取得
+	const std::list<PlayerBullet*>& playerBullets = player_->GetBullets();
+
+
+	//コライダー
+	std::list<Collider*> colliders_;
+	// コライダーをリストに登録
+	colliders_.push_back(player_.get()->GetVehicle().get());
+	colliders_.push_back(enemy_.get()->GetStomach().get());
+	colliders_.push_back(enemy_.get()->GetChest().get());
+	colliders_.push_back(enemy_.get()->GetHead().get());
+	//自弾コライダーをリストに登録
+	for (PlayerBullet* pbullet : playerBullets) {
+		colliders_.push_back(pbullet);
+	}
+
+	// 衝突マネージャーのリストにコライダーを登録する
+	collisionManager_->SetColliders(colliders_);
+	// 衝突判定の当たり判定処理を呼び出す
+	collisionManager_->CheckCollision();
+
 }

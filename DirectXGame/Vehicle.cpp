@@ -1,6 +1,7 @@
 #include "Vehicle.h"
 #include "ImGuiManager.h"
 #include "StageScene.h"
+#include "CollisionConfig.h"
 #include <cassert>
 
 Vehicle::Vehicle() {}
@@ -17,6 +18,10 @@ void Vehicle::Initialize(Input* input, Model* model, const Vector3& position) {
 	worldTransform_.Initialize();
 	//引数で受け取った座標をセット
 	worldTransform_.translation_ = position;
+	// 衝突属性を設定(自分の属性)
+	SetCollisionAttribute(kCollisionAttributePlayer);
+	// 衝突対象を自分の属性以外に設定(相手の属性)
+	SetCollisionMask(kCollisionAttributeEnemy);
 }
 
 void Vehicle::Update() {
@@ -185,8 +190,10 @@ void Vehicle::Draw(const ViewProjection& viewProjection) {
 	model_->Draw(worldTransform_, viewProjection);
 }
 
-const Vector3 Vehicle::GetWorldPostion() {
-	//ワールド座標
+void Vehicle::OnCollision() {}
+
+Vector3 Vehicle::GetWorldPosition() { 
+	// ワールド座標
 	Vector3 worldPos;
 	worldPos.x = worldTransform_.matWorld_.m[3][0];
 	worldPos.y = worldTransform_.matWorld_.m[3][1];

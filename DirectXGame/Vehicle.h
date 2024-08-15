@@ -1,4 +1,5 @@
 #pragma once
+#include "Collider.h"
 #include "Function.h"
 #include "Input.h"
 #include "Model.h"
@@ -6,7 +7,7 @@
 
 class StageScene;
 
-class Vehicle {
+class Vehicle : public Collider {
 public:
 	Vehicle();
 	~Vehicle();
@@ -15,10 +16,18 @@ public:
 	void Update();
 	void Draw(const ViewProjection& viewProjection);
 
+
+public: // 関数
+	// 衝突を検出したら呼び出されるコールバック関数
+	void OnCollision() override;
+
 public://ゲッター
 	//ローカル座標
 	const Vector3& GetLocalPosition() { return localPos_; }
-	const Vector3 GetWorldPostion();
+	// ワールド座標を取得
+	Vector3 GetWorldPosition() override;
+	// 半径
+	float GetRadius() { return rad_; }
 
 public://セッター
 	//ステージシーンのセット
@@ -47,4 +56,7 @@ private: // 調整可能数値
 	const float rotateSpeed_ = (2.0f / 2.0f) * pi / 60.0f;
 	//ローカル座標保存用
 	Vector3 localPos_ = {0.0f, 0.0f, 0.0f};
+	//半径
+	const float rad_ = 1.25f;
+
 };

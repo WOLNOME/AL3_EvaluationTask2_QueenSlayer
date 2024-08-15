@@ -93,3 +93,5 @@ float Dot(const Vector3& v1, const Vector3& v2);
 float AngleOf2Vector(const Vector3& v1, const Vector3& v2);
 
 Vector3 Multiply(const float& s, const Vector3& v);
+
+Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth);

@@ -17,7 +17,12 @@ public:
 	void Draw(ViewProjection& viewProjection);
 
 public: // ゲッター
-
+	// 腹部獲得
+	const std::unique_ptr<Stomach>& GetStomach() const { return stomach_; }
+	// 胸部獲得
+	const std::unique_ptr<Chest>& GetChest() const { return chest_; }
+	// 頭部獲得
+	const std::unique_ptr<Head>& GetHead() const { return head_; }
 
 public: // セッター
 	

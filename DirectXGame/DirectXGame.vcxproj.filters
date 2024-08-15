@@ -70,6 +70,12 @@
     <Filter Include="ヘッダー ファイル\program\enemy">
       <UniqueIdentifier>{c47a233e-1e92-401d-9817-a0bd6b2d5e7e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\program\collision">
+      <UniqueIdentifier>{78ea1e82-c936-437b-b2bc-4ebf2e0143ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\program\collision">
+      <UniqueIdentifier>{033a0865-97e0-4ca1-bbef-bc27d8f302e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="base\DirectXCommon.cpp">
@@ -133,7 +139,16 @@
       <Filter>ソース ファイル\program\enemy</Filter>
     </ClCompile>
     <ClCompile Include="PlayerBullet.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\program\player</Filter>
+    </ClCompile>
+    <ClCompile Include="Reticle.cpp">
+      <Filter>ソース ファイル\program</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider.cpp">
+      <Filter>ソース ファイル\program\collision</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionManager.cpp">
+      <Filter>ソース ファイル\program\collision</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -267,7 +282,19 @@
       <Filter>ヘッダー ファイル\program\enemy</Filter>
     </ClInclude>
     <ClInclude Include="PlayerBullet.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\program\player</Filter>
+    </ClInclude>
+    <ClInclude Include="Reticle.h">
+      <Filter>ヘッダー ファイル\program</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider.h">
+      <Filter>ヘッダー ファイル\program\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionConfig.h">
+      <Filter>ヘッダー ファイル\program\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionManager.h">
+      <Filter>ヘッダー ファイル\program\collision</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -3,7 +3,7 @@
 #include "Model.h"
 #include "WorldTransform.h"
 
-class ShootingStand {
+class ShootingStand{
 public:
 	ShootingStand();
 	~ShootingStand();
@@ -15,7 +15,6 @@ public:
 public://ゲッター
 	const WorldTransform& GetWorldTransform() { return worldTransform_; }
 	const Vector3& GetLocalPosition() { return localPosition_; }
-
 public://セッター
 
 private:

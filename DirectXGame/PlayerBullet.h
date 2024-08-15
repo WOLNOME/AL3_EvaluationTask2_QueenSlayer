@@ -1,8 +1,9 @@
 #pragma once
+#include "Collider.h"
 #include "Model.h"
 #include "WorldTransform.h"
 
-class PlayerBullet {
+class PlayerBullet : public Collider {
 public:
 	PlayerBullet();
 	~PlayerBullet();
@@ -11,9 +12,19 @@ public:
 	void Update();
 	void Draw(const ViewProjection& viewProjection);
 
-public:
+public: // 関数
 	bool isDead() const { return isDead_; }
+	// 衝突を検出したら呼び出されるコールバック関数
+	void OnCollision() override;
 
+public: // ゲッター
+	const WorldTransform& GetWorldTransform() { return worldTransform_; }
+	// ワールド座標を取得
+	Vector3 GetWorldPosition() override;
+	// 半径
+	float GetRadius() override { return radius_; }
+
+public: // セッター
 private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;
@@ -29,6 +40,4 @@ private:
 	int32_t deathTimer_ = kLifeTime;
 	// デスフラグ
 	bool isDead_ = false;
-	// 半径
-	const float rad_ = 1.0f;
 };

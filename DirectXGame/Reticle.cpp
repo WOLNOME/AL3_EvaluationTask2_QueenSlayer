@@ -1,22 +1,24 @@
 #include "Reticle.h"
-#include "WinApp.h"
+#include "TextureManager.h"
 
 Reticle::Reticle() {}
 
 Reticle::~Reticle() {}
 
 void Reticle::Initialize() {
-	//モデル生成
+	//ファイル名を指定してテクスチャを読み込む
+	textureReticle_ = TextureManager::Load("target.png");
+	// モデル生成
 	model3DReticle_.reset(Model::CreateFromOBJ("cube", true));
 	// ワールドトランスフォーム初期化
 	worldTransform3DReticle_.Initialize();
-	//ローカル座標設定
-	localPosition_ = worldTransform3DReticle_.translation_;
+	// 2Dスプライト
+	sprite2DReticle_.reset(Sprite::Create(textureReticle_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
+	    // ローカル座標設定
+	    localPosition_ = worldTransform3DReticle_.translation_;
 }
 
 void Reticle::Update(ViewProjection& viewProjection) {
-	// 画面中央の座標を取得し、2Dスプライトに代入する
-	HWND hwnd = WinApp::GetInstance()->GetHwnd();
 	// 画面中央座標取得
 	Vector2 centerPosition = {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f};
 	// centerPositionを2Dレティクルのスプライトに代入する
@@ -38,29 +40,29 @@ void Reticle::Update(ViewProjection& viewProjection) {
 	Vector3 centerDirection = Subtract(posFar, posNear);
 	centerDirection = Normalize(centerDirection);
 
-	// カメラから照準オブジェクトの距離
+	// カメラから照準オブジェクトの距離を設定し、3Dレティクルの座標を確定
 	worldTransform3DReticle_.translation_ = Add(posNear, Multiply(kReticleRange_, centerDirection));
-	// ワールド行列の更新と転送
+
+	// ローカル座標更新
+	localPosition_ = worldTransform3DReticle_.translation_;
+	// 3Dレティクルワールドトランスフォームの更新と転送
 	worldTransform3DReticle_.UpdateMatrix();
-
-
-	//3Dレティクルワールドトランスフォームの更新と転送
-	worldTransform3DReticle_.UpdateMatrix();
-
 }
 
 void Reticle::Draw(ViewProjection& viewProjection) {
 #ifdef _DEBUG
-	//3Dモデル
-	model3DReticle_->Draw(worldTransform3DReticle_, viewProjection);
+	viewProjection;
+	// 3Dモデル
+	//model3DReticle_->Draw(worldTransform3DReticle_, viewProjection);
 #endif // _DEBUG
 }
 
 void Reticle::DrawUI() {
-	//2Dレティクル
+	// 2Dレティクル
+	sprite2DReticle_->Draw();
 }
 
-const Vector3& Reticle::GetWorldPosition() {
+const Vector3 Reticle::GetWorldPosition() {
 	Vector3 worldPos;
 	// ワールド行列の平行移動成分を取得
 	worldPos.x = worldTransform3DReticle_.matWorld_.m[3][0];

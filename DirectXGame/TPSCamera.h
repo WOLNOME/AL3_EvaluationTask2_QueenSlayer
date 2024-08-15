@@ -37,7 +37,7 @@ private:
 	// プレイヤーとの距離
 	const float length_ = 10.0f;
 	// 視点移動速度
-	const float Speed_ = (90.0f / 360.0f * pi) / 60.0f;
+	const float Speed_ = (120.0f / 360.0f * pi) / 60.0f;
 	// 現在の視点角度座標
 	float lat = 1.0f / 18.0f * pi;
 	float lon = 1.0f / 2.0f * pi;

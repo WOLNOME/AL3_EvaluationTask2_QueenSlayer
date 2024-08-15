@@ -18,6 +18,8 @@ void StageScene::Init(Input* input) {
 	debugCamera_->SetFarZ(2000.0f);
 	//TPSカメラの生成
 	tpsCamera_ = std::make_unique<TPSCamera>();
+	//レティクル
+	reticle_ = std::make_unique<Reticle>();
 	// 自キャラの生成
 	player_ = std::make_unique<Player>();
 	//敵キャラの生成
@@ -30,7 +32,6 @@ void StageScene::Init(Input* input) {
 	collisionManager_ = std::make_unique<CollisionManager>();
 
 
-
 	//プレイヤーにシーンを渡す
 	player_->SetStageScene(this);
 	//TPSカメラにシーンを渡す
@@ -38,6 +39,8 @@ void StageScene::Init(Input* input) {
 
 	//TPSカメラの初期化
 	tpsCamera_->Initialize(input_);
+	//レティクル初期化
+	reticle_->Initialize();
 	// 自キャラの初期化
 	player_->Initialize({0.0f, 0.3f, 20.0f},input_);
 	//敵キャラの初期化
@@ -52,19 +55,6 @@ void StageScene::Init(Input* input) {
 }
 
 void StageScene::Update() {
-	// 自キャラの更新
-	player_->Update();
-	//敵キャラの更新
-	enemy_->Update();
-	//天球の更新
-	skydome_->Update();
-	// 地面の更新
-	ground_->Update();
-
-	//当たり判定処理
-	CheckAllCollision();
-
-
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_TAB)) {
 		if (isDebugCameraActive_) {
@@ -91,6 +81,20 @@ void StageScene::Update() {
 		// ビュープロジェクション行列の更新と転送
 		viewProjection_.TransferMatrix();
 	}
+
+	// レティクルの更新
+	reticle_->Update(viewProjection_);
+	// 自キャラの更新
+	player_->Update();
+	// 敵キャラの更新
+	enemy_->Update();
+	// 天球の更新
+	skydome_->Update();
+	// 地面の更新
+	ground_->Update();
+
+	// 当たり判定処理
+	CheckAllCollision();
 }
 
 void StageScene::Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* dxCommon_) {
@@ -124,6 +128,8 @@ void StageScene::Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* dxC
 	skydome_->Draw(viewProjection_);
 	//地面の描画
 	ground_->Draw(viewProjection_);
+	//3Dレティクルの描画(デバッグ時)
+	reticle_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -137,6 +143,10 @@ void StageScene::Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* dxC
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
+
+	//2Dレティクル描画
+	reticle_->DrawUI();
+
 
 	// スプライト描画後処理
 	Sprite::PostDraw();

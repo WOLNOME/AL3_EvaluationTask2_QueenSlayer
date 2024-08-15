@@ -78,16 +78,16 @@ void Player::Draw(ViewProjection& viewProjection) {
 void Player::Attack() {
 	if (input_->TriggerKey(DIK_SPACE)) {
 
-		// 弾の速度
-		Vector3 velocity(0, 0, kBulletSpeed_);
-
-		// 速度ベクトルを自機の向きに合わせて回転させる
-		velocity = TransformNormal(velocity, stand_->GetWorldTransform().matWorld_);
-
-		// 弾を生成し、初期化
+		// 弾を生成
 		PlayerBullet* newBullet = new PlayerBullet();
+		// 弾の発射位置を確定
 		Vector3 bulletInitPosition = Transform({0.0f,0.0f,3.0f},stand_->GetWorldTransform().matWorld_);
+		//弾の速度(ベクトル)を確定
+		Vector3 velocity = Normalize(Subtract(stageScene_->GetReticle()->GetWorldPosition(), bulletInitPosition));
+		velocity = Multiply(kBulletSpeed_, velocity);
+		//弾を初期化
 		newBullet->Initialize(modelBullet_.get(), bulletInitPosition, velocity);
+		
 
 		// 弾を登録する
 		bullets_.push_back(newBullet);

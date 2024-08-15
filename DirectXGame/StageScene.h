@@ -10,6 +10,7 @@
 #include "Ground.h"
 #include "TPSCamera.h"
 #include "CollisionManager.h"
+#include "Reticle.h"
 
 
 class StageScene :	public BaseScene
@@ -29,6 +30,7 @@ public://ゲッター
 	SCENE GetNextScene()override { return NextScene; }
 	Player* GetPlayer() { return player_.get(); }
 	TPSCamera* GetTPSCamera() { return tpsCamera_.get(); }
+	Reticle* GetReticle() { return reticle_.get(); }
 
 private:
 	//入力
@@ -44,6 +46,8 @@ private:
 	bool isDebugCameraActive_ = false;
 	//TPSカメラ
 	std::unique_ptr<TPSCamera> tpsCamera_ = nullptr;
+	//レティクル
+	std::unique_ptr<Reticle> reticle_ = nullptr;
 
 	//自キャラ
 	std::unique_ptr<Player> player_ = nullptr;

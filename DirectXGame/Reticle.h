@@ -4,6 +4,8 @@
 #include "Model.h"
 #include "Sprite.h"
 #include "WorldTransform.h"
+#include "WinApp.h"
+
 
 class Reticle {
 public:
@@ -21,7 +23,7 @@ public: // ゲッター
 	//3Dレティクルのワールドトランスフォーム
 	const WorldTransform& GetWorldTransform() { return worldTransform3DReticle_; }
 	//3Dレティクルのワールド座標
-	const Vector3& GetWorldPosition();
+	const Vector3 GetWorldPosition();
 	//3Dレティクルのローカル座標
 	const Vector3& GetLocalPosition() { return localPosition_; }
 
@@ -29,6 +31,8 @@ public: // セッター
 
 
 private:
+	//2Dレティクルテクスチャハンドル
+	uint32_t textureReticle_;
 	// 3Dレティクルワールドトランスフォーム
 	WorldTransform worldTransform3DReticle_;
 	// 3Dレティクルモデル
@@ -38,7 +42,7 @@ private:
 
 private:
 	//カメラから離す距離
-	const float kReticleRenge_ = 50.0f;
+	float kReticleRange_ = 50.0f;
 	//ローカル座標
 	Vector3 localPosition_ = {0.0f, 0.0f, 0.0f};
 	// ビューポート行列

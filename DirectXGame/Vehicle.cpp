@@ -79,7 +79,7 @@ void Vehicle::Update() {
 		// 入力Vector獲得
 		inputVector = Transform(inputVector, MakeRotateYMatrix(radian_));
 		// directionとvelocityのなす角を求める
-		float theta = AngleOf2Vector(direction_, inputVector); // ←direction基準
+		float theta = AngleOf2VectorY(direction_, inputVector); // ←direction基準
 		// 最終的に加算する速度
 		Vector3 velocity = {0.0f, 0.0f, 0.0f};
 		// 前進

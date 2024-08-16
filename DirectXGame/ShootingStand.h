@@ -28,5 +28,4 @@ private:
 	const float ssPos = 1.0f;
 	//ローカル座標
 	Vector3 localPosition_;
-
 };

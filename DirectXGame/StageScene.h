@@ -31,6 +31,7 @@ public://ゲッター
 	Player* GetPlayer() { return player_.get(); }
 	TPSCamera* GetTPSCamera() { return tpsCamera_.get(); }
 	Reticle* GetReticle() { return reticle_.get(); }
+	Enemy* GetEnemy() { return enemy_.get(); }
 
 private:
 	//入力

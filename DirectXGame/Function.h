@@ -90,8 +90,18 @@ Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
 
 float Dot(const Vector3& v1, const Vector3& v2);
 
-float AngleOf2Vector(const Vector3& v1, const Vector3& v2);
+float AngleOf2VectorX(const Vector3& v1, const Vector3& v2);
+
+float AngleOf2VectorY(const Vector3& v1, const Vector3& v2);
+
+float AngleOf2VectorZ(const Vector3& v1, const Vector3& v2);
 
 Vector3 Multiply(const float& s, const Vector3& v);
 
 Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth);
+
+Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
+
+float Lerp(const float& l1, const float& l2, float t);
+
+Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t);

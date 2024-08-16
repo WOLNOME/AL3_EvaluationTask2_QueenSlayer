@@ -460,7 +460,31 @@ float Dot(const Vector3& v1, const Vector3& v2) {
 	return c;
 }
 
-float AngleOf2Vector(const Vector3& v1, const Vector3& v2) {
+float AngleOf2VectorX(const Vector3& v1, const Vector3& v2) { 
+	// ベクトルAとBの長さを計算する
+	float length_v1 = Length(v1);
+	float length_v2 = Length(v2);
+	// 内積とベクトル長さを使ってcosθを求める
+	float cos_theta = Dot(v1, v2) / (length_v1 * length_v2);
+	// cosθからθを求める
+	float theta = std::acos(cos_theta);
+	// 2ベクトルの外積を求める
+	Vector2 longHand = Normalize(Vector2(v1.z, v1.y));
+	Vector2 hourHand = Normalize(Vector2(v2.z, v2.y));
+	// 2つ目のベクトルが左向きなら、なす角にマイナスを掛ける
+	if (Cross(longHand, hourHand) > 0.0f) {
+		theta = -theta;
+	}
+	// cosθの値で場合分け(NAN回避処理)
+	if (cos_theta >= 1.0f) {
+		theta = 0.0f;
+	} else if (cos_theta <= -1.0f) {
+		theta = pi;
+	} 
+	return theta;
+}
+
+float AngleOf2VectorY(const Vector3& v1, const Vector3& v2) { 
 	// ベクトルAとBの長さを計算する
 	float length_v1 = Length(v1);
 	float length_v2 = Length(v2);
@@ -475,13 +499,37 @@ float AngleOf2Vector(const Vector3& v1, const Vector3& v2) {
 	if (Cross(longHand, hourHand) > 0.0f) {
 		theta = -theta;
 	}
-	//cosθの値で場合分け(NAN回避処理)
+	// cosθの値で場合分け(NAN回避処理)
 	if (cos_theta >= 1.0f) {
 		theta = 0.0f;
 	} else if (cos_theta <= -1.0f) {
 		theta = pi;
 	}
 
+	return theta;
+}
+
+float AngleOf2VectorZ(const Vector3& v1, const Vector3& v2) { 
+	// ベクトルAとBの長さを計算する
+	float length_v1 = Length(v1);
+	float length_v2 = Length(v2);
+	// 内積とベクトル長さを使ってcosθを求める
+	float cos_theta = Dot(v1, v2) / (length_v1 * length_v2);
+	// cosθからθを求める
+	float theta = std::acos(cos_theta);
+	// 2ベクトルの外積を求める
+	Vector2 longHand = Normalize(Vector2(v1.x, v1.y));
+	Vector2 hourHand = Normalize(Vector2(v2.x, v2.y));
+	// 2つ目のベクトルが左向きなら、なす角にマイナスを掛ける
+	if (Cross(longHand, hourHand) > 0.0f) {
+		theta = -theta;
+	}
+	// cosθの値で場合分け(NAN回避処理)
+	if (cos_theta >= 1.0f) {
+		theta = 0.0f;
+	} else if (cos_theta <= -1.0f) {
+		theta = pi;
+	}
 
 	return theta;
 }
@@ -513,4 +561,54 @@ Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, f
 	c.m[3][2] = minDepth;
 	c.m[3][3] = 1;
 	return c;
+}
+
+Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t) {
+	Vector3 p;
+	p = Add(v1, Multiply(t, Subtract(v2, v1)));
+	return p;
+}
+
+float Lerp(const float& l1, const float& l2, float t) {
+	float p;
+	p = (1 - t) * l1 + t * l2;
+	return p;
+}
+
+Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t) {
+	// 各ベクトルを正規化
+	Vector3 v1n, v2n;
+	v1n = Normalize(v1);
+	v2n = Normalize(v2);
+	// 内積を求める→cosθ
+	float dot = Dot(v1n, v2n);
+	// sinθを求める
+	if (dot > 1.0f) {
+		dot = 1.0f;
+	}
+	// アークコサインでθの角度を求める
+	float theta = std::acos(dot);
+	// シータの角度からsinθを求める
+	float sinTheta = std::sin(theta);
+	// サイン(θ(1-t))を求める
+	float sinThetaFrom = std::sin((1 - t) * theta);
+	// sinθtを求める
+	float sinThetaTo = std::sin(t * theta);
+	// 球面線形補完したベクトル(単位ベクトル)
+	Vector3 nvec = Add(Multiply(sinThetaFrom / sinTheta, v1n), Multiply(sinThetaTo / sinTheta, v2n));
+	// ゼロ除算を防ぐ
+	if (sinTheta < 1.0e-5) {
+		nvec = v1n;
+	} else {
+		// 球面線形補完したベクトル
+		nvec = Multiply(1 / sinTheta, nvec);
+	}
+	// ベクトルの長さはv1とv2の長さを線形補完
+	float length1 = Length(v1);
+	float length2 = Length(v2);
+	// Lerpで補完ベクトルの長さを求める
+	float length = Lerp(length1, length2, t);
+
+	// 長さを反映
+	return Multiply(length, nvec);
 }

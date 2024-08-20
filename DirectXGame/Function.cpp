@@ -460,18 +460,23 @@ float Dot(const Vector3& v1, const Vector3& v2) {
 	return c;
 }
 
+float Dot(const Vector2& v1, const Vector2& v2) {
+	float c;
+	c = v1.x * v2.x + v1.y * v2.y;
+	return c;
+}
+
+
+
 float AngleOf2VectorX(const Vector3& v1, const Vector3& v2) { 
-	// ベクトルAとBの長さを計算する
-	float length_v1 = Length(v1);
-	float length_v2 = Length(v2);
-	// 内積とベクトル長さを使ってcosθを求める
-	float cos_theta = Dot(v1, v2) / (length_v1 * length_v2);
-	// cosθからθを求める
-	float theta = std::acos(cos_theta);
-	// 2ベクトルの外積を求める
+	// X軸回転のため、引数のベクトルをzy成分に分解(長さの計算する手間省くため正規化)
 	Vector2 longHand = Normalize(Vector2(v1.z, v1.y));
 	Vector2 hourHand = Normalize(Vector2(v2.z, v2.y));
-	// 2つ目のベクトルが左向きなら、なす角にマイナスを掛ける
+	// 内積とベクトル長さを使ってcosθを求める
+	float cos_theta = Dot(longHand, hourHand);
+	// cosθからθを求める
+	float theta = std::acos(cos_theta);
+	// 2ベクトルの外積を求め、hourHandが左にあるならマイナス
 	if (Cross(longHand, hourHand) > 0.0f) {
 		theta = -theta;
 	}
@@ -480,22 +485,19 @@ float AngleOf2VectorX(const Vector3& v1, const Vector3& v2) {
 		theta = 0.0f;
 	} else if (cos_theta <= -1.0f) {
 		theta = pi;
-	} 
+	}
 	return theta;
 }
 
 float AngleOf2VectorY(const Vector3& v1, const Vector3& v2) { 
-	// ベクトルAとBの長さを計算する
-	float length_v1 = Length(v1);
-	float length_v2 = Length(v2);
-	// 内積とベクトル長さを使ってcosθを求める
-	float cos_theta = Dot(v1, v2) / (length_v1 * length_v2);
-	// cosθからθを求める
-	float theta = std::acos(cos_theta);
-	// 2ベクトルの外積を求める
+	//Y軸回転のため、引数のベクトルをxz成分に分解(長さの計算する手間省くため正規化)
 	Vector2 longHand = Normalize(Vector2(v1.x, v1.z));
 	Vector2 hourHand = Normalize(Vector2(v2.x, v2.z));
-	// 2つ目のベクトルが左向きなら、なす角にマイナスを掛ける
+	// 内積とベクトル長さを使ってcosθを求める
+	float cos_theta = Dot(longHand, hourHand);
+	// cosθからθを求める
+	float theta = std::acos(cos_theta);
+	// 2ベクトルの外積を求め、hourHandが左にあるならマイナス
 	if (Cross(longHand, hourHand) > 0.0f) {
 		theta = -theta;
 	}
@@ -505,22 +507,18 @@ float AngleOf2VectorY(const Vector3& v1, const Vector3& v2) {
 	} else if (cos_theta <= -1.0f) {
 		theta = pi;
 	}
-
 	return theta;
 }
 
 float AngleOf2VectorZ(const Vector3& v1, const Vector3& v2) { 
-	// ベクトルAとBの長さを計算する
-	float length_v1 = Length(v1);
-	float length_v2 = Length(v2);
-	// 内積とベクトル長さを使ってcosθを求める
-	float cos_theta = Dot(v1, v2) / (length_v1 * length_v2);
-	// cosθからθを求める
-	float theta = std::acos(cos_theta);
-	// 2ベクトルの外積を求める
+	// Z軸回転のため、引数のベクトルをxy成分に分解(長さの計算する手間省くため正規化)
 	Vector2 longHand = Normalize(Vector2(v1.x, v1.y));
 	Vector2 hourHand = Normalize(Vector2(v2.x, v2.y));
-	// 2つ目のベクトルが左向きなら、なす角にマイナスを掛ける
+	// 内積とベクトル長さを使ってcosθを求める
+	float cos_theta = Dot(longHand, hourHand);
+	// cosθからθを求める
+	float theta = std::acos(cos_theta);
+	// 2ベクトルの外積を求め、hourHandが左にあるならマイナス
 	if (Cross(longHand, hourHand) > 0.0f) {
 		theta = -theta;
 	}
@@ -530,7 +528,6 @@ float AngleOf2VectorZ(const Vector3& v1, const Vector3& v2) {
 	} else if (cos_theta <= -1.0f) {
 		theta = pi;
 	}
-
 	return theta;
 }
 

@@ -60,13 +60,15 @@ private://調整変数
 	// 緯度経度のオリジンポイント
 	float oLat = 0.0f;
 	float oLon = 0.0f;
+	//カメラのローカル座標を保持
+	Vector3 setLocalPosition;
 	//カメラのワールド座標を保持
 	Vector3 setWorldPosition;
 	// ロックオン処理変数
 	bool isLockOn = false;//ロックオン状態か
 	bool isTransition = false;//ロックオン遷移状態か
 	// ロックオン遷移フレーム
-	const uint32_t kTransitionFrame = 10;
+	const uint32_t kTransitionFrame = 6;
 	//遷移カウントダウン
 	uint32_t countTransition_ = 0;
 };

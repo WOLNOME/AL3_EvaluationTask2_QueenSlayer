@@ -35,9 +35,22 @@ void TPSCamera::Update() {
 		if (input_->TriggerKey(DIK_LSHIFT)) {
 			// フラグ切り替え
 			isLockOn = false;
-			// 視点移動速度の設定
-			speedLat_ = kNormalSpeed_;
-			speedLon_ = kNormalSpeed_;
+			///今のカメラの座標をlatとlonに教える
+			//oLatとoLonの座標を得る
+			Vector3 sphereOrigin;
+			sphereOrigin.x = toCenterDirectionLocal_.x + length_ * cosf(oLat) * cosf(oLon);
+			sphereOrigin.y = toCenterDirectionLocal_.y + length_ * sinf(oLat);
+			sphereOrigin.z = toCenterDirectionLocal_.z + length_ * cosf(oLat) * sinf(oLon);
+			//回転中心(ローカル)→球オリジン座標のベクトルを得る
+			Vector3 centerOfRotationToOrigin = Normalize(Subtract(sphereOrigin, toCenterDirectionLocal_));
+			//回転中心(ローカル)→現在のカメラの座標(ローカル)
+			Vector3 centerOfRotationToCamera = Normalize(Subtract(worldTransform_.translation_, toCenterDirectionLocal_));
+			//lat用ベクトルの生成
+			Vector3 centerOfRotationToCameraLat = Normalize(Vector3(1.0f, centerOfRotationToCamera.y, 0.0f));
+			//2つのベクトルの回転量をlatとlonに代入
+			lat = -AngleOf2VectorZ(centerOfRotationToOrigin, centerOfRotationToCameraLat);
+			lon = -AngleOf2VectorY(centerOfRotationToOrigin, centerOfRotationToCamera);
+			
 		}
 	}
 	// 回転中心座標(world)の更新
@@ -49,6 +62,8 @@ void TPSCamera::Update() {
 		NormalCameraProcess();
 	}
 
+	//ローカル座標を保持
+	setLocalPosition = worldTransform_.translation_;
 	// 行列の再計算
 	worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
 	// プレイヤーの座標だけを掛ける(プレイヤーの座標を基準にする(回転は引き継がない))

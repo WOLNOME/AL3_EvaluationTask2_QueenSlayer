@@ -90,6 +90,8 @@ Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
 
 float Dot(const Vector3& v1, const Vector3& v2);
 
+float Dot(const Vector2& v1, const Vector2& v2);
+
 float AngleOf2VectorX(const Vector3& v1, const Vector3& v2);
 
 float AngleOf2VectorY(const Vector3& v1, const Vector3& v2);

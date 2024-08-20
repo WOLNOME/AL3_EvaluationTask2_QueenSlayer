@@ -8,6 +8,13 @@
 //前方宣言
 class StageScene;
 
+//ロックオンできる部位
+enum Parts {
+	HEAD,
+	CHEST,
+	STOMACH,
+};
+
 class TPSCamera {
 public:
 	/// <summary>
@@ -57,13 +64,6 @@ private://調整変数
 	// 現在の視点角度座標
 	float lat = 1.0f / 18.0f * pi;//緯度
 	float lon = 1.0f / 2.0f * pi;//経度
-	// 緯度経度のオリジンポイント
-	float oLat = 0.0f;
-	float oLon = 0.0f;
-	//カメラのローカル座標を保持
-	Vector3 setLocalPosition;
-	//カメラのワールド座標を保持
-	Vector3 setWorldPosition;
 	// ロックオン処理変数
 	bool isLockOn = false;//ロックオン状態か
 	bool isTransition = false;//ロックオン遷移状態か
@@ -71,4 +71,6 @@ private://調整変数
 	const uint32_t kTransitionFrame = 6;
 	//遷移カウントダウン
 	uint32_t countTransition_ = 0;
+	//ロックオン中の部位
+	Parts lockOnParts;
 };

@@ -27,30 +27,29 @@ void TPSCamera::Update() {
 			// フラグ切り替え
 			isLockOn = true;
 			isTransition = true;
-			// 始めのカメラのワールドポジションを記憶
-			setWorldPosition = GetWorldPosition();
+			// ロックオンパーツの指定
+			lockOnParts = CHEST;
 		}
 	} else if (isLockOn && !isTransition) {
 		// ロックオン状態解除
 		if (input_->TriggerKey(DIK_LSHIFT)) {
 			// フラグ切り替え
 			isLockOn = false;
-			///今のカメラの座標をlatとlonに教える
-			//oLatとoLonの座標を得る
+			/// 今のカメラの座標をlatとlonに教える
+			// oLatとoLonの座標を得る
 			Vector3 sphereOrigin;
-			sphereOrigin.x = toCenterDirectionLocal_.x + length_ * cosf(oLat) * cosf(oLon);
-			sphereOrigin.y = toCenterDirectionLocal_.y + length_ * sinf(oLat);
-			sphereOrigin.z = toCenterDirectionLocal_.z + length_ * cosf(oLat) * sinf(oLon);
-			//回転中心(ローカル)→球オリジン座標のベクトルを得る
+			sphereOrigin.x = toCenterDirectionLocal_.x + length_ * cosf(0.0f) * cosf(0.0f);
+			sphereOrigin.y = toCenterDirectionLocal_.y + length_ * sinf(0.0f);
+			sphereOrigin.z = toCenterDirectionLocal_.z + length_ * cosf(0.0f) * sinf(0.0f);
+			// 回転中心(ローカル)→球オリジン座標のベクトルを得る
 			Vector3 centerOfRotationToOrigin = Normalize(Subtract(sphereOrigin, toCenterDirectionLocal_));
-			//回転中心(ローカル)→現在のカメラの座標(ローカル)
+			// 回転中心(ローカル)→現在のカメラの座標(ローカル)
 			Vector3 centerOfRotationToCamera = Normalize(Subtract(worldTransform_.translation_, toCenterDirectionLocal_));
-			//lat用ベクトルの生成
+			// lat用ベクトルの生成
 			Vector3 centerOfRotationToCameraLat = Normalize(Vector3(1.0f, centerOfRotationToCamera.y, 0.0f));
-			//2つのベクトルの回転量をlatとlonに代入
+			// 2つのベクトルの回転量をlatとlonに代入
 			lat = -AngleOf2VectorZ(centerOfRotationToOrigin, centerOfRotationToCameraLat);
 			lon = -AngleOf2VectorY(centerOfRotationToOrigin, centerOfRotationToCamera);
-			
 		}
 	}
 	// 回転中心座標(world)の更新
@@ -62,8 +61,6 @@ void TPSCamera::Update() {
 		NormalCameraProcess();
 	}
 
-	//ローカル座標を保持
-	setLocalPosition = worldTransform_.translation_;
 	// 行列の再計算
 	worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
 	// プレイヤーの座標だけを掛ける(プレイヤーの座標を基準にする(回転は引き継がない))
@@ -88,10 +85,24 @@ void TPSCamera::LockOnCameraProcess() {
 		// カウントをインクリメント
 		countTransition_++;
 
-		// エネミー(chest)→回転中心座標のベクトルを獲得(slerp用に長さを揃える)
-		Vector3 enemyToCenterOfRotation = Multiply(length_, Normalize(Subtract(toCenterDirectionWorld_, stageScene_->GetEnemy()->GetChest()->GetWorldPosition())));
+		// エネミー→回転中心座標のベクトルを獲得(slerp用に長さを揃える)
+		Vector3 enemyToCenterOfRotation;
+		// 各部位で変数を目標を変更
+		switch (lockOnParts) {
+		case HEAD:
+			enemyToCenterOfRotation = Multiply(length_, Normalize(Subtract(toCenterDirectionWorld_, stageScene_->GetEnemy()->GetHead()->GetWorldPosition())));
+			break;
+		case CHEST:
+			enemyToCenterOfRotation = Multiply(length_, Normalize(Subtract(toCenterDirectionWorld_, stageScene_->GetEnemy()->GetChest()->GetWorldPosition())));
+			break;
+		case STOMACH:
+			enemyToCenterOfRotation = Multiply(length_, Normalize(Subtract(toCenterDirectionWorld_, stageScene_->GetEnemy()->GetStomach()->GetWorldPosition())));
+			break;
+		default:
+			break;
+		}
 		// 回転中心座標→カメラのベクトルを獲得
-		Vector3 centerOfRotationToCamera = Multiply(length_, Normalize(Subtract(setWorldPosition, toCenterDirectionWorld_)));
+		Vector3 centerOfRotationToCamera = Multiply(length_, Normalize(Subtract(GetWorldPosition(), toCenterDirectionWorld_)));
 		// スラープ関数で新しい座標を得る
 		Vector3 slerpNewPosition = Multiply(length_, Normalize(Slerp(centerOfRotationToCamera, enemyToCenterOfRotation, (float)countTransition_ / kTransitionFrame)));
 
@@ -116,8 +127,65 @@ void TPSCamera::LockOnCameraProcess() {
 	}
 	// ロックオン中処理
 	else {
+		// ロックオン切り替え処理
+		switch (lockOnParts) {
+		case HEAD:
+			// ロックオン部位の切り替え
+			if (input_->TriggerKey(DIK_DOWN)) {
+				// フラグ切り替え
+				isLockOn = true;
+				isTransition = true;
+				// ロックオンパーツの指定
+				lockOnParts = CHEST;
+			}
+			break;
+		case CHEST:
+			// ロックオン部位の切り替え
+			if (input_->TriggerKey(DIK_UP)) {
+				// フラグ切り替え
+				isLockOn = true;
+				isTransition = true;
+				// ロックオンパーツの指定
+				lockOnParts = HEAD;
+			}
+			if (input_->TriggerKey(DIK_DOWN)) {
+				// フラグ切り替え
+				isLockOn = true;
+				isTransition = true;
+				// ロックオンパーツの指定
+				lockOnParts = STOMACH;
+			}
+			break;
+		case STOMACH:
+			// ロックオン部位の切り替え
+			if (input_->TriggerKey(DIK_UP)) {
+				// フラグ切り替え
+				isLockOn = true;
+				isTransition = true;
+				// ロックオンパーツの指定
+				lockOnParts = CHEST;
+			}
+			break;
+		default:
+			break;
+		}
+
 		// 敵→回転中心のベクトル
-		Vector3 enemyToCenterOfRotation = Normalize(Subtract(toCenterDirectionWorld_, stageScene_->GetEnemy()->GetChest()->GetWorldPosition()));
+		Vector3 enemyToCenterOfRotation;
+		// 各部位で変数を目標を変更
+		switch (lockOnParts) {
+		case HEAD:
+			enemyToCenterOfRotation = Normalize(Subtract(toCenterDirectionWorld_, stageScene_->GetEnemy()->GetHead()->GetWorldPosition()));
+			break;
+		case CHEST:
+			enemyToCenterOfRotation = Normalize(Subtract(toCenterDirectionWorld_, stageScene_->GetEnemy()->GetChest()->GetWorldPosition()));
+			break;
+		case STOMACH:
+			enemyToCenterOfRotation = Normalize(Subtract(toCenterDirectionWorld_, stageScene_->GetEnemy()->GetStomach()->GetWorldPosition()));
+			break;
+		default:
+			break;
+		}
 		// 手に入れたベクトルに距離を掛ける
 		Vector3 centerOfRotationToCamera = Multiply(length_, enemyToCenterOfRotation);
 

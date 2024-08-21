@@ -34,6 +34,8 @@ void StageScene::Init(Input* input) {
 
 	//プレイヤーにシーンを渡す
 	player_->SetStageScene(this);
+	//エネミーにシーンを渡す
+	enemy_->SetStageScene(this);
 	//TPSカメラにシーンを渡す
 	tpsCamera_->SetStageScene(this);
 

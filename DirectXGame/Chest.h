@@ -17,6 +17,7 @@ public:
 public: // 関数
 	// 衝突を検出したら呼び出されるコールバック関数
 	void OnCollision() override;
+	void Attack();
 
 public: // ゲッター
 	const WorldTransform& GetWorldTransform() { return worldTransform_; }

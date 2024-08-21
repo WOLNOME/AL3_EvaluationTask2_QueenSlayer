@@ -35,6 +35,8 @@ void Head::Draw(ViewProjection& viewProjection) {
 
 void Head::OnCollision() {}
 
+void Head::Attack() {}
+
 Vector3 Head::GetWorldPosition() {
 	Vector3 worldPos;
 	// ワールド行列の平行移動成分を取得

@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include"StageScene.h"
 
 Enemy::Enemy() {}
 
@@ -19,6 +20,8 @@ void Enemy::Initialize(const Vector3& position) {
 	// 頭部の生成
 	head_ = std::make_unique<Head>();
 
+	//腹部にステージシーンを渡す
+	stomach_->SetStageScene(stageScene_);
 	//腹部(親)と胸部(子)の親子関係を結ぶ
 	chest_->SetParent(&stomach_->GetWorldTransform());
 	// 胸部(親)と頭部(子)の親子関係を結ぶ
@@ -33,6 +36,25 @@ void Enemy::Initialize(const Vector3& position) {
 }
 
 void Enemy::Update() {
+	//敵の行動
+	switch (action_) {
+	case Stop:
+		break;
+	case AttackHead:
+		head_->Attack();
+		break;
+	case AttackChest:
+		chest_->Attack();
+		break;
+	case AttackStomach:
+		stomach_->Attack();
+		break;
+	case Move:
+		break;
+	default:
+		break;
+	}
+
 	//腹部更新
 	stomach_->Update();
 	//胸部更新

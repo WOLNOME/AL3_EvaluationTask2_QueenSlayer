@@ -4,6 +4,9 @@
 #include "Model.h"
 #include "WorldTransform.h"
 
+//前方宣言
+class StageScene;
+
 class Stomach : public Collider {
 public:
 	Stomach();
@@ -16,6 +19,7 @@ public:
 public: // 関数
 	// 衝突を検出したら呼び出されるコールバック関数
 	void OnCollision() override;
+	void Attack();
 
 public: // ゲッター
 	const WorldTransform& GetWorldTransform() { return worldTransform_; }
@@ -25,11 +29,15 @@ public: // ゲッター
 	float GetRadius() override { return radius_; }
 
 public: // セッター
+	void SetStageScene(StageScene* stageScene) { stageScene_ = stageScene; }
+
 private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 	// モデル
 	Model* model_ = nullptr;
-
+	//ステージシーン
+	StageScene* stageScene_ = nullptr;
+	//カラー
 private:
 };

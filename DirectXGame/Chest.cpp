@@ -35,6 +35,8 @@ void Chest::Draw(ViewProjection& viewProjection) {
 
 void Chest::OnCollision() {}
 
+void Chest::Attack() {}
+
 Vector3 Chest::GetWorldPosition() { 
 	Vector3 worldPos;
 	// ワールド行列の平行移動成分を取得

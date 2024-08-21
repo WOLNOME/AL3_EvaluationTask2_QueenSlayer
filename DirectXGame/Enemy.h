@@ -1,11 +1,24 @@
 #pragma once
-#include "Function.h"
-#include "Model.h"
-#include "WorldTransform.h"
-#include "Input.h"
-#include "Head.h"
 #include "Chest.h"
+#include "Function.h"
+#include "Head.h"
+#include "Input.h"
+#include "Model.h"
 #include "Stomach.h"
+#include "WorldTransform.h"
+
+// 行動パターン
+enum EnemyActionPattern {
+	Stop,
+	AttackHead,
+	AttackChest,
+	AttackStomach,
+	Move,
+	kAllActionNum,
+};
+
+// 前方宣言
+class StageScene;
 
 class Enemy {
 public:
@@ -25,23 +38,26 @@ public: // ゲッター
 	const std::unique_ptr<Head>& GetHead() const { return head_; }
 
 public: // セッター
-	
+	void SetStageScene(StageScene* stageScene) { stageScene_ = stageScene; }
 
 private:
 	// 入力
 	Input* input_ = nullptr;
-	//腹部
+	// 腹部
 	std::unique_ptr<Stomach> stomach_ = nullptr;
 	std::unique_ptr<Model> modelStomach_ = nullptr;
-	//胸部
+	// 胸部
 	std::unique_ptr<Chest> chest_ = nullptr;
 	std::unique_ptr<Model> modelChest_ = nullptr;
-	//頭部
+	// 頭部
 	std::unique_ptr<Head> head_ = nullptr;
 	std::unique_ptr<Model> modelHead_ = nullptr;
+	// ステージシーン
+	StageScene* stageScene_ = nullptr;
 
 private:
-	//各部位の半径
+	// 各部位の半径
 	const float rad_ = 1.5f;
-
+	//行動
+	EnemyActionPattern action_ = Stop;
 };

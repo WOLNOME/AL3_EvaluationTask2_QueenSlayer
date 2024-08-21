@@ -5,15 +5,15 @@
 #include "WorldTransform.h"
 #include <cmath>
 
-//前方宣言
-class StageScene;
-
 //ロックオンできる部位
 enum Parts {
 	HEAD,
 	CHEST,
 	STOMACH,
 };
+
+//前方宣言
+class StageScene;
 
 class TPSCamera {
 public:

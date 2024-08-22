@@ -162,8 +162,10 @@ void StageScene::CheckAllCollision() {
 
 	//自弾リストの取得
 	const std::list<PlayerBullet*>& playerBullets = player_->GetBullets();
-
-
+	//敵弾リストの取得
+	const std::list<EnemyBullet*>& enemyBulletsStomach = enemy_->GetStomach()->GetBullets();
+	const std::list<EnemyBullet*>& enemyBulletsChest = enemy_->GetChest()->GetBullets();
+	const std::list<EnemyBullet*>& enemyBulletsHead = enemy_->GetHead()->GetBullets();
 	//コライダー
 	std::list<Collider*> colliders_;
 	// コライダーをリストに登録
@@ -174,6 +176,16 @@ void StageScene::CheckAllCollision() {
 	//自弾コライダーをリストに登録
 	for (PlayerBullet* pbullet : playerBullets) {
 		colliders_.push_back(pbullet);
+	}
+	//敵弾コライダーをリストに登録
+	for (EnemyBullet* ebullet : enemyBulletsStomach) {
+		colliders_.push_back(ebullet);
+	}
+	for (EnemyBullet* ebullet : enemyBulletsChest) {
+		colliders_.push_back(ebullet);
+	}
+	for (EnemyBullet* ebullet : enemyBulletsHead) {
+		colliders_.push_back(ebullet);
 	}
 
 	// 衝突マネージャーのリストにコライダーを登録する

@@ -41,6 +41,12 @@ public: // セッター
 	void SetStageScene(StageScene* stageScene) { stageScene_ = stageScene; }
 
 private:
+	//STOPアクション
+	void StopAction();
+	//次のアクションルーレット
+	EnemyActionPattern ActionRoulette();
+
+private:
 	// 入力
 	Input* input_ = nullptr;
 	// 腹部
@@ -60,4 +66,11 @@ private:
 	const float rad_ = 1.5f;
 	//行動
 	EnemyActionPattern action_ = Stop;
+
+	//アクション中フラグ
+	bool isAction_ = true;
+	//アクションタイマー
+	uint32_t timer_ = 0;
+	//ストップタイマー制限時間
+	const uint32_t kStopTime_ = 120;
 };

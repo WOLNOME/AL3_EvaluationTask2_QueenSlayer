@@ -150,6 +150,9 @@
     <ClCompile Include="CollisionManager.cpp">
       <Filter>ソース ファイル\program\collision</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyBullet.cpp">
+      <Filter>ソース ファイル\program\enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3d\ViewProjection.h">
@@ -295,6 +298,9 @@
     </ClInclude>
     <ClInclude Include="CollisionManager.h">
       <Filter>ヘッダー ファイル\program\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyBullet.h">
+      <Filter>ヘッダー ファイル\program\enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

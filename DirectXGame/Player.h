@@ -52,5 +52,7 @@ private:
 private:
 	//弾の速度
 	const float kBulletSpeed_ = 1.0f;
-
+	//連続弾インターバル
+	const uint32_t kBulletInterval_ = 8;
+	uint32_t interval_ = 0;
 };

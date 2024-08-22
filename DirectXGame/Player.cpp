@@ -76,21 +76,31 @@ void Player::Draw(ViewProjection& viewProjection) {
 }
 
 void Player::Attack() {
-	if (input_->TriggerKey(DIK_SPACE)) {
+	//インターバル関連処理
+	if (interval_ > 0) {
+		interval_--;
+	}
 
-		// 弾を生成
-		PlayerBullet* newBullet = new PlayerBullet();
-		// 弾の発射位置を確定
-		Vector3 bulletInitPosition = Transform({0.0f,0.0f,3.0f},stand_->GetWorldTransform().matWorld_);
-		//弾の速度(ベクトル)を確定
-		Vector3 velocity = Normalize(Subtract(stageScene_->GetReticle()->GetWorldPosition(), bulletInitPosition));
-		velocity = Multiply(kBulletSpeed_, velocity);
-		//弾を初期化
-		newBullet->Initialize(modelBullet_.get(), bulletInitPosition, velocity);
-		
+	if (input_->PushKey(DIK_SPACE)) {
 
-		// 弾を登録する
-		bullets_.push_back(newBullet);
+		if (interval_ == 0) {
+
+			// 弾を生成
+			PlayerBullet* newBullet = new PlayerBullet();
+			// 弾の発射位置を確定
+			Vector3 bulletInitPosition = Transform({0.0f, 0.0f, 3.0f}, stand_->GetWorldTransform().matWorld_);
+			// 弾の速度(ベクトル)を確定
+			Vector3 velocity = Normalize(Subtract(stageScene_->GetReticle()->GetWorldPosition(), bulletInitPosition));
+			velocity = Multiply(kBulletSpeed_, velocity);
+			// 弾を初期化
+			newBullet->Initialize(modelBullet_.get(), bulletInitPosition, velocity);
+
+			// 弾を登録する
+			bullets_.push_back(newBullet);
+			//インターバルリセット
+			interval_ = kBulletInterval_; 
+
+		}
 	}
 }
 

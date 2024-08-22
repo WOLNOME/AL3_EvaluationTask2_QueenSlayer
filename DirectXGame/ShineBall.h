@@ -1,0 +1,54 @@
+#pragma once
+#include "Collider.h"
+#include "WorldTransform.h"
+#include "Model.h"
+
+class StageScene;
+
+class ShineBall : public Collider {
+public:
+	ShineBall();
+	~ShineBall();
+
+	void Initialize(Model* model, const Vector3& position, const Vector3& velocity);
+	void Update();
+	void Draw(const ViewProjection& viewProjection);
+
+public: // 関数
+	bool isDead() const { return isDead_; }
+	// 衝突を検出したら呼び出されるコールバック関数
+	void OnCollision() override;
+
+public: // ゲッター
+	const WorldTransform& GetWorldTransform() { return worldTransform_; }
+	// ワールド座標を取得
+	Vector3 GetWorldPosition() override;
+	// 半径
+	float GetRadius() override { return radius_; }
+
+public: // セッター
+	void SetStageScene(StageScene* stageScene) { stageScene_ = stageScene; }
+
+private:
+	// ワールド変換データ
+	WorldTransform worldTransform_;
+	// モデル
+	Model* model_ = nullptr;
+	// ステージシーン
+	StageScene* stageScene_ = nullptr;
+
+private:
+	// 寿命
+	static const int32_t kLifeTime = 60 * 15;
+	// デスタイマー
+	int32_t deathTimer_ = kLifeTime;
+	// デスフラグ
+	bool isDead_ = false;
+	//速度
+	Vector3 velocity_;
+	//重力
+	const Vector3 kGravity_ = {0.0f, -0.05f, 0.0f};
+	//静止フラグ
+	bool isStop_ = false;
+
+};

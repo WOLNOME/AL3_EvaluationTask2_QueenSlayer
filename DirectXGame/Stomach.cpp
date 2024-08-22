@@ -31,8 +31,6 @@ void Stomach::Initialize(Model* model, const Vector3& position, const float rad)
 	textureHandle_ = TextureManager::Load("enemyStomach/enemyStomach.png");
 	// 衝突属性を設定(自分の属性)
 	SetCollisionAttribute(kCollisionAttributeEnemy);
-	// 衝突対象を自分の属性以外に設定(相手の属性)
-	SetCollisionMask(kCollisionAttributePlayer);
 }
 
 void Stomach::Update() {
@@ -71,7 +69,12 @@ void Stomach::Draw(ViewProjection& viewProjection) {
 	}
 }
 
-void Stomach::OnCollision() {}
+void Stomach::OnCollision() {
+	// アクション中の時
+	if (isAction_) {
+		isHit_ = true;
+	}
+}
 
 void Stomach::Attack() {
 	// 行動処理中

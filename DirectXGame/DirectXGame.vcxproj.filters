@@ -153,6 +153,9 @@
     <ClCompile Include="EnemyBullet.cpp">
       <Filter>ソース ファイル\program\enemy</Filter>
     </ClCompile>
+    <ClCompile Include="ShineBall.cpp">
+      <Filter>ソース ファイル\program</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3d\ViewProjection.h">
@@ -301,6 +304,9 @@
     </ClInclude>
     <ClInclude Include="EnemyBullet.h">
       <Filter>ヘッダー ファイル\program\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="ShineBall.h">
+      <Filter>ヘッダー ファイル\program</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

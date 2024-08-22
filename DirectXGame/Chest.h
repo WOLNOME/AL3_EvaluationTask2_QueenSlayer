@@ -32,10 +32,13 @@ public: // ゲッター
 	const std::list<EnemyBullet*>& GetBullets() const { return bullets_; }
 	// 攻撃中コールバック
 	bool GetIsAction() { return isAction_; }
+	// 光玉蓄積許可
+	bool GetIsHit() { return isHit_; }
 
 public: // セッター
 	void SetParent(const WorldTransform* parent) { worldTransform_.parent_ = parent; };
 	void SetStageScene(StageScene* stageScene) { stageScene_ = stageScene; }
+	void SetIsHit(bool isHit) { isHit_ = isHit; }
 
 private:
 	// ワールド変換データ
@@ -67,4 +70,6 @@ private:
 	Vector3 velocity_ = {0.0f, 0.0f, 0.0f};
 	// 振動前の座標を保持
 	Vector3 prePos;
+	// 光玉蓄積フラグ
+	bool isHit_ = false;
 };

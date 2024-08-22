@@ -36,9 +36,12 @@ public: // ゲッター
 	const std::unique_ptr<Chest>& GetChest() const { return chest_; }
 	// 頭部獲得
 	const std::unique_ptr<Head>& GetHead() const { return head_; }
+	//SP獲得
+	uint32_t GetSP() { return nowSP_; }
 
 public: // セッター
 	void SetStageScene(StageScene* stageScene) { stageScene_ = stageScene; }
+	void SetSP(uint32_t newSP) { nowSP_ = newSP; }
 
 private:
 	//STOPアクション
@@ -72,5 +75,13 @@ private:
 	//アクションタイマー
 	uint32_t timer_ = 0;
 	//ストップタイマー制限時間
-	const uint32_t kStopTime_ = 120;
+	const uint32_t kStopTime_ = 180;
+
+	//敵の体力
+	const uint32_t kMaxHP_ = 250;
+	uint32_t nowHP_ = 0;
+
+	//光玉蓄積値
+	uint32_t nowSP_ = 0;
+
 };

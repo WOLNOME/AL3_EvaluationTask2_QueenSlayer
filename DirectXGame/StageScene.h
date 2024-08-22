@@ -8,6 +8,7 @@
 #include "DebugCamera.h"
 #include "Skydome.h"
 #include "Ground.h"
+#include "ShineBall.h"
 #include "TPSCamera.h"
 #include "CollisionManager.h"
 #include "Reticle.h"
@@ -26,6 +27,9 @@ public:
 public://関数
 	void CheckAllCollision();
 
+private:
+	void CreateShineBall();
+
 public://ゲッター
 	SCENE GetNextScene()override { return NextScene; }
 	Player* GetPlayer() { return player_.get(); }
@@ -39,6 +43,7 @@ private:
 	//3Dモデル
 	std::unique_ptr<Model> modelSkydome_ = nullptr;
 	std::unique_ptr<Model> modelGround_ = nullptr;
+	std::unique_ptr<Model> modelShineBall_ = nullptr;
 	//ビュープロジェクション
 	ViewProjection viewProjection_;
 	// デバッグカメラ
@@ -58,6 +63,9 @@ private:
 	std::unique_ptr<Skydome> skydome_ = nullptr;
 	//地面
 	std::unique_ptr<Ground> ground_ = nullptr;
+	//光玉
+	std::list<ShineBall*> shineBalls_;
+	
 
 	// 衝突マネージャー
 	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;

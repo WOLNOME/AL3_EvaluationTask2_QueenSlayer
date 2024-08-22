@@ -123,6 +123,7 @@
     <ClCompile Include="PlayerBullet.cpp" />
     <ClCompile Include="Reticle.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
+    <ClCompile Include="ShineBall.cpp" />
     <ClCompile Include="ShootingStand.cpp" />
     <ClCompile Include="Skydome.cpp" />
     <ClCompile Include="StageScene.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="PlayerBullet.h" />
     <ClInclude Include="Reticle.h" />
     <ClInclude Include="scene\GameScene.h" />
+    <ClInclude Include="ShineBall.h" />
     <ClInclude Include="ShootingStand.h" />
     <ClInclude Include="Skydome.h" />
     <ClInclude Include="StageScene.h" />

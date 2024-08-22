@@ -33,9 +33,12 @@ public: // ゲッター
 	float GetRadius() override { return radius_; }
 	// 攻撃中コールバック
 	bool GetIsAction() { return isAction_; }
+	// 光玉蓄積許可
+	bool GetIsHit() { return isHit_; }
 
 public: // セッター
 	void SetStageScene(StageScene* stageScene) { stageScene_ = stageScene; }
+	void SetIsHit(bool isHit) { isHit_ = isHit; }
 
 private:
 	// ワールド変換データ
@@ -70,6 +73,7 @@ private:
 	const float kReducation_ = 0.8f;
 	//振動前の座標を保持
 	Vector3 prePos;
-
+	// 光玉蓄積フラグ
+	bool isHit_ = false;
 
 };

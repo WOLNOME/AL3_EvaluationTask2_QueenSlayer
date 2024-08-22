@@ -1,4 +1,5 @@
 #include "CollisionManager.h"
+#include "CollisionConfig.h"
 #include "Function.h"
 
 void CollisionManager::CheckCollision() {
@@ -14,9 +15,64 @@ void CollisionManager::CheckCollision() {
 			// イテレーターBからコライダーBを取得する
 			Collider* colliderB = *itrB;
 			// 衝突フィルタリング
-			if (!(colliderA->GetCollisionAttribute() & colliderB->GetCollisionMask()) || !(colliderB->GetCollisionAttribute() & colliderA->GetCollisionMask())) {
+			//自分と同じ属性だと貫通
+			if (colliderA->GetCollisionAttribute() == colliderB->GetCollisionAttribute()) {
 				continue;
 			}
+			//自機と自弾
+			if (colliderA->GetCollisionAttribute() == kCollisionAttributePlayer) {
+				if (colliderB->GetCollisionAttribute() == kCollisionAttributePlayerBullet) {
+					continue;
+				}
+			}
+			if (colliderB->GetCollisionAttribute() == kCollisionAttributePlayer) {
+				if (colliderA->GetCollisionAttribute() == kCollisionAttributePlayerBullet) {
+					continue;
+				}
+			}
+			//敵と敵弾
+			if (colliderA->GetCollisionAttribute() == kCollisionAttributeEnemy) {
+				if (colliderB->GetCollisionAttribute() == kCollisionAttributeEnemyBullet) {
+					continue;
+				}
+			}
+			if (colliderB->GetCollisionAttribute() == kCollisionAttributeEnemy) {
+				if (colliderA->GetCollisionAttribute() == kCollisionAttributeEnemyBullet) {
+					continue;
+				}
+			}
+			//オブジェクトとプレイヤー以外
+			if (colliderA->GetCollisionAttribute() == kCollisionAttributeObject) {
+				if (colliderB->GetCollisionAttribute() == kCollisionAttributePlayerBullet) {
+					continue;
+				}
+			}
+			if (colliderB->GetCollisionAttribute() == kCollisionAttributeObject) {
+				if (colliderA->GetCollisionAttribute() == kCollisionAttributePlayerBullet) {
+					continue;
+				}
+			}
+			if (colliderA->GetCollisionAttribute() == kCollisionAttributeObject) {
+				if (colliderB->GetCollisionAttribute() == kCollisionAttributeEnemy) {
+					continue;
+				}
+			}
+			if (colliderB->GetCollisionAttribute() == kCollisionAttributeObject) {
+				if (colliderA->GetCollisionAttribute() == kCollisionAttributeEnemy) {
+					continue;
+				}
+			}
+			if (colliderA->GetCollisionAttribute() == kCollisionAttributeObject) {
+				if (colliderB->GetCollisionAttribute() == kCollisionAttributeEnemyBullet) {
+					continue;
+				}
+			}
+			if (colliderB->GetCollisionAttribute() == kCollisionAttributeObject) {
+				if (colliderA->GetCollisionAttribute() == kCollisionAttributeEnemyBullet) {
+					continue;
+				}
+			}
+
 			// ペアの当たり判定
 			CheckCollisionPair(colliderA, colliderB);
 		}

@@ -93,6 +93,20 @@ void Enemy::Update() {
 	chest_->Update();
 	// 頭部更新
 	head_->Update();
+
+	//光玉蓄積処理
+	if (head_->GetIsHit()) {
+		nowSP_++;
+		head_->SetIsHit(false);
+	}
+	if (chest_->GetIsHit()) {
+		nowSP_++;
+		chest_->SetIsHit(false);
+	}
+	if (stomach_->GetIsHit()) {
+		nowSP_++;
+		stomach_->SetIsHit(false);
+	}
 }
 
 void Enemy::Draw(ViewProjection& viewProjection) {

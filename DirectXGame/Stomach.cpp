@@ -79,7 +79,7 @@ void Stomach::OnCollision() {
 	}
 }
 
-void Stomach::OnSpecialCollision() {}
+void Stomach::OnSpecialCollision() { isDamageLarge_ = true; }
 
 void Stomach::Attack() {
 	// 行動処理中

@@ -3,6 +3,7 @@
 #include "Input.h"
 #include "Model.h"
 #include "PlayerBullet.h"
+#include "PlayerSpecialBullet.h"
 #include "ShootingStand.h"
 #include "Vehicle.h"
 #include "WorldTransform.h"
@@ -48,9 +49,13 @@ private:
 	// 砲台
 	std::unique_ptr<ShootingStand> stand_ = nullptr;
 	std::unique_ptr<Model> modelStand_ = nullptr;
-	// 弾
+	// 通常弾
 	std::list<PlayerBullet*> bullets_;
 	std::unique_ptr<Model> modelBullet_ = nullptr;
+	// 必殺弾
+	std::list<PlayerSpecialBullet*> specialBullets_;
+	std::unique_ptr<Model> modelSpecialBullet_ = nullptr;
+
 
 private:
 	//弾の速度
@@ -62,9 +67,11 @@ private:
 	//プレイヤーのHP
 	const uint32_t kMaxHP_ = 20;
 	uint32_t nowHP_;
-	//プレイヤーのSPゲージ
-	const uint32_t kMaxSP_ = 10;
-	uint32_t nowSP_;
+	//プレイヤーのSP関連
+	const uint32_t kMaxSPGauge_ = 10;
+	const uint32_t kMaxSPNum_ = 3;
+	uint32_t nowSPGauge_;
+	uint32_t nowSPNum_;
 	//死亡フラグ
 	bool isDead_;
 };

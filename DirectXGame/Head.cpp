@@ -71,7 +71,7 @@ void Head::OnCollision() {
 	}
 }
 
-void Head::OnSpecialCollision() {}
+void Head::OnSpecialCollision() { isDamageLarge_ = true; }
 
 void Head::Attack() {
 	// 行動処理中

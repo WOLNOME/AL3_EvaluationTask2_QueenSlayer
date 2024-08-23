@@ -70,7 +70,7 @@ void Chest::OnCollision() {
 	}
 }
 
-void Chest::OnSpecialCollision() {}
+void Chest::OnSpecialCollision() { isDamageLarge_ = true; }
 
 void Chest::Attack() {
 	// 行動処理中

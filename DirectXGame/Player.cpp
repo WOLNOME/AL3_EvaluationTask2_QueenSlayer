@@ -10,6 +10,9 @@ Player::~Player() {
 	for (PlayerBullet* bullet : bullets_) {
 		delete bullet;
 	}
+	for (PlayerSpecialBullet* bullet : specialBullets_) {
+		delete bullet;
+	}
 }
 
 void Player::Initialize(const Vector3& position, Input* input) {
@@ -21,9 +24,11 @@ void Player::Initialize(const Vector3& position, Input* input) {
 	modelStand_.reset(Model::CreateFromOBJ("playerAbove", true));
 	// 弾モデルの生成
 	modelBullet_.reset(Model::CreateFromOBJ("playerBullet", true));
+	// 必殺弾モデルの生成
+	modelSpecialBullet_.reset(Model::CreateFromOBJ("playerSpecialBullet", true));
 	// 車両の生成
 	vehicle_ = std::make_unique<Vehicle>();
-	//車両にstageSceneをセット
+	// 車両にstageSceneをセット
 	vehicle_->SetStageScene(stageScene_);
 	// 車両の初期化
 	vehicle_->Initialize(input_, modelVehicle_.get(), position);
@@ -32,11 +37,11 @@ void Player::Initialize(const Vector3& position, Input* input) {
 	// 砲台の初期化
 	stand_->Initialize(modelStand_.get());
 
-	///パラメーター
+	/// パラメーター
 	nowHP_ = kMaxHP_;
-	nowSP_ = 0;
+	nowSPGauge_ = 0;
+	nowSPNum_ = 0;
 	isDead_ = false;
-
 }
 
 void Player::Update() {
@@ -48,8 +53,15 @@ void Player::Update() {
 		}
 		return false;
 	});
+	specialBullets_.remove_if([](PlayerSpecialBullet* bullet) {
+		if (bullet->isDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
 
-	//攻撃処理
+	// 攻撃処理
 	Attack();
 
 	// 車両の更新
@@ -57,20 +69,30 @@ void Player::Update() {
 	// 砲台の更新
 	Vector3 cameraDir = {stageScene_->GetTPSCamera()->GetDirectionToPlayer().x, 0.0f, stageScene_->GetTPSCamera()->GetDirectionToPlayer().z};
 	stand_->Update(vehicle_->GetLocalPosition(), cameraDir);
-	//弾更新
+	// 弾更新
 	for (PlayerBullet* bullet : bullets_) {
 		bullet->Update();
 	}
+	// 必殺弾更新
+	for (PlayerSpecialBullet* bullet : specialBullets_) {
+		bullet->Update();
+	}
 
-	//SP回収処理
+	// SP回収処理
 	if (vehicle_->GetIsGetShineBall()) {
-		nowSP_++;
+		nowSPGauge_++;
+		if (nowSPGauge_ == kMaxSPGauge_) {
+			nowSPGauge_ = 0;
+			if (nowSPNum_ < kMaxSPNum_) {
+				nowSPNum_++;
+			}
+		}
 		vehicle_->SetIsGetShineBall(false);
 	}
 
-	//ダメージ判定
+	// ダメージ判定
 	Damage();
-	//死亡判定
+	// 死亡判定
 	if (nowHP_ <= 0) {
 		isDead_ = true;
 	}
@@ -78,7 +100,8 @@ void Player::Update() {
 #ifdef _DEBUG
 	ImGui::Begin("player");
 	ImGui::Text("playerHP : %d/%d", nowHP_, kMaxHP_);
-	ImGui::Text("playerSP : %d/%d", nowSP_, kMaxSP_);
+	ImGui::Text("playerSPGauge : %d/%d", nowSPGauge_, kMaxSPGauge_);
+	ImGui::Text("playerSPNum : %d/%d", nowSPNum_, kMaxSPNum_);
 	ImGui::End();
 #endif // _DEBUG
 }
@@ -92,15 +115,18 @@ void Player::Draw(ViewProjection& viewProjection) {
 	for (PlayerBullet* bullet : bullets_) {
 		bullet->Draw(viewProjection);
 	}
-		
+	// 必殺弾描画
+	for (PlayerSpecialBullet* bullet : specialBullets_) {
+		bullet->Draw(viewProjection);
+	}
 }
 
 void Player::Attack() {
-	//インターバル関連処理
+	// インターバル関連処理
 	if (interval_ > 0) {
 		interval_--;
 	}
-
+	// 通常弾
 	if (input_->PushKey(DIK_SPACE)) {
 
 		if (interval_ == 0) {
@@ -117,9 +143,29 @@ void Player::Attack() {
 
 			// 弾を登録する
 			bullets_.push_back(newBullet);
-			//インターバルリセット
-			interval_ = kBulletInterval_; 
+			// インターバルリセット
+			interval_ = kBulletInterval_;
+		}
+	}
+	// 必殺弾
+	if (nowSPNum_ > 0) {
+		if (input_->TriggerKey(DIK_B)) {
+			// 弾を生成
+			PlayerSpecialBullet* newBullet = new PlayerSpecialBullet();
+			// 弾の発射位置を確定
+			Vector3 bulletInitPosition = Transform({0.0f, 0.0f, 3.0f}, stand_->GetWorldTransform().matWorld_);
+			// 弾の速度(ベクトル)を確定
+			Vector3 velocity = Normalize(Subtract(stageScene_->GetReticle()->GetWorldPosition(), bulletInitPosition));
+			velocity = Multiply(kBulletSpeed_, velocity);
+			// 弾を初期化
+			newBullet->Initialize(modelSpecialBullet_.get(), bulletInitPosition, velocity);
 
+			// 弾を登録する
+			specialBullets_.push_back(newBullet);
+			// インターバルリセット
+			interval_ = kBulletInterval_;
+			//SP消費
+			nowSPNum_--;
 		}
 	}
 }
@@ -130,4 +176,3 @@ void Player::Damage() {
 		vehicle_->SetIsDamage(false);
 	}
 }
-

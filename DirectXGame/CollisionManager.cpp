@@ -19,7 +19,7 @@ void CollisionManager::CheckCollision() {
 			if (colliderA->GetCollisionAttribute() == colliderB->GetCollisionAttribute()) {
 				continue;
 			}
-			//自機と自弾
+			//自機と自弾&必殺弾
 			if (colliderA->GetCollisionAttribute() == kCollisionAttributePlayer) {
 				if (colliderB->GetCollisionAttribute() == kCollisionAttributePlayerBullet) {
 					continue;
@@ -27,6 +27,16 @@ void CollisionManager::CheckCollision() {
 			}
 			if (colliderB->GetCollisionAttribute() == kCollisionAttributePlayer) {
 				if (colliderA->GetCollisionAttribute() == kCollisionAttributePlayerBullet) {
+					continue;
+				}
+			}
+			if (colliderA->GetCollisionAttribute() == kCollisionAttributePlayer) {
+				if (colliderB->GetCollisionAttribute() == kCollisionAttributePlayerSpecialBullet) {
+					continue;
+				}
+			}
+			if (colliderB->GetCollisionAttribute() == kCollisionAttributePlayer) {
+				if (colliderA->GetCollisionAttribute() == kCollisionAttributePlayerSpecialBullet) {
 					continue;
 				}
 			}
@@ -72,6 +82,16 @@ void CollisionManager::CheckCollision() {
 					continue;
 				}
 			}
+			if (colliderA->GetCollisionAttribute() == kCollisionAttributeObject) {
+				if (colliderB->GetCollisionAttribute() == kCollisionAttributePlayerSpecialBullet) {
+					continue;
+				}
+			}
+			if (colliderB->GetCollisionAttribute() == kCollisionAttributeObject) {
+				if (colliderA->GetCollisionAttribute() == kCollisionAttributePlayerSpecialBullet) {
+					continue;
+				}
+			}
 
 			//プレイヤーとオブジェクトの特殊当たり判定
 			if (colliderA->GetCollisionAttribute() == kCollisionAttributePlayer) {
@@ -82,6 +102,20 @@ void CollisionManager::CheckCollision() {
 			}
 			if (colliderB->GetCollisionAttribute() == kCollisionAttributePlayer) {
 				if (colliderA->GetCollisionAttribute() == kCollisionAttributeObject) {
+					CheckSpecialCollisionPair(colliderA, colliderB);
+					continue;
+				}
+			}
+
+			//敵と必殺弾の特殊当たり判定
+			if (colliderA->GetCollisionAttribute() == kCollisionAttributeEnemy) {
+				if (colliderB->GetCollisionAttribute() == kCollisionAttributePlayerSpecialBullet) {
+					CheckSpecialCollisionPair(colliderA, colliderB);
+					continue;
+				}
+			}
+			if (colliderB->GetCollisionAttribute() == kCollisionAttributeEnemy) {
+				if (colliderA->GetCollisionAttribute() == kCollisionAttributePlayerSpecialBullet) {
 					CheckSpecialCollisionPair(colliderA, colliderB);
 					continue;
 				}

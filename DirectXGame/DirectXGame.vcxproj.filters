@@ -156,6 +156,9 @@
     <ClCompile Include="ShineBall.cpp">
       <Filter>ソース ファイル\program</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerSpecialBullet.cpp">
+      <Filter>ソース ファイル\program\player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3d\ViewProjection.h">
@@ -307,6 +310,9 @@
     </ClInclude>
     <ClInclude Include="ShineBall.h">
       <Filter>ヘッダー ファイル\program</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerSpecialBullet.h">
+      <Filter>ヘッダー ファイル\program\player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

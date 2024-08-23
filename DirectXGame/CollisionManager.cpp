@@ -15,7 +15,7 @@ void CollisionManager::CheckCollision() {
 			// イテレーターBからコライダーBを取得する
 			Collider* colliderB = *itrB;
 			// 衝突フィルタリング
-			//自分と同じ属性だと貫通
+			//自分と同じ属性だと当たらない
 			if (colliderA->GetCollisionAttribute() == colliderB->GetCollisionAttribute()) {
 				continue;
 			}
@@ -73,6 +73,20 @@ void CollisionManager::CheckCollision() {
 				}
 			}
 
+			//プレイヤーとオブジェクトの特殊当たり判定
+			if (colliderA->GetCollisionAttribute() == kCollisionAttributePlayer) {
+				if (colliderB->GetCollisionAttribute() == kCollisionAttributeObject) {
+					CheckSpecialCollisionPair(colliderA, colliderB);
+					continue;
+				}
+			}
+			if (colliderB->GetCollisionAttribute() == kCollisionAttributePlayer) {
+				if (colliderA->GetCollisionAttribute() == kCollisionAttributeObject) {
+					CheckSpecialCollisionPair(colliderA, colliderB);
+					continue;
+				}
+			}
+
 			// ペアの当たり判定
 			CheckCollisionPair(colliderA, colliderB);
 		}
@@ -96,5 +110,25 @@ void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
 		// 衝突時コールバックを呼び出す
 		colliderA->OnCollision();
 		colliderB->OnCollision();
+	}
+}
+
+void CollisionManager::CheckSpecialCollisionPair(Collider* colliderA, Collider* colliderB) {
+	Vector3 posA, posB;
+	// Aの座標
+	posA = colliderA->GetWorldPosition();
+	// Bの座標
+	posB = colliderB->GetWorldPosition();
+	// ABの差
+	Vector3 AtoB = Subtract(posA, posB);
+	// 半径の和
+	float addRad = colliderA->GetRadius() + colliderB->GetRadius();
+	// 座標AとBの距離を求める
+	float length = Length(AtoB);
+	// 球と球の交差判定
+	if (length < addRad) {
+		// 衝突時コールバックを呼び出す
+		colliderA->OnSpecialCollision();
+		colliderB->OnSpecialCollision();
 	}
 }

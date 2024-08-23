@@ -20,6 +20,8 @@ public:
 public: // 関数
 	// 衝突を検出したら呼び出されるコールバック関数
 	void OnCollision() override;
+	// 特殊な衝突でのみ呼び出されるコールバック関数
+	void OnSpecialCollision() override;
 	void Attack();
 
 public: // ゲッター
@@ -34,11 +36,18 @@ public: // ゲッター
 	bool GetIsAction() { return isAction_; }
 	// 光玉蓄積許可
 	bool GetIsHit() { return isHit_; }
+	// 被弾ゲッター
+	bool GetIsDamageSmall() { return isDamageSmall_; }
+	bool GetIsDamageMedium() { return isDamageMedium_; }
+	bool GetIsDamageLarge() { return isDamageLarge_; }
 
 public: // セッター
 	void SetParent(const WorldTransform* parent) { worldTransform_.parent_ = parent; };
 	void SetStageScene(StageScene* stageScene) { stageScene_ = stageScene; }
 	void SetIsHit(bool isHit) { isHit_ = isHit; }
+	void SetIsDamageSmall(bool isDamageSmall) { isDamageSmall_ = isDamageSmall; }
+	void SetIsDamageMedium(bool isDamageMedium) { isDamageMedium_ = isDamageMedium; }
+	void SetIsDamageLarge(bool isDamageLarge) { isDamageLarge_ = isDamageLarge; }
 
 private:
 	// ワールド変換データ
@@ -72,4 +81,10 @@ private:
 	Vector3 prePos;
 	// 光玉蓄積フラグ
 	bool isHit_ = false;
+	// 小ダメージ蓄積フラグ
+	bool isDamageSmall_ = false;
+	// 中ダメージ蓄積フラグ
+	bool isDamageMedium_ = false;
+	// 大ダメージ蓄積フラグ
+	bool isDamageLarge_ = false;
 };

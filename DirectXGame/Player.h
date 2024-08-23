@@ -19,8 +19,9 @@ public:
 	void Update();
 	void Draw(ViewProjection& viewProjection);
 
-public://関数
+private://関数
 	void Attack();
+	void Damage();
 
 public: // ゲッター
 	const Vector3 GetWorldPostion() { return vehicle_->GetWorldPosition(); }
@@ -30,6 +31,8 @@ public: // ゲッター
 	const std::unique_ptr<Vehicle>& GetVehicle() const { return vehicle_; }
 	// 砲台部獲得
 	const std::unique_ptr<ShootingStand>& GetStand() const { return stand_; }
+	//死亡判定
+	bool GetIsDead() { return isDead_; }
 
 public: // セッター
 	void SetStageScene(StageScene* stageScene) { stageScene_ = stageScene; }
@@ -55,4 +58,13 @@ private:
 	//連続弾インターバル
 	const uint32_t kBulletInterval_ = 8;
 	uint32_t interval_ = 0;
+
+	//プレイヤーのHP
+	const uint32_t kMaxHP_ = 20;
+	uint32_t nowHP_;
+	//プレイヤーのSPゲージ
+	const uint32_t kMaxSP_ = 10;
+	uint32_t nowSP_;
+	//死亡フラグ
+	bool isDead_;
 };

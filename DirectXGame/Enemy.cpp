@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include "StageScene.h"
+#include "ImGuiManager.h"
 #include "time.h"
 
 Enemy::Enemy() {}
@@ -38,6 +39,12 @@ void Enemy::Initialize(const Vector3& position) {
 	chest_->Initialize(modelChest_.get(), rad_);
 	// 頭部の初期化
 	head_->Initialize(modelHead_.get(), rad_);
+
+	///パラメーター設定
+	nowHP_ = kMaxHP_;
+	nowSP_ = 0;
+	isDead_ = false;
+
 }
 
 void Enemy::Update() {
@@ -107,6 +114,22 @@ void Enemy::Update() {
 		nowSP_++;
 		stomach_->SetIsHit(false);
 	}
+	//被弾処理
+	Damage();
+
+	//体力0になったら死ぬ
+	if (nowHP_ <= 0) {
+		isDead_ = true;
+	}
+
+#ifdef _DEBUG
+	ImGui::Begin("enemy");
+	ImGui::Text("enemyHP : %d/%d", nowHP_, kMaxHP_);
+	ImGui::Text("SP accumulate value : %d/7", nowSP_);
+	ImGui::End();
+#endif // _DEBUG
+
+
 }
 
 void Enemy::Draw(ViewProjection& viewProjection) {
@@ -139,4 +162,45 @@ EnemyActionPattern Enemy::ActionRoulette() {
 	int num = rand() % EnemyActionPattern::kAllActionNum;
 	result = (EnemyActionPattern)num;
 	return result;
+}
+
+void Enemy::Damage() {
+	if (head_->GetIsDamageSmall()) {
+		nowHP_ -= kDamageSmall_;
+		head_->SetIsDamageSmall(false);
+	}
+	if (chest_->GetIsDamageSmall()) {
+		nowHP_ -= kDamageSmall_;
+		chest_->SetIsDamageSmall(false);
+	}
+	if (stomach_->GetIsDamageSmall()) {
+		nowHP_ -= kDamageSmall_;
+		stomach_->SetIsDamageSmall(false);
+	}
+
+	if (head_->GetIsDamageMedium()) {
+		nowHP_ -= kDamageMedium_;
+		head_->SetIsDamageMedium(false);
+	}
+	if (chest_->GetIsDamageMedium()) {
+		nowHP_ -= kDamageMedium_;
+		chest_->SetIsDamageMedium(false);
+	}
+	if (stomach_->GetIsDamageMedium()) {
+		nowHP_ -= kDamageMedium_;
+		stomach_->SetIsDamageMedium(false);
+	}
+
+	if (head_->GetIsDamageLarge()) {
+		nowHP_ -= kDamageLarge_;
+		head_->SetIsDamageLarge(false);
+	}
+	if (chest_->GetIsDamageLarge()) {
+		nowHP_ -= kDamageLarge_;
+		chest_->SetIsDamageLarge(false);
+	}
+	if (stomach_->GetIsDamageLarge()) {
+		nowHP_ -= kDamageLarge_;
+		stomach_->SetIsDamageLarge(false);
+	}
 }

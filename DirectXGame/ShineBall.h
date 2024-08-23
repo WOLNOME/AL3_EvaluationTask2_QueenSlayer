@@ -18,6 +18,8 @@ public: // 関数
 	bool isDead() const { return isDead_; }
 	// 衝突を検出したら呼び出されるコールバック関数
 	void OnCollision() override;
+	// プレイヤーとの衝突でのみ呼び出されるコールバック関数
+	void OnSpecialCollision() override;
 
 public: // ゲッター
 	const WorldTransform& GetWorldTransform() { return worldTransform_; }

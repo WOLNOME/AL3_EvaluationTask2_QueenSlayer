@@ -64,8 +64,14 @@ void Head::OnCollision() {
 	//アクション中の時
 	if (isAction_) {
 		isHit_ = true;
+		isDamageMedium_ = true;
+	}
+	else {
+		isDamageSmall_ = true;
 	}
 }
+
+void Head::OnSpecialCollision() {}
 
 void Head::Attack() {
 	// 行動処理中

@@ -76,7 +76,9 @@ void ShineBall::Draw(const ViewProjection& viewProjection) {
 	}
 }
 
-void ShineBall::OnCollision() { isDead_ = true; }
+void ShineBall::OnCollision() {}
+
+void ShineBall::OnSpecialCollision() { isDead_ = true; }
 
 Vector3 ShineBall::GetWorldPosition() {
 	Vector3 worldPos;

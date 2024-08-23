@@ -44,6 +44,8 @@ void PlayerBullet::Draw(const ViewProjection& viewProjection) {
 
 void PlayerBullet::OnCollision() { isDead_ = true; }
 
+void PlayerBullet::OnSpecialCollision() {}
+
 Vector3 PlayerBullet::GetWorldPosition() {
 	Vector3 worldPos;
 	// ワールド行列の平行移動成分を取得

@@ -38,6 +38,8 @@ public: // ゲッター
 	const std::unique_ptr<Head>& GetHead() const { return head_; }
 	//SP獲得
 	uint32_t GetSP() { return nowSP_; }
+	//死亡判定
+	bool GetIsDead() { return isDead_; }
 
 public: // セッター
 	void SetStageScene(StageScene* stageScene) { stageScene_ = stageScene; }
@@ -48,6 +50,9 @@ private:
 	void StopAction();
 	//次のアクションルーレット
 	EnemyActionPattern ActionRoulette();
+	//被弾処理
+	void Damage();
+
 
 private:
 	// 入力
@@ -79,9 +84,15 @@ private:
 
 	//敵の体力
 	const uint32_t kMaxHP_ = 250;
-	uint32_t nowHP_ = 0;
+	uint32_t nowHP_;
+	const uint32_t kDamageSmall_ = 1;
+	const uint32_t kDamageMedium_ = 3;
+	const uint32_t kDamageLarge_ = 35;
 
 	//光玉蓄積値
-	uint32_t nowSP_ = 0;
+	uint32_t nowSP_;
+
+	//死亡フラグ
+	bool isDead_;
 
 };

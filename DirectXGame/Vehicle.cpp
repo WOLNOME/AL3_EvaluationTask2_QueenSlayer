@@ -188,7 +188,9 @@ void Vehicle::Draw(const ViewProjection& viewProjection) {
 	model_->Draw(worldTransform_, viewProjection);
 }
 
-void Vehicle::OnCollision() {}
+void Vehicle::OnCollision() { isDamage_ = true; }
+
+void Vehicle::OnSpecialCollision() { isGetShineBall_ = true; }
 
 Vector3 Vehicle::GetWorldPosition() { 
 	// ワールド座標

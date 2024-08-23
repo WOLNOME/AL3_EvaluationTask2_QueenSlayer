@@ -32,6 +32,10 @@ void Player::Initialize(const Vector3& position, Input* input) {
 	// 砲台の初期化
 	stand_->Initialize(modelStand_.get());
 
+	///パラメーター
+	nowHP_ = kMaxHP_;
+	nowSP_ = 0;
+	isDead_ = false;
 
 }
 
@@ -58,8 +62,24 @@ void Player::Update() {
 		bullet->Update();
 	}
 
-#ifdef _DEBUG
+	//SP回収処理
+	if (vehicle_->GetIsGetShineBall()) {
+		nowSP_++;
+		vehicle_->SetIsGetShineBall(false);
+	}
 
+	//ダメージ判定
+	Damage();
+	//死亡判定
+	if (nowHP_ <= 0) {
+		isDead_ = true;
+	}
+
+#ifdef _DEBUG
+	ImGui::Begin("player");
+	ImGui::Text("playerHP : %d/%d", nowHP_, kMaxHP_);
+	ImGui::Text("playerSP : %d/%d", nowSP_, kMaxSP_);
+	ImGui::End();
 #endif // _DEBUG
 }
 
@@ -101,6 +121,13 @@ void Player::Attack() {
 			interval_ = kBulletInterval_; 
 
 		}
+	}
+}
+
+void Player::Damage() {
+	if (vehicle_->GetIsDamage()) {
+		nowHP_ -= 1;
+		vehicle_->SetIsDamage(false);
 	}
 }
 

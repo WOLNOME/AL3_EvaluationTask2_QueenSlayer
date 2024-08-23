@@ -73,8 +73,13 @@ void Stomach::OnCollision() {
 	// アクション中の時
 	if (isAction_) {
 		isHit_ = true;
+		isDamageMedium_ = true;
+	} else {
+		isDamageSmall_ = true;
 	}
 }
+
+void Stomach::OnSpecialCollision() {}
 
 void Stomach::Attack() {
 	// 行動処理中

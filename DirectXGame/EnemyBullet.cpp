@@ -63,6 +63,8 @@ void EnemyBullet::Draw(const ViewProjection& viewProjection) {
 
 void EnemyBullet::OnCollision() { isDead_ = true; }
 
+void EnemyBullet::OnSpecialCollision() {}
+
 Vector3 EnemyBullet::GetWorldPosition() {
 	Vector3 worldPos;
 	// ワールド行列の平行移動成分を取得

@@ -20,6 +20,9 @@ public:
 public: // 関数
 	// 衝突を検出したら呼び出されるコールバック関数
 	void OnCollision() override;
+	//オブジェクトとの衝突デノミ呼び出されるコールバック関数
+	void OnSpecialCollision() override;
+
 
 public://ゲッター
 	//ローカル座標
@@ -28,10 +31,16 @@ public://ゲッター
 	Vector3 GetWorldPosition() override;
 	// 半径
 	float GetRadius() { return rad_; }
+	// 被弾ゲッター
+	bool GetIsDamage() { return isDamage_; }
+	// 光玉ゲッター
+	bool GetIsGetShineBall() { return isGetShineBall_; }
 
 public://セッター
 	//ステージシーンのセット
 	void SetStageScene(StageScene* stageScene) { stageScene_ = stageScene; }
+	void SetIsDamage(bool isDamage) { isDamage_ = isDamage; }
+	void SetIsGetShineBall(bool isGetShineBall) { isGetShineBall_ = isGetShineBall; }
 
 private:
 	//入力
@@ -58,5 +67,9 @@ private: // 調整可能数値
 	Vector3 localPos_ = {0.0f, 0.0f, 0.0f};
 	//半径
 	const float rad_ = 1.25f;
+	// ダメージ蓄積フラグ
+	bool isDamage_ = false;
+	// 光玉獲得フラグ
+	bool isGetShineBall_ = false;
 
 };

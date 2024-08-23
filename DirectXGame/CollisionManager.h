@@ -14,6 +14,9 @@ public:
 private:
 	// 当たり判定演算
 	void CheckCollisionPair(Collider* colliderA, Collider* colliderB);
+	// 特殊当たり判定チェック
+	void CheckSpecialCollisionPair(Collider* colliderA, Collider* colliderB);
+
 	// コライダーリスト
 	std::list<Collider*> colliders_;
 };

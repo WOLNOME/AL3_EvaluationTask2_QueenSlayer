@@ -10,6 +10,7 @@ void ShineBall::Initialize(Model* model, const Vector3& position, const Vector3&
 	// NULLポインタチェック
 	assert(model);
 	model_ = model;
+	model_->SetAlpha(1.0f);
 	// ワールドトランスフォーム初期化
 	worldTransform_.Initialize();
 	// 引数で受け取った初期座標をセット
@@ -34,6 +35,20 @@ void ShineBall::Update() {
 		worldTransform_.translation_.y += velocity_.y;
 		worldTransform_.translation_.z += velocity_.z;
 	}
+
+	//時間経過迫ったら点滅
+	if (deathTimer_ < 60 * 4) {
+		if (deathTimer_ % 2 == 1) {
+			if (isDisplay) {
+				model_->SetAlpha(0.0f);
+				isDisplay = false;
+			} else {
+				model_->SetAlpha(1.0f);
+				isDisplay = true;
+			}
+		}
+	}
+
 	// 回転
 	worldTransform_.rotation_.y += 0.03f;
 

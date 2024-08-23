@@ -70,7 +70,7 @@ private:
 	//速度
 	Vector3 velocity_ = {0.0f, 0.0f, 0.0f};
 	//最大縮小値
-	const float kReducation_ = 0.8f;
+	const float kReducation_ = 0.7f;
 	//振動前の座標を保持
 	Vector3 prePos;
 	// 光玉蓄積フラグ

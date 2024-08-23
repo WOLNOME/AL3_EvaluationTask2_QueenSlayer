@@ -186,7 +186,7 @@ void Stomach::Jump() {
 		timer_++;
 
 		// 少し縮小
-		worldTransform_.scale_.y = Lerp(1.0f, kReducation_, float(timer_ / accumulatePowerTime_));
+		worldTransform_.scale_.y = Lerp(1.0f, kReducation_, ((float)timer_ / accumulatePowerTime_));
 
 		// 制限時間に達したら
 		if (timer_ == accumulatePowerTime_) {
@@ -202,6 +202,8 @@ void Stomach::Jump() {
 			// 目的地までの移動速度
 			velocity_.x = Multiply(1.0f / 40.0f, Subtract(stageScene_->GetPlayer()->GetWorldPostion(), GetWorldPosition())).x;
 			velocity_.z = Multiply(1.0f / 40.0f, Subtract(stageScene_->GetPlayer()->GetWorldPostion(), GetWorldPosition())).z;
+			// スケール基に戻す
+			worldTransform_.scale_.y = 1.0f;
 		}
 	}
 	// ジャンプ処理
@@ -221,8 +223,7 @@ void Stomach::Jump() {
 			textureHandle_ = TextureManager::Load("enemyStomach/enemyStomach.png");
 			// 座標リセット
 			worldTransform_.translation_.y = initPos.y;
-			// スケール基に戻す
-			worldTransform_.scale_.y = 1.0f;
+			
 			// フラグの変更
 			isJump_ = false;
 			isAction_ = false;

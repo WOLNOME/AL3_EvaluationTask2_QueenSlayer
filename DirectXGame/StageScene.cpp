@@ -231,7 +231,7 @@ void StageScene::CreateShineBall() {
 		Vector3 ballInitPosition = enemy_->GetChest()->GetWorldPosition();
 		// 乱数生成
 		uint32_t currenttime = (int)time(nullptr);
-		srand(currenttime);
+		srand(currenttime * 8);
 		float theta = float(rand() % 360) / 180.0f * pi;
 		// 弾の速度(ベクトル)を確定
 		Vector3 velocity;

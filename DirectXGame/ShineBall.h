@@ -50,5 +50,6 @@ private:
 	const Vector3 kGravity_ = {0.0f, -0.05f, 0.0f};
 	//静止フラグ
 	bool isStop_ = false;
-
+	//表示されているかフラグ
+	bool isDisplay = false;
 };

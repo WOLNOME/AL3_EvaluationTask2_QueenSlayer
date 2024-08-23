@@ -119,6 +119,7 @@ void Enemy::Draw(ViewProjection& viewProjection) {
 }
 
 void Enemy::StopAction() {
+	isAction_ = true;
 	//タイマーをインクリメント
 	timer_++;
 	//タイマーが時間に達したら
@@ -134,7 +135,7 @@ void Enemy::StopAction() {
 EnemyActionPattern Enemy::ActionRoulette() {
 	EnemyActionPattern result;
 	uint32_t currentTime = (int)time(nullptr);
-	srand(currentTime);
+	srand(currentTime*2);
 	int num = rand() % EnemyActionPattern::kAllActionNum;
 	result = (EnemyActionPattern)num;
 	return result;

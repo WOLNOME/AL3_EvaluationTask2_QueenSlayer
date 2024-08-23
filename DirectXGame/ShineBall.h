@@ -38,18 +38,18 @@ private:
 	StageScene* stageScene_ = nullptr;
 
 private:
+	//重力
+	const Vector3 kGravity_ = {0.0f, -0.05f, 0.0f};
 	// 寿命
 	static const int32_t kLifeTime = 60 * 15;
 	// デスタイマー
-	int32_t deathTimer_ = kLifeTime;
+	int32_t deathTimer_;
 	// デスフラグ
-	bool isDead_ = false;
+	bool isDead_;
 	//速度
 	Vector3 velocity_;
-	//重力
-	const Vector3 kGravity_ = {0.0f, -0.05f, 0.0f};
 	//静止フラグ
-	bool isStop_ = false;
+	bool isStop_;
 	//表示されているかフラグ
-	bool isDisplay = false;
+	bool isDisplay_;
 };

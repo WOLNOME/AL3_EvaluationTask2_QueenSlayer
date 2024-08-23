@@ -10,7 +10,6 @@ void ShineBall::Initialize(Model* model, const Vector3& position, const Vector3&
 	// NULLポインタチェック
 	assert(model);
 	model_ = model;
-	model_->SetAlpha(1.0f);
 	// ワールドトランスフォーム初期化
 	worldTransform_.Initialize();
 	// 引数で受け取った初期座標をセット
@@ -19,6 +18,14 @@ void ShineBall::Initialize(Model* model, const Vector3& position, const Vector3&
 	radius_ = 1.0f;
 	// 速度反映
 	velocity_ = velocity;
+	//デスタイマー設定
+	deathTimer_ = kLifeTime;
+	//デスフラグ設定
+	isDead_ = false;
+	//静止フラグ
+	isStop_ = false;
+	//表示フラグ
+	isDisplay_ = true;
 	// 衝突属性を設定(自分の属性)
 	SetCollisionAttribute(kCollisionAttributeObject);
 }
@@ -39,12 +46,10 @@ void ShineBall::Update() {
 	//時間経過迫ったら点滅
 	if (deathTimer_ < 60 * 4) {
 		if (deathTimer_ % 2 == 1) {
-			if (isDisplay) {
-				model_->SetAlpha(0.0f);
-				isDisplay = false;
+			if (isDisplay_) {
+				isDisplay_ = false;
 			} else {
-				model_->SetAlpha(1.0f);
-				isDisplay = true;
+				isDisplay_ = true;
 			}
 		}
 	}
@@ -66,7 +71,9 @@ void ShineBall::Update() {
 
 void ShineBall::Draw(const ViewProjection& viewProjection) {
 	// 本体描画
-	model_->Draw(worldTransform_, viewProjection);
+	if (isDisplay_) {
+		model_->Draw(worldTransform_, viewProjection);
+	}
 }
 
 void ShineBall::OnCollision() { isDead_ = true; }

@@ -57,7 +57,7 @@ private:
 	//弾の種類
 	BulletKind bulletKind_ = Diffusion;
 	//ホーミングの強さ（0~1まで）
-	const float kHomingStrength_ = 0.4f;
+	const float kHomingStrength_ = 0.35f;
 	//弾のスピード
 	const float kSpeed_ = 0.3f;
 

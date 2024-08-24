@@ -162,6 +162,9 @@
     <ClCompile Include="Background.cpp">
       <Filter>ソース ファイル\program</Filter>
     </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>ソース ファイル\program</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3d\ViewProjection.h">
@@ -317,8 +320,11 @@
     <ClInclude Include="PlayerSpecialBullet.h">
       <Filter>ヘッダー ファイル\program\player</Filter>
     </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>ヘッダー ファイル\program</Filter>
+    </ClInclude>
     <ClInclude Include="Background.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\program</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

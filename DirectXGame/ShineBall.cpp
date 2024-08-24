@@ -18,13 +18,13 @@ void ShineBall::Initialize(Model* model, const Vector3& position, const Vector3&
 	radius_ = 1.0f;
 	// 速度反映
 	velocity_ = velocity;
-	//デスタイマー設定
+	// デスタイマー設定
 	deathTimer_ = kLifeTime;
-	//デスフラグ設定
+	// デスフラグ設定
 	isDead_ = false;
-	//静止フラグ
+	// 静止フラグ
 	isStop_ = false;
-	//表示フラグ
+	// 表示フラグ
 	isDisplay_ = true;
 	// 衝突属性を設定(自分の属性)
 	SetCollisionAttribute(kCollisionAttributeObject);
@@ -43,7 +43,7 @@ void ShineBall::Update() {
 		worldTransform_.translation_.z += velocity_.z;
 	}
 
-	//時間経過迫ったら点滅
+	// 時間経過迫ったら点滅
 	if (deathTimer_ < 60 * 4) {
 		if (deathTimer_ % 2 == 1) {
 			if (isDisplay_) {
@@ -71,7 +71,7 @@ void ShineBall::Update() {
 
 void ShineBall::Draw(const ViewProjection& viewProjection) {
 	// 本体描画
-	if (isDisplay_) {
+	if (isDisplay_ && !isDead_) {
 		model_->Draw(worldTransform_, viewProjection);
 	}
 }

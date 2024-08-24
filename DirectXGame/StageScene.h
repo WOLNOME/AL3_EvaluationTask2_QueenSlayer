@@ -13,6 +13,7 @@
 #include "TPSCamera.h"
 #include "CollisionManager.h"
 #include "Reticle.h"
+#include "UI.h"
 
 
 class StageScene :	public BaseScene
@@ -68,6 +69,9 @@ private:
 	std::unique_ptr<Background> background_ = nullptr;
 	//光玉
 	std::list<ShineBall*> shineBalls_;
+
+	//UI
+	std::unique_ptr<UI> ui_ = nullptr;
 	
 
 	// 衝突マネージャー

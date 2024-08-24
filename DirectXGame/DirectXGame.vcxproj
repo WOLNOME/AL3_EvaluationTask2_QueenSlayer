@@ -132,6 +132,7 @@
     <ClCompile Include="Stomach.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="TPSCamera.cpp" />
+    <ClCompile Include="UI.cpp" />
     <ClCompile Include="Vehicle.cpp" />
     <ClCompile Include="WorldTransformEx.cpp" />
   </ItemGroup>
@@ -187,6 +188,7 @@
     <ClInclude Include="Stomach.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="TPSCamera.h" />
+    <ClInclude Include="UI.h" />
     <ClInclude Include="Vehicle.h" />
   </ItemGroup>
   <ItemGroup>

@@ -36,9 +36,11 @@ public: // ゲッター
 	const std::unique_ptr<Chest>& GetChest() const { return chest_; }
 	// 頭部獲得
 	const std::unique_ptr<Head>& GetHead() const { return head_; }
-	//SP獲得
+	// HP獲得
+	uint32_t GetHP() { return nowHP_; }
+	// SP獲得
 	uint32_t GetSP() { return nowSP_; }
-	//死亡判定
+	// 死亡判定
 	bool GetIsDead() { return isDead_; }
 
 public: // セッター
@@ -46,13 +48,16 @@ public: // セッター
 	void SetSP(uint32_t newSP) { nowSP_ = newSP; }
 
 private:
-	//STOPアクション
+	// STOPアクション
 	void StopAction();
-	//次のアクションルーレット
+	// 次のアクションルーレット
 	EnemyActionPattern ActionRoulette();
-	//被弾処理
+	// 被弾処理
 	void Damage();
 
+public: // 定数
+	//最大HP
+	const uint32_t kMaxHP_ = 1500;
 
 private:
 	// 入力
@@ -72,27 +77,25 @@ private:
 private:
 	// 各部位の半径
 	const float rad_ = 1.5f;
-	//行動
+	// 行動
 	EnemyActionPattern action_ = Stop;
 
-	//アクション中フラグ
+	// アクション中フラグ
 	bool isAction_ = true;
-	//アクションタイマー
+	// アクションタイマー
 	uint32_t timer_ = 0;
-	//ストップタイマー制限時間
+	// ストップタイマー制限時間
 	const uint32_t kStopTime_ = 180;
 
-	//敵の体力
-	const uint32_t kMaxHP_ = 250;
+	// 敵の体力
 	uint32_t nowHP_;
 	const uint32_t kDamageSmall_ = 1;
 	const uint32_t kDamageMedium_ = 3;
-	const uint32_t kDamageLarge_ = 35;
+	const uint32_t kDamageLarge_ = 120;
 
-	//光玉蓄積値
+	// 光玉蓄積値
 	uint32_t nowSP_;
 
-	//死亡フラグ
+	// 死亡フラグ
 	bool isDead_;
-
 };

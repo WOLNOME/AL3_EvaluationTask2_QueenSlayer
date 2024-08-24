@@ -161,6 +161,10 @@ EnemyActionPattern Enemy::ActionRoulette() {
 	srand(currentTime*2);
 	int num = rand() % EnemyActionPattern::kAllActionNum;
 	result = (EnemyActionPattern)num;
+	//もしプレイヤーと敵が離れすぎてたら強制的に移動処理
+	if (Length(Subtract(stageScene_->GetPlayer()->GetWorldPostion(), stomach_->GetWorldPosition())) > 55) {
+		result = Move;
+	}
 	return result;
 }
 

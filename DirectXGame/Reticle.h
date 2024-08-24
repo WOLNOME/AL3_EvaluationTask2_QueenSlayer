@@ -47,5 +47,6 @@ private:
 	Vector3 localPosition_ = {0.0f, 0.0f, 0.0f};
 	// ビューポート行列
 	Matrix4x4 matViewport = MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
-
+	// レティクル
+	Vector2 size_;
 };

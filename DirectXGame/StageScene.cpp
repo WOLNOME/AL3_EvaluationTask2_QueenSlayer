@@ -1,5 +1,6 @@
 #include "StageScene.h"
 #include "time.h"
+#include "ImGuiManager.h"
 
 StageScene::StageScene() { NextScene = STAGE; }
 
@@ -39,6 +40,8 @@ void StageScene::Init(Input* input) {
 	background_ = std::make_unique<Background>();
 	// 衝突マネージャの生成
 	collisionManager_ = std::make_unique<CollisionManager>();
+	//UIの生成
+	ui_ = std::make_unique<UI>();
 
 	// プレイヤーにシーンを渡す
 	player_->SetStageScene(this);
@@ -46,6 +49,8 @@ void StageScene::Init(Input* input) {
 	enemy_->SetStageScene(this);
 	// TPSカメラにシーンを渡す
 	tpsCamera_->SetStageScene(this);
+	//UIにシーンを渡す
+	ui_->SetStageScene(this);
 
 	// TPSカメラの初期化
 	tpsCamera_->Initialize(input_);
@@ -61,6 +66,9 @@ void StageScene::Init(Input* input) {
 	ground_->Initialize(modelGround_.get(), {0.0f, 0.0f, 0.0f});
 	// 背景の初期化
 	background_->Initialize({0.0f, 0.0f, 0.0f});
+	//UIの初期化
+	ui_->Initialize();
+
 }
 
 void StageScene::Update() {
@@ -115,12 +123,21 @@ void StageScene::Update() {
 	for (ShineBall* shineBall : shineBalls_) {
 		shineBall->Update();
 	}
+	//UIの更新
+	ui_->Update();
 
 	// 当たり判定処理
 	CheckAllCollision();
 
 	// 光玉生成処理
 	CreateShineBall();
+
+
+#ifdef _DEBUG
+	ImGui::Begin("scene");
+	ImGui::Text("lengthPtoE : %f", Length(Subtract(player_->GetWorldPostion(), enemy_->GetStomach()->GetWorldPosition())));
+	ImGui::End();
+#endif // _DEBUG
 }
 
 void StageScene::Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* dxCommon_) {
@@ -179,6 +196,9 @@ void StageScene::Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* dxC
 
 	// 2Dレティクル描画
 	reticle_->DrawUI();
+	//UI描画
+	ui_->Draw();
+
 
 	// スプライト描画後処理
 	Sprite::PostDraw();

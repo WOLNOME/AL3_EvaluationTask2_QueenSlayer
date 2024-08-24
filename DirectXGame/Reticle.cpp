@@ -1,5 +1,6 @@
 #include "Reticle.h"
 #include "TextureManager.h"
+#include "ImGuiManager.h"
 
 Reticle::Reticle() {}
 
@@ -14,11 +15,13 @@ void Reticle::Initialize() {
 	worldTransform3DReticle_.Initialize();
 	// 2Dスプライト
 	sprite2DReticle_.reset(Sprite::Create(textureReticle_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
-	    // ローカル座標設定
-	    localPosition_ = worldTransform3DReticle_.translation_;
+	size_ = sprite2DReticle_->GetSize();
+	// ローカル座標設定
+	localPosition_ = worldTransform3DReticle_.translation_;
 }
 
 void Reticle::Update(ViewProjection& viewProjection) {
+
 	// 画面中央座標取得
 	Vector2 centerPosition = {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f};
 	// centerPositionを2Dレティクルのスプライトに代入する
@@ -47,6 +50,16 @@ void Reticle::Update(ViewProjection& viewProjection) {
 	localPosition_ = worldTransform3DReticle_.translation_;
 	// 3Dレティクルワールドトランスフォームの更新と転送
 	worldTransform3DReticle_.UpdateMatrix();
+
+#ifdef _DEBUG
+	ImGui::Begin("reticle");
+	ImGui::Text("size : %.1f,%.1f", size_.x, size_.y);
+
+	ImGui::End();
+
+#endif // _DEBUG
+
+
 }
 
 void Reticle::Draw(ViewProjection& viewProjection) {

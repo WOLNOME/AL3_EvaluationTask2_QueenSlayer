@@ -41,7 +41,7 @@ void EnemyBullet::Update() {
 		worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
 		break;
 	case Homing:
-		if (deathTimer_ >= 150) {
+		if (deathTimer_ >= 180) {
 			velocity_ = Multiply(kSpeed_, Normalize(Slerp(velocity_, Subtract(stageScene_->GetPlayer()->GetWorldPostion(), GetWorldPosition()), kHomingStrength_)));
 		}
 		worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);

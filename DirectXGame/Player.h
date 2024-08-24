@@ -36,9 +36,22 @@ public: // ゲッター
 	const std::unique_ptr<ShootingStand>& GetStand() const { return stand_; }
 	//死亡判定
 	bool GetIsDead() { return isDead_; }
+	//HP獲得
+	uint32_t GetHP() { return nowHP_; }
+	// HP獲得
+	uint32_t GetSPGauge() { return nowSPGauge_; }
+
 
 public: // セッター
 	void SetStageScene(StageScene* stageScene) { stageScene_ = stageScene; }
+
+
+public:
+	//最大体力
+	const uint32_t kMaxHP_ = 10;
+	const uint32_t kMaxSPGauge_ = 10;
+
+
 
 private:
 	// 入力
@@ -67,13 +80,11 @@ private:
 	uint32_t interval_ = 0;
 
 	//プレイヤーのHP
-	const uint32_t kMaxHP_ = 20;
 	uint32_t nowHP_;
 	//プレイヤーのSP関連
-	const uint32_t kMaxSPGauge_ = 10;
-	const uint32_t kMaxSPNum_ = 3;
 	uint32_t nowSPGauge_;
-	uint32_t nowSPNum_;
+	//SP射出可能フラグ
+	bool isUseSP_ = false;
 	//死亡フラグ
 	bool isDead_;
 };

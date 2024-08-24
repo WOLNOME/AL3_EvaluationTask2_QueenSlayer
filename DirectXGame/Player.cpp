@@ -40,7 +40,6 @@ void Player::Initialize(const Vector3& position, Input* input) {
 	/// パラメーター
 	nowHP_ = kMaxHP_;
 	nowSPGauge_ = 0;
-	nowSPNum_ = 0;
 	isDead_ = false;
 }
 
@@ -82,10 +81,7 @@ void Player::Update() {
 	if (vehicle_->GetIsGetShineBall()) {
 		nowSPGauge_++;
 		if (nowSPGauge_ == kMaxSPGauge_) {
-			nowSPGauge_ = 0;
-			if (nowSPNum_ < kMaxSPNum_) {
-				nowSPNum_++;
-			}
+			isUseSP_ = true;
 		}
 		vehicle_->SetIsGetShineBall(false);
 	}
@@ -101,7 +97,6 @@ void Player::Update() {
 	ImGui::Begin("player");
 	ImGui::Text("playerHP : %d/%d", nowHP_, kMaxHP_);
 	ImGui::Text("playerSPGauge : %d/%d", nowSPGauge_, kMaxSPGauge_);
-	ImGui::Text("playerSPNum : %d/%d", nowSPNum_, kMaxSPNum_);
 	ImGui::End();
 #endif // _DEBUG
 }
@@ -148,7 +143,7 @@ void Player::Attack() {
 		}
 	}
 	// 必殺弾
-	if (nowSPNum_ > 0) {
+	if (isUseSP_) {
 		if (input_->TriggerKey(DIK_B)) {
 			// 弾を生成
 			PlayerSpecialBullet* newBullet = new PlayerSpecialBullet();
@@ -165,7 +160,8 @@ void Player::Attack() {
 			// インターバルリセット
 			interval_ = kBulletInterval_;
 			//SP消費
-			nowSPNum_--;
+			isUseSP_ = false;
+			nowSPGauge_ = 0;
 		}
 	}
 }

@@ -72,7 +72,7 @@ private:
 
 	//UI
 	std::unique_ptr<UI> ui_ = nullptr;
-	
+
 
 	// 衝突マネージャー
 	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;

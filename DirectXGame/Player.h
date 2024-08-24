@@ -23,6 +23,7 @@ public:
 private://関数
 	void Attack();
 	void Damage();
+	void Invincible();
 
 public: // ゲッター
 	const Vector3 GetWorldPostion() { return vehicle_->GetWorldPosition(); }
@@ -87,4 +88,10 @@ private:
 	bool isUseSP_ = false;
 	//死亡フラグ
 	bool isDead_;
+
+	//無敵時間
+	const uint32_t kInviTime_ = 60 * 2;
+	uint32_t nowInviTimer_;
+	bool isInvincible_;
+	bool isDisplay_;
 };

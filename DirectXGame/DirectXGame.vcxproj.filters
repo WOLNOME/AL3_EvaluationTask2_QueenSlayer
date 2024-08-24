@@ -165,6 +165,9 @@
     <ClCompile Include="UI.cpp">
       <Filter>ソース ファイル\program</Filter>
     </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>ソース ファイル\program</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3d\ViewProjection.h">
@@ -324,6 +327,9 @@
       <Filter>ヘッダー ファイル\program</Filter>
     </ClInclude>
     <ClInclude Include="Background.h">
+      <Filter>ヘッダー ファイル\program</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.h">
       <Filter>ヘッダー ファイル\program</Filter>
     </ClInclude>
   </ItemGroup>

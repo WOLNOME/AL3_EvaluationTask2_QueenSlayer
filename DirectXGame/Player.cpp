@@ -41,6 +41,9 @@ void Player::Initialize(const Vector3& position, Input* input) {
 	nowHP_ = kMaxHP_;
 	nowSPGauge_ = 0;
 	isDead_ = false;
+	nowInviTimer_ = 0;
+	isInvincible_ = false;
+	isDisplay_ = true;
 }
 
 void Player::Update() {
@@ -93,19 +96,25 @@ void Player::Update() {
 		isDead_ = true;
 	}
 
+	// 無敵処理
+	Invincible();
+
 #ifdef _DEBUG
 	ImGui::Begin("player");
 	ImGui::Text("playerHP : %d/%d", nowHP_, kMaxHP_);
 	ImGui::Text("playerSPGauge : %d/%d", nowSPGauge_, kMaxSPGauge_);
+	ImGui::Text("invincible : %d", isInvincible_);
 	ImGui::End();
 #endif // _DEBUG
 }
 
 void Player::Draw(ViewProjection& viewProjection) {
-	// 砲台描画
-	stand_->Draw(viewProjection);
-	// 車両描画
-	vehicle_->Draw(viewProjection);
+	if (isDisplay_) {
+		// 砲台描画
+		stand_->Draw(viewProjection);
+		// 車両描画
+		vehicle_->Draw(viewProjection);
+	}
 	// 弾描画
 	for (PlayerBullet* bullet : bullets_) {
 		bullet->Draw(viewProjection);
@@ -159,7 +168,7 @@ void Player::Attack() {
 			specialBullets_.push_back(newBullet);
 			// インターバルリセット
 			interval_ = kBulletInterval_;
-			//SP消費
+			// SP消費
 			isUseSP_ = false;
 			nowSPGauge_ = 0;
 		}
@@ -168,7 +177,46 @@ void Player::Attack() {
 
 void Player::Damage() {
 	if (vehicle_->GetIsDamage()) {
-		nowHP_ -= 1;
+		if (!isInvincible_) {
+			nowHP_ -= 1;
+			isInvincible_ = true;
+		}
 		vehicle_->SetIsDamage(false);
+	}
+}
+
+void Player::Invincible() {
+	// 無敵処理
+	if (isInvincible_) {
+		// タイマーインクリメント
+		nowInviTimer_++;
+		// 最初の1秒はゆっくり点滅
+		if (nowInviTimer_ < 60) {
+			if (nowInviTimer_ % 3 == 1) {
+				if (isDisplay_) {
+					isDisplay_ = false;
+				} else {
+					isDisplay_ = true;
+				}
+			}
+
+		}
+		// 最後の1秒は早く点滅
+		else {
+			if (nowInviTimer_ % 2 == 1) {
+				if (isDisplay_) {
+					isDisplay_ = false;
+				} else {
+					isDisplay_ = true;
+				}
+			}
+		}
+
+		// タイマーが規定時間に達したら
+		if (nowInviTimer_ == kInviTime_) {
+			nowInviTimer_ = 0;
+			isInvincible_ = false;
+			isDisplay_ = true;
+		}
 	}
 }

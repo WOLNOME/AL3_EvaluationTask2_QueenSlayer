@@ -1,6 +1,7 @@
 #include "PlayerBullet.h"
-#include "Function.h"
 #include "CollisionConfig.h"
+#include "Function.h"
+#include "TextureManager.h"
 #include <cassert>
 
 PlayerBullet::PlayerBullet() {}
@@ -17,32 +18,68 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vecto
 	worldTransform_.translation_ = position;
 	// 速度初期化
 	velocity_ = velocity;
-	//半径設定
+	// 半径設定
 	radius_ = 0.2f;
 	// 衝突属性を設定(自分の属性)
 	SetCollisionAttribute(kCollisionAttributePlayerBullet);
+
+	// パーティクル生成
+	particle_ = std::make_unique<Particle>();
+	// テクスチャハンドル取得
+	textureHandleParticle_ = TextureManager::Load("particle/ParticleShine.png");
+	// パーティクル初期化
+	particle_->Initialize(&worldTransform_, textureHandleParticle_, ParticleKind::DIFFUSION);
+	// パーティクルタイマー
+	particleTimer_ = 0;
 }
 
 void PlayerBullet::Update() {
 
 	// ワールドトランスフォームの更新←出現位置を初期値と一緒にするため
 	worldTransform_.UpdateMatrix();
-	
-	// 速度加算
-	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
 
-	// 時間経過でデス
-	if (--deathTimer_ <= 0) {
-		isDead_ = true;
+	// 生きてるとき
+	if (!isDeadParticle_) {
+		// 速度加算
+		worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
+
+		// 時間経過でデス
+		if (--deathTimer_ <= 0) {
+			isDeadParticle_ = true;
+		}
+	}
+	// 死亡パーティクル演出時
+	else {
+		// タイマーインクリメント
+		particleTimer_++;
+
+		// パーティクル更新処理
+		particle_->Update();
+
+		// タイマーが規定時間に達したら
+		if (particleTimer_ == kMaxParticleTime_) {
+			particleTimer_ = 0;
+			isDeadParticle_ = false;
+			isDead_ = true;
+		}
 	}
 }
 
 void PlayerBullet::Draw(const ViewProjection& viewProjection) {
-	//モデルの描画
-	model_->Draw(worldTransform_, viewProjection);
+	// モデルの描画
+	if (!isDeadParticle_) {
+		model_->Draw(worldTransform_, viewProjection);
+	}
+	if (particleTimer_ > 0) {
+		particle_->Draw(viewProjection);
+	}
 }
 
-void PlayerBullet::OnCollision() { isDead_ = true; }
+void PlayerBullet::OnCollision() { 
+	isDeadParticle_ = true;
+	//敵に当たった瞬間敵属性になる
+	SetCollisionAttribute(kCollisionAttributeEnemy);
+}
 
 void PlayerBullet::OnSpecialCollision() {}
 

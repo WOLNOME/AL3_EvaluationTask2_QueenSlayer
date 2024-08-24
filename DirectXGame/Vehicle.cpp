@@ -168,6 +168,13 @@ void Vehicle::Update() {
 		worldTransform_.translation_.x += velocity.x;
 		worldTransform_.translation_.y += velocity.y;
 		worldTransform_.translation_.z += velocity.z;
+
+		//移動の制限
+		worldTransform_.translation_.x = max(worldTransform_.translation_.x, -60.0f);
+		worldTransform_.translation_.x = min(worldTransform_.translation_.x, 60.0f);
+		worldTransform_.translation_.z = max(worldTransform_.translation_.z, -60.0f);
+		worldTransform_.translation_.z = min(worldTransform_.translation_.z, 60.0f);
+
 		// 回転の更新
 		worldTransform_.rotation_.y = std::atan2(direction_.x, direction_.z);
 		Matrix4x4 rotateYMatrix = MakeRotateYMatrix(-worldTransform_.rotation_.y);

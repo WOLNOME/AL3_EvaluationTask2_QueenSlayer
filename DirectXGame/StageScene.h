@@ -8,6 +8,7 @@
 #include "DebugCamera.h"
 #include "Skydome.h"
 #include "Ground.h"
+#include "Background.h"
 #include "ShineBall.h"
 #include "TPSCamera.h"
 #include "CollisionManager.h"
@@ -63,6 +64,8 @@ private:
 	std::unique_ptr<Skydome> skydome_ = nullptr;
 	//地面
 	std::unique_ptr<Ground> ground_ = nullptr;
+	//背景
+	std::unique_ptr<Background> background_ = nullptr;
 	//光玉
 	std::list<ShineBall*> shineBalls_;
 	

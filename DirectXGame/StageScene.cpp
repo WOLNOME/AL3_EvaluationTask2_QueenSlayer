@@ -35,6 +35,8 @@ void StageScene::Init(Input* input) {
 	skydome_ = std::make_unique<Skydome>();
 	// 地面の生成
 	ground_ = std::make_unique<Ground>();
+	// 背景の生成
+	background_ = std::make_unique<Background>();
 	// 衝突マネージャの生成
 	collisionManager_ = std::make_unique<CollisionManager>();
 
@@ -57,6 +59,8 @@ void StageScene::Init(Input* input) {
 	skydome_->Initialize(modelSkydome_.get(), {0.0f, 0.0f, 0.0f});
 	// 地面の初期化
 	ground_->Initialize(modelGround_.get(), {0.0f, 0.0f, 0.0f});
+	// 背景の初期化
+	background_->Initialize({0.0f, 0.0f, 0.0f});
 }
 
 void StageScene::Update() {
@@ -105,6 +109,8 @@ void StageScene::Update() {
 	skydome_->Update();
 	// 地面の更新
 	ground_->Update();
+	// 背景の更新
+	background_->Update();
 	// 光玉の更新
 	for (ShineBall* shineBall : shineBalls_) {
 		shineBall->Update();
@@ -148,6 +154,8 @@ void StageScene::Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* dxC
 	skydome_->Draw(viewProjection_);
 	// 地面の描画
 	ground_->Draw(viewProjection_);
+	// 背景の描画
+	background_->Draw(viewProjection_);
 	// 光玉の描画
 	for (ShineBall* shineBall : shineBalls_) {
 		shineBall->Draw(viewProjection_);
@@ -184,6 +192,8 @@ void StageScene::CheckAllCollision() {
 
 	// 自弾リストの取得
 	const std::list<PlayerBullet*>& playerBullets = player_->GetBullets();
+	//必殺弾リストの取得
+	const std::list<PlayerSpecialBullet*>& playerSpecialBullets = player_->GetSpecialBullets();
 	// 敵弾リストの取得
 	const std::list<EnemyBullet*>& enemyBulletsStomach = enemy_->GetStomach()->GetBullets();
 	const std::list<EnemyBullet*>& enemyBulletsChest = enemy_->GetChest()->GetBullets();
@@ -197,6 +207,10 @@ void StageScene::CheckAllCollision() {
 	colliders_.push_back(enemy_.get()->GetHead().get());
 	// 自弾コライダーをリストに登録
 	for (PlayerBullet* pbullet : playerBullets) {
+		colliders_.push_back(pbullet);
+	}
+	//必殺弾コライダーをリストに登録
+	for (PlayerSpecialBullet* pbullet : playerSpecialBullets) {
 		colliders_.push_back(pbullet);
 	}
 	// 敵弾コライダーをリストに登録

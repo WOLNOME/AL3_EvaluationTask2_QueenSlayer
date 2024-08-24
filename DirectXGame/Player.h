@@ -28,6 +28,8 @@ public: // ゲッター
 	const Vector3 GetWorldPostion() { return vehicle_->GetWorldPosition(); }
 	// 弾リストを取得
 	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
+	// 必殺弾リストを取得
+	const std::list<PlayerSpecialBullet*>& GetSpecialBullets() const { return specialBullets_; }
 	//車両部獲得
 	const std::unique_ptr<Vehicle>& GetVehicle() const { return vehicle_; }
 	// 砲台部獲得

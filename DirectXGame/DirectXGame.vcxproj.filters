@@ -159,6 +159,9 @@
     <ClCompile Include="PlayerSpecialBullet.cpp">
       <Filter>ソース ファイル\program\player</Filter>
     </ClCompile>
+    <ClCompile Include="Background.cpp">
+      <Filter>ソース ファイル\program</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3d\ViewProjection.h">
@@ -313,6 +316,9 @@
     </ClInclude>
     <ClInclude Include="PlayerSpecialBullet.h">
       <Filter>ヘッダー ファイル\program\player</Filter>
+    </ClInclude>
+    <ClInclude Include="Background.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

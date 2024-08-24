@@ -14,7 +14,6 @@ enum EnemyActionPattern {
 	AttackChest,
 	AttackStomach,
 	Move,
-	SpecialDown,
 	kAllActionNum,
 };
 

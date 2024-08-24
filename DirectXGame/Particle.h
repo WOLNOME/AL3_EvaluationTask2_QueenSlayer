@@ -3,7 +3,7 @@
 #include "WorldTransform.h"
 
 // パーティクルの数
-const int kParticleNum_ = 3;
+const int kParticleNum_ = 5;
 
 //パーティクルの種類
 enum ParticleKind {

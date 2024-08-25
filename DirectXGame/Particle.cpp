@@ -1,5 +1,6 @@
 #include "Particle.h"
 #include "TextureManager.h"
+#include "Function.h"
 #include "time.h"
 
 Particle::Particle() {}
@@ -76,6 +77,13 @@ void Particle::Initialize(const WorldTransform* worldTransform, uint32_t texture
 		}
 		break;
 	case SMOKE:
+		// 速度
+		for (uint32_t i = 0; i < particleNum_; i++) {
+			srand((uint32_t)time(nullptr) + (uint32_t)std::powf((float)i, 3));
+			particle_[i].velocity.x = 0.25f;
+			particle_[i].velocity.y = float(rand() % 6 + 1) * (1.0f / 10.0f);
+			particle_[i].velocity.z = 0.2f;
+		}
 		break;
 	default:
 		break;
@@ -104,6 +112,18 @@ void Particle::Update() {
 		}
 		break;
 	case SMOKE:
+		for (uint32_t i = 0; i < particleNum_; i++) {
+			// 加算処理
+			particle_[i].worldTransform.translation_.x += particle_[i].velocity.x;
+			particle_[i].worldTransform.translation_.y += particle_[i].velocity.y;
+			particle_[i].worldTransform.translation_.z += particle_[i].velocity.z;
+			// 高度上限処理
+			if (particle_[i].worldTransform.translation_.y > kSmokeMaxHeight_) {
+				particle_[i].worldTransform.translation_.x = 0.0f;
+				particle_[i].worldTransform.translation_.y = 0.0f;
+				particle_[i].worldTransform.translation_.z = 0.0f;
+			}
+		}
 		break;
 	default:
 		break;

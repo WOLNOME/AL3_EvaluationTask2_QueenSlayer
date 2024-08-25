@@ -214,4 +214,10 @@ void Enemy::Damage() {
 		nowHP_ -= kDamageLarge_;
 		stomach_->SetIsDamageLarge(false);
 	}
+
+	//HPが0より下になったら0にする
+	if (nowHP_ < 0) {
+		nowHP_ = 0;
+	}
+
 }

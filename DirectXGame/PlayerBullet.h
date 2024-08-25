@@ -38,9 +38,9 @@ private:
 	// 速度
 	Vector3 velocity_;
 	// 寿命
-	static const int32_t kLifeTime = 60 * 5;
+	const int kLifeTime = 60 * 5;
 	// デスタイマー
-	int32_t deathTimer_ = kLifeTime;
+	int deathTimer_ = kLifeTime;
 	// デスフラグ
 	bool isDead_ = false;
 
@@ -52,8 +52,8 @@ private://演出系
 	//演出中判定
 	bool isDeadParticle_;
 	//パーティクル長さ
-	const uint32_t kMaxParticleTime_ = 20;
+	const int kMaxParticleTime_ = 20;
 	//パーティクルタイマー
-	uint32_t particleTimer_;
+	int particleTimer_;
 
 };

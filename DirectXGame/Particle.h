@@ -37,8 +37,9 @@ private:
 	// パーティクルの種類
 	ParticleKind particleKind_;
 	// 回転速度
-	const float kRotateSpeed_ = 0.6f;
+	const float kRotateSpeed_ = 0.5f;
 	//重力
 	const Vector3 kGravity_ = {0.0f, -0.01f, 0.0f};
-
+	//煙最大高度
+	const float kSmokeMaxHeight_ = 2.5f;
 };

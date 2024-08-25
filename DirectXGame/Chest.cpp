@@ -96,7 +96,7 @@ void Chest::Attack() {
 		worldTransform_.translation_.z = prePos.z + float(rand() % 11 - 5) * (1.0f / 30.0f);
 
 		// 制限時間に達したら
-		if (timer_ == accumulatePowerTime_) {
+		if (timer_ >= accumulatePowerTime_) {
 			// タイマーリセット
 			timer_ = 0;
 			// 座標リセット
@@ -147,7 +147,7 @@ void Chest::Attack() {
 			bullets_.push_back(newBullet);
 		}
 		// 制限時間に達したら
-		if (timer_ == accumulatePowerTime_) {
+		if (timer_ >= accumulatePowerTime_) {
 			// タイマーリセット
 			timer_ = 0;
 			// 色リセット

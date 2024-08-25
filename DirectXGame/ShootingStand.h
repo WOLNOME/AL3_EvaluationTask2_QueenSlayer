@@ -2,6 +2,7 @@
 #include "Function.h"
 #include "Model.h"
 #include "WorldTransform.h"
+#include "Particle.h"
 
 class ShootingStand {
 public:
@@ -17,6 +18,8 @@ public: // ゲッター
 	const Vector3& GetLocalPosition() { return localPosition_; }
 
 public: // セッター
+	void SetIsPlayerCrisis(bool isPlayerCrisis) { isPlayerCrisis_ = isPlayerCrisis; }
+
 private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;
@@ -29,4 +32,14 @@ private:
 	// ローカル座標
 	Vector3 localPosition_;
 	//
+private: // 演出系
+	// パーティクル
+	std::unique_ptr<Particle> particle_ = nullptr;
+	//テクスチャハンドル
+	uint32_t textureHandle_;
+	// 演出中判定
+	bool isParticle_ = false;
+	//プレイヤーがピンチ状態かを取得するフラグ
+	bool isPlayerCrisis_ = false;
+
 };

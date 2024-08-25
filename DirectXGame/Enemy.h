@@ -37,15 +37,15 @@ public: // ゲッター
 	// 頭部獲得
 	const std::unique_ptr<Head>& GetHead() const { return head_; }
 	// HP獲得
-	uint32_t GetHP() { return nowHP_; }
+	int GetHP() { return nowHP_; }
 	// SP獲得
-	uint32_t GetSP() { return nowSP_; }
+	int GetSP() { return nowSP_; }
 	// 死亡判定
 	bool GetIsDead() { return isDead_; }
 
 public: // セッター
 	void SetStageScene(StageScene* stageScene) { stageScene_ = stageScene; }
-	void SetSP(uint32_t newSP) { nowSP_ = newSP; }
+	void SetSP(int newSP) { nowSP_ = newSP; }
 
 private:
 	// STOPアクション
@@ -57,7 +57,7 @@ private:
 
 public: // 定数
 	//最大HP
-	const uint32_t kMaxHP_ = 1200;
+	const int kMaxHP_ = 200;
 
 private:
 	// 入力
@@ -83,18 +83,18 @@ private:
 	// アクション中フラグ
 	bool isAction_ = true;
 	// アクションタイマー
-	uint32_t timer_ = 0;
+	int timer_ = 0;
 	// ストップタイマー制限時間
-	const uint32_t kStopTime_ = 140;
+	const int kStopTime_ = 140;
 
 	// 敵の体力
-	uint32_t nowHP_;
-	const uint32_t kDamageSmall_ = 1;
-	const uint32_t kDamageMedium_ = 3;
-	const uint32_t kDamageLarge_ = 120;
+	int nowHP_;
+	const int kDamageSmall_ = 1;
+	const int kDamageMedium_ = 3;
+	const int kDamageLarge_ = 120;
 
 	// 光玉蓄積値
-	uint32_t nowSP_;
+	int nowSP_;
 
 	// 死亡フラグ
 	bool isDead_;

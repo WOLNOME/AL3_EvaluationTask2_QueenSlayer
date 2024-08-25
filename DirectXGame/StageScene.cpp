@@ -132,6 +132,15 @@ void StageScene::Update() {
 	// 光玉生成処理
 	CreateShineBall();
 
+	//クリアシーン遷移処理
+	if (enemy_->GetHP() <= 0) {
+		NextScene = RESULT;
+	}
+	//ゲームオーバー遷移処理
+	if (player_->GetHP() <= 0) {
+		NextScene = GAMEOVER;
+	}
+
 
 #ifdef _DEBUG
 	ImGui::Begin("scene");

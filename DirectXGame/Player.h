@@ -38,9 +38,9 @@ public: // ゲッター
 	//死亡判定
 	bool GetIsDead() { return isDead_; }
 	//HP獲得
-	uint32_t GetHP() { return nowHP_; }
+	int GetHP() { return nowHP_; }
 	// HP獲得
-	uint32_t GetSPGauge() { return nowSPGauge_; }
+	int GetSPGauge() { return nowSPGauge_; }
 
 
 public: // セッター
@@ -49,8 +49,8 @@ public: // セッター
 
 public:
 	//最大体力
-	const uint32_t kMaxHP_ = 8;
-	const uint32_t kMaxSPGauge_ = 7;
+	const int kMaxHP_ = 8;
+	const int kMaxSPGauge_ = 7;
 
 
 
@@ -77,21 +77,21 @@ private:
 	//弾の速度
 	const float kBulletSpeed_ = 1.0f;
 	//連続弾インターバル
-	const uint32_t kBulletInterval_ = 8;
-	uint32_t interval_ = 0;
+	const int kBulletInterval_ = 8;
+	int interval_ = 0;
 
 	//プレイヤーのHP
-	uint32_t nowHP_;
+	int nowHP_;
 	//プレイヤーのSP関連
-	uint32_t nowSPGauge_;
+	int nowSPGauge_;
 	//SP射出可能フラグ
 	bool isUseSP_ = false;
 	//死亡フラグ
 	bool isDead_;
 
 	//無敵時間
-	const uint32_t kInviTime_ = 60 * 2;
-	uint32_t nowInviTimer_;
+	const int kInviTime_ = 60 * 2;
+	int nowInviTimer_;
 	bool isInvincible_;
 	bool isDisplay_;
 };

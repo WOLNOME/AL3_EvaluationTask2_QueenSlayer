@@ -3,9 +3,11 @@
 #include "BaseScene.h"
 #include "ImGuiManager.h"
 #include "PrimitiveDrawer.h"
-#include "StageScene.h"
-#include "TextureManager.h"
 #include "TitleScene.h"
+#include "StageScene.h"
+#include "ResultScene.h"
+#include "GameOverScene.h"
+#include "TextureManager.h"
 #include <cassert>
 
 GameScene::GameScene() {}
@@ -75,11 +77,25 @@ void GameScene::ChangeScene() {
 			;
 			break;
 		case SCENE::STAGE:
-			m_pScene = std::make_unique<StageScene>(); // タイトルシーンを現在のシーンにする
+			m_pScene = std::make_unique<StageScene>(); // ステージシーンを現在のシーンにする
 			m_pScene->Init(input_);
 			CurrentScene_ = m_pScene->GetNextScene();
 			;
 			break;
+		case SCENE::GAMEOVER:
+			m_pScene = std::make_unique<GameOverScene>(); // ゲームオーバーシーンを現在のシーンにする
+			m_pScene->Init(input_);
+			CurrentScene_ = m_pScene->GetNextScene();
+			;
+			break;
+		case SCENE::RESULT:
+			m_pScene = std::make_unique<ResultScene>(); // リザルトシーンを現在のシーンにする
+			m_pScene->Init(input_);
+			CurrentScene_ = m_pScene->GetNextScene();
+			;
+			break;
+
+
 		default:
 			break;
 		}

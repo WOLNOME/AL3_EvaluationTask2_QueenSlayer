@@ -80,6 +80,13 @@ void Player::Update() {
 		bullet->Update();
 	}
 
+	//プレイヤーのピンチ状態を伝える
+	if (nowHP_ <= 3) {
+		stand_->SetIsPlayerCrisis(true);
+	} else {
+		stand_->SetIsPlayerCrisis(false);
+	}
+
 	// SP回収処理
 	if (vehicle_->GetIsGetShineBall()) {
 		nowSPGauge_++;

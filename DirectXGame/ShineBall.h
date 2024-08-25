@@ -44,9 +44,9 @@ private:
 	//重力
 	const Vector3 kGravity_ = {0.0f, -0.05f, 0.0f};
 	// 寿命
-	static const int32_t kLifeTime = 60 * 15;
+	const int kLifeTime = 60 * 15;
 	// デスタイマー
-	int32_t deathTimer_;
+	int deathTimer_;
 	// デスフラグ
 	bool isDead_;
 	//速度
@@ -62,7 +62,7 @@ private: // 演出系
 	// 演出中判定
 	bool isDeadParticle_;
 	// パーティクル長さ
-	const uint32_t kMaxParticleTime_ = 30;
+	const int kMaxParticleTime_ = 30;
 	// パーティクルタイマー
-	uint32_t particleTimer_;
+	int particleTimer_;
 };

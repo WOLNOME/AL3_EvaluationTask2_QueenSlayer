@@ -26,6 +26,13 @@ void GameScene::Initialize() {
 	m_pScene->Init(input_);
 	CurrentScene_ = TITLE;
 	NextScene_ = TITLE;
+
+	//シーン遷移生成
+	gradation_ = std::make_unique<Gradation>();
+	AnimationFrame_ = 0;
+	isInNow_ = false;
+	isOutNow_ = false;
+
 }
 
 void GameScene::Update() {
@@ -55,15 +62,36 @@ void GameScene::Draw() {
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 	// シーンの描画処理
 	m_pScene->Draw(commandList, dxCommon_);
-
-
+	//シーン遷移描画
+	gradation_->Draw(commandList);
 }
 
 void GameScene::ChangeScene() {
 	// シーン切り替えアニメーションとか作るならこの関数に書く
 
+	// もしNextSceneが入力されているならシーンを切り替える
+	if (!isInNow_ && !isOutNow_ && NextScene_ != CurrentScene_) {
+		isInNow_ = true;
+		gradation_->Initialize(KindAni::ADMISSION);
+		gradation_->SetIsDraw(true);
+	}
+
+	// インアニメーション
+	if (isInNow_ && !isOutNow_) {
+		AnimationFrame_++;
+
+		// アニメーション処理
+		gradation_->Update(AnimationFrame_, kAnimationFrame_);
+		// アニメーション終わった時の処理
+		if (AnimationFrame_ == kAnimationFrame_) {
+			isInNow_ = false;
+			isOutNow_ = true;
+			AnimationFrame_ = 0;
+		}
+	}
+
 	// 切り替え
-	if (NextScene_ != CurrentScene_) {
+	if (!isInNow_ && isOutNow_ && NextScene_ != CurrentScene_) {
 		// 現在のシーンの削除
 		if (m_pScene != NULL) {
 			m_pScene.reset();
@@ -99,5 +127,23 @@ void GameScene::ChangeScene() {
 		default:
 			break;
 		}
+		// アニメーションの初期化
+		gradation_->Initialize(KindAni::EXIT);
 	}
+
+	// アウトアニメーション
+	if (!isInNow_ && isOutNow_ && NextScene_ == CurrentScene_) {
+		AnimationFrame_++;
+
+		// アニメーション処理
+		gradation_->Update(AnimationFrame_, kAnimationFrame_);
+		// アニメーション終わった時の処理
+		if (AnimationFrame_ == kAnimationFrame_) {
+			isInNow_ = false;
+			isOutNow_ = false;
+			AnimationFrame_ = 0;
+			gradation_->SetIsDraw(false);
+		}
+	}
+
 }

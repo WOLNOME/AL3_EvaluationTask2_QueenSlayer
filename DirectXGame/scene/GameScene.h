@@ -9,6 +9,7 @@
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include "Gradation.h"
 
 class BaseScene;
 
@@ -56,6 +57,13 @@ private: // メンバ変数
 	std::unique_ptr<BaseScene> m_pScene = nullptr;
 	SCENE CurrentScene_;
 	SCENE NextScene_;
+
+	//シーン遷移
+	std::unique_ptr<Gradation> gradation_ = nullptr;
+	const int kAnimationFrame_ = 80;
+	int AnimationFrame_;
+	bool isInNow_;
+	bool isOutNow_;
 
 	/// <summary>
 	/// ゲームシーン用

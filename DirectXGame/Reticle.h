@@ -42,7 +42,7 @@ private:
 
 private:
 	//カメラから離す距離
-	float kReticleRange_ = 50.0f;
+	float kReticleRange_ = 35.0f;
 	//ローカル座標
 	Vector3 localPosition_ = {0.0f, 0.0f, 0.0f};
 	// ビューポート行列

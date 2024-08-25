@@ -13,3 +13,7 @@ const uint32_t kCollisionAttributePlayerSpecialBullet = 0b1 << 3;
 const uint32_t kCollisionAttributeEnemyBullet = 0b1 << 4;
 // オブジェクト
 const uint32_t kCollisionAttributeObject = 0b1 << 5;
+//虚無
+const uint32_t kCollisionAttributeNothingness = 0b1 << 6;
+
+

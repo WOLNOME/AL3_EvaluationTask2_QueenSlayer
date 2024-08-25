@@ -2,6 +2,7 @@
 #include "Collider.h"
 #include "WorldTransform.h"
 #include "Model.h"
+#include "Particle.h"
 
 class StageScene;
 
@@ -54,4 +55,14 @@ private:
 	bool isStop_;
 	//表示されているかフラグ
 	bool isDisplay_;
+
+private: // 演出系
+	// パーティクル
+	std::unique_ptr<Particle> particle_ = nullptr;
+	// 演出中判定
+	bool isDeadParticle_;
+	// パーティクル長さ
+	const uint32_t kMaxParticleTime_ = 30;
+	// パーティクルタイマー
+	uint32_t particleTimer_;
 };

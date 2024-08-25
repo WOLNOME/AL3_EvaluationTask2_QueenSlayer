@@ -49,8 +49,8 @@ public: // セッター
 
 public:
 	//最大体力
-	const uint32_t kMaxHP_ = 10;
-	const uint32_t kMaxSPGauge_ = 10;
+	const uint32_t kMaxHP_ = 8;
+	const uint32_t kMaxSPGauge_ = 7;
 
 
 

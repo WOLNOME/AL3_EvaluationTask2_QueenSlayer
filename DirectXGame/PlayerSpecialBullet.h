@@ -2,6 +2,7 @@
 #include "Collider.h"
 #include "Model.h"
 #include "WorldTransform.h"
+#include "Particle.h"
 
 class PlayerSpecialBullet : public Collider {
 public:
@@ -46,5 +47,13 @@ private:
 	// 放射弾にするために少し重力を付ける
 	Vector3 kGravity_ = {0.0f, -0.002f, 0.0f};
 
-private:
+private: // 演出系
+	// パーティクル
+	std::unique_ptr<Particle> particle_ = nullptr;
+	// 演出中判定
+	bool isDeadParticle_;
+	// パーティクル長さ
+	const uint32_t kMaxParticleTime_ = 60;
+	// パーティクルタイマー
+	uint32_t particleTimer_;
 };

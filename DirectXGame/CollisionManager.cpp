@@ -15,11 +15,11 @@ void CollisionManager::CheckCollision() {
 			// イテレーターBからコライダーBを取得する
 			Collider* colliderB = *itrB;
 			// 衝突フィルタリング
-			//自分と同じ属性だと当たらない
+			// 自分と同じ属性だと当たらない
 			if (colliderA->GetCollisionAttribute() == colliderB->GetCollisionAttribute()) {
 				continue;
 			}
-			//自機と自弾&必殺弾
+			// 自機と自弾&必殺弾
 			if (colliderA->GetCollisionAttribute() == kCollisionAttributePlayer) {
 				if (colliderB->GetCollisionAttribute() == kCollisionAttributePlayerBullet) {
 					continue;
@@ -40,7 +40,7 @@ void CollisionManager::CheckCollision() {
 					continue;
 				}
 			}
-			//敵と敵弾
+			// 敵と敵弾
 			if (colliderA->GetCollisionAttribute() == kCollisionAttributeEnemy) {
 				if (colliderB->GetCollisionAttribute() == kCollisionAttributeEnemyBullet) {
 					continue;
@@ -51,7 +51,7 @@ void CollisionManager::CheckCollision() {
 					continue;
 				}
 			}
-			//オブジェクトとプレイヤー以外
+			// オブジェクトとプレイヤー以外
 			if (colliderA->GetCollisionAttribute() == kCollisionAttributeObject) {
 				if (colliderB->GetCollisionAttribute() == kCollisionAttributePlayerBullet) {
 					continue;
@@ -93,7 +93,19 @@ void CollisionManager::CheckCollision() {
 				}
 			}
 
-			//プレイヤーとオブジェクトの特殊当たり判定
+			// 虚無オブジェクトは当たり判定を取らない
+			if (colliderA->GetCollisionAttribute() == kCollisionAttributeNothingness) {
+				if (colliderB->GetCollisionAttribute() > 0) {
+					continue;
+				}
+			}
+			if (colliderB->GetCollisionAttribute() == kCollisionAttributeNothingness) {
+				if (colliderA->GetCollisionAttribute() > 0) {
+					continue;
+				}
+			}
+
+			// プレイヤーとオブジェクトの特殊当たり判定
 			if (colliderA->GetCollisionAttribute() == kCollisionAttributePlayer) {
 				if (colliderB->GetCollisionAttribute() == kCollisionAttributeObject) {
 					CheckSpecialCollisionPair(colliderA, colliderB);
@@ -107,7 +119,7 @@ void CollisionManager::CheckCollision() {
 				}
 			}
 
-			//敵と必殺弾の特殊当たり判定
+			// 敵と必殺弾の特殊当たり判定
 			if (colliderA->GetCollisionAttribute() == kCollisionAttributeEnemy) {
 				if (colliderB->GetCollisionAttribute() == kCollisionAttributePlayerSpecialBullet) {
 					CheckSpecialCollisionPair(colliderA, colliderB);
@@ -117,6 +129,20 @@ void CollisionManager::CheckCollision() {
 			if (colliderB->GetCollisionAttribute() == kCollisionAttributeEnemy) {
 				if (colliderA->GetCollisionAttribute() == kCollisionAttributePlayerSpecialBullet) {
 					CheckSpecialCollisionPair(colliderA, colliderB);
+					continue;
+				}
+			}
+
+			//敵と自機の特殊当たり判定
+			if (colliderA->GetCollisionAttribute() == kCollisionAttributeEnemy) {
+				if (colliderB->GetCollisionAttribute() == kCollisionAttributePlayer) {
+					CheckPAECollisionPair(colliderB, colliderA);
+					continue;
+				}
+			}
+			if (colliderB->GetCollisionAttribute() == kCollisionAttributeEnemy) {
+				if (colliderA->GetCollisionAttribute() == kCollisionAttributePlayer) {
+					CheckPAECollisionPair(colliderA, colliderB);
 					continue;
 				}
 			}
@@ -133,14 +159,14 @@ void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
 	posA = colliderA->GetWorldPosition();
 	// Bの座標
 	posB = colliderB->GetWorldPosition();
-	//ABの差
+	// ABの差
 	Vector3 AtoB = Subtract(posA, posB);
-	//半径の和
-	float addRad=colliderA->GetRadius() + colliderB->GetRadius();
+	// 半径の和
+	float addRad = colliderA->GetRadius() + colliderB->GetRadius();
 	// 座標AとBの距離を求める
 	float length = Length(AtoB);
 	// 球と球の交差判定
-	if (length <addRad) {
+	if (length < addRad) {
 		// 衝突時コールバックを呼び出す
 		colliderA->OnCollision();
 		colliderB->OnCollision();
@@ -164,5 +190,24 @@ void CollisionManager::CheckSpecialCollisionPair(Collider* colliderA, Collider* 
 		// 衝突時コールバックを呼び出す
 		colliderA->OnSpecialCollision();
 		colliderB->OnSpecialCollision();
+	}
+}
+
+void CollisionManager::CheckPAECollisionPair(Collider* colliderA, Collider* colliderB) {
+	Vector3 posA, posB;
+	// Aの座標
+	posA = colliderA->GetWorldPosition();
+	// Bの座標
+	posB = colliderB->GetWorldPosition();
+	// ABの差
+	Vector3 AtoB = Subtract(posA, posB);
+	// 半径の和
+	float addRad = colliderA->GetRadius() + colliderB->GetRadius();
+	// 座標AとBの距離を求める
+	float length = Length(AtoB);
+	// 球と球の交差判定
+	if (length < addRad) {
+		// Aのコールバックのみ呼び出す
+		colliderA->OnCollision();
 	}
 }

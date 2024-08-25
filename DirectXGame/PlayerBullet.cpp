@@ -26,9 +26,9 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vecto
 	// パーティクル生成
 	particle_ = std::make_unique<Particle>();
 	// テクスチャハンドル取得
-	textureHandleParticle_ = TextureManager::Load("particle/ParticleShine.png");
+	textureHandleParticle_ = TextureManager::Load("particle/ParticleYellow.png");
 	// パーティクル初期化
-	particle_->Initialize(&worldTransform_, textureHandleParticle_, ParticleKind::DIFFUSION);
+	particle_->Initialize(&worldTransform_, textureHandleParticle_, ParticleKind::DIFFUSION, 4);
 	// パーティクルタイマー
 	particleTimer_ = 0;
 }
@@ -75,10 +75,10 @@ void PlayerBullet::Draw(const ViewProjection& viewProjection) {
 	}
 }
 
-void PlayerBullet::OnCollision() { 
+void PlayerBullet::OnCollision() {
 	isDeadParticle_ = true;
-	//敵に当たった瞬間敵属性になる
-	SetCollisionAttribute(kCollisionAttributeEnemy);
+	// 敵に当たった瞬間虚無属性になる
+	SetCollisionAttribute(kCollisionAttributeNothingness);
 }
 
 void PlayerBullet::OnSpecialCollision() {}

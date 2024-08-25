@@ -21,31 +21,64 @@ void PlayerSpecialBullet::Initialize(Model* model, const Vector3& position, cons
 	radius_ = 1.0f;
 	// 衝突属性を設定(自分の属性)
 	SetCollisionAttribute(kCollisionAttributePlayerSpecialBullet);
+
+	// パーティクル生成
+	particle_ = std::make_unique<Particle>();
+	// パーティクル初期化
+	particle_->Initialize(&worldTransform_, 0, ParticleKind::POP, 25);
+	// パーティクルタイマー
+	particleTimer_ = 0;
 }
 
 void PlayerSpecialBullet::Update() {
 	// ワールドトランスフォームの更新←出現位置を初期値と一緒にするため
 	worldTransform_.UpdateMatrix();
-	
-	//重力加算
-	velocity_.y += kGravity_.y;
-	// 速度加算
-	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
+	//生きてるときの処理
+	if (!isDeadParticle_) {
+		// 重力加算
+		velocity_.y += kGravity_.y;
+		// 速度加算
+		worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
 
-	// 時間経過でデス
-	if (--deathTimer_ <= 0) {
-		isDead_ = true;
+		// 時間経過でデス
+		if (--deathTimer_ <= 0) {
+			isDeadParticle_ = true;
+		}
+	} 
+	//死亡演出
+	else {
+		// タイマーインクリメント
+		particleTimer_++;
+
+		// パーティクル更新処理
+		particle_->Update();
+
+		// タイマーが規定時間に達したら
+		if (particleTimer_ == kMaxParticleTime_) {
+			particleTimer_ = 0;
+			isDeadParticle_ = false;
+			isDead_ = true;
+		}
 	}
 }
 
 void PlayerSpecialBullet::Draw(const ViewProjection& viewProjection) {
-	//モデルの描画
-	model_->Draw(worldTransform_, viewProjection);
+	// モデルの描画
+	if (!isDeadParticle_) {
+		model_->Draw(worldTransform_, viewProjection);
+	}
+	if (particleTimer_ > 0) {
+		particle_->Draw(viewProjection);
+	}
 }
 
 void PlayerSpecialBullet::OnCollision() {}
 
-void PlayerSpecialBullet::OnSpecialCollision() { isDead_ = true; }
+void PlayerSpecialBullet::OnSpecialCollision() { 
+	isDeadParticle_ = true; 
+	// 敵に当たった瞬間敵属性になる
+	SetCollisionAttribute(kCollisionAttributeNothingness);
+}
 
 Vector3 PlayerSpecialBullet::GetWorldPosition() {
 	Vector3 worldPos;

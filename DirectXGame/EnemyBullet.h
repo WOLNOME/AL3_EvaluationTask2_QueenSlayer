@@ -2,6 +2,7 @@
 #include "Collider.h"
 #include "Model.h"
 #include "WorldTransform.h"
+#include "Particle.h"
 
 enum BulletKind {
 	Diffusion,
@@ -61,4 +62,15 @@ private:
 	//弾のスピード
 	const float kSpeed_ = 0.3f;
 
+private: // 演出系
+	// パーティクル
+	std::unique_ptr<Particle> particle_ = nullptr;
+	// テクスチャハンドル
+	uint32_t textureHandleParticle_;
+	// 演出中判定
+	bool isDeadParticle_;
+	// パーティクル長さ
+	const uint32_t kMaxParticleTime_ = 20;
+	// パーティクルタイマー
+	uint32_t particleTimer_;
 };

@@ -28,57 +28,90 @@ void ShineBall::Initialize(Model* model, const Vector3& position, const Vector3&
 	isDisplay_ = true;
 	// 衝突属性を設定(自分の属性)
 	SetCollisionAttribute(kCollisionAttributeObject);
+
+	// パーティクル生成
+	particle_ = std::make_unique<Particle>();
+	// パーティクル初期化
+	particle_->Initialize(&worldTransform_, 0, ParticleKind::POP, 6);
+	// パーティクルタイマー
+	particleTimer_ = 0;
 }
 
 void ShineBall::Update() {
 	// ワールドトランスフォームの更新←出現位置を初期値と一緒にするため
 	worldTransform_.UpdateMatrix();
+	//生きてるとき
+	if (!isDeadParticle_) {
+		if (!isStop_) {
+			// 重力計算
+			velocity_.y += kGravity_.y;
+			// 速度加算
+			worldTransform_.translation_.x += velocity_.x;
+			worldTransform_.translation_.y += velocity_.y;
+			worldTransform_.translation_.z += velocity_.z;
+		}
 
-	if (!isStop_) {
-		// 重力計算
-		velocity_.y += kGravity_.y;
-		// 速度加算
-		worldTransform_.translation_.x += velocity_.x;
-		worldTransform_.translation_.y += velocity_.y;
-		worldTransform_.translation_.z += velocity_.z;
-	}
-
-	// 時間経過迫ったら点滅
-	if (deathTimer_ < 60 * 4) {
-		if (deathTimer_ % 2 == 1) {
-			if (isDisplay_) {
-				isDisplay_ = false;
-			} else {
-				isDisplay_ = true;
+		// 時間経過迫ったら点滅
+		if (deathTimer_ < 60 * 4) {
+			if (deathTimer_ % 2 == 1) {
+				if (isDisplay_) {
+					isDisplay_ = false;
+				} else {
+					isDisplay_ = true;
+				}
 			}
 		}
+
+		// 回転
+		worldTransform_.rotation_.y += 0.03f;
+
+		// 静止処理
+		if (worldTransform_.translation_.y <= radius_) {
+			worldTransform_.translation_.y = radius_;
+			isStop_ = true;
+		}
+
+		// 時間経過でデス
+		if (--deathTimer_ <= 0) {
+			isDeadParticle_ = true;
+		}
 	}
+	//消滅演出
+	else {
+		// タイマーインクリメント
+		particleTimer_++;
 
-	// 回転
-	worldTransform_.rotation_.y += 0.03f;
+		// パーティクル更新処理
+		particle_->Update();
 
-	// 静止処理
-	if (worldTransform_.translation_.y <= radius_) {
-		worldTransform_.translation_.y = radius_;
-		isStop_ = true;
-	}
-
-	// 時間経過でデス
-	if (--deathTimer_ <= 0) {
-		isDead_ = true;
+		// タイマーが規定時間に達したら
+		if (particleTimer_ == kMaxParticleTime_) {
+			particleTimer_ = 0;
+			isDeadParticle_ = false;
+			isDead_ = true;
+		}
 	}
 }
 
 void ShineBall::Draw(const ViewProjection& viewProjection) {
 	// 本体描画
-	if (isDisplay_ && !isDead_) {
-		model_->Draw(worldTransform_, viewProjection);
+	if (!isDeadParticle_) {
+		if (isDisplay_ && !isDead_) {
+			model_->Draw(worldTransform_, viewProjection);
+		}
+	}
+	if (particleTimer_ > 0) {
+		particle_->Draw(viewProjection);
 	}
 }
 
 void ShineBall::OnCollision() {}
 
-void ShineBall::OnSpecialCollision() { isDead_ = true; }
+void ShineBall::OnSpecialCollision() {
+	isDeadParticle_ = true; 
+	// 敵に当たった瞬間虚無属性になる
+	SetCollisionAttribute(kCollisionAttributeNothingness);
+}
 
 Vector3 ShineBall::GetWorldPosition() {
 	Vector3 worldPos;

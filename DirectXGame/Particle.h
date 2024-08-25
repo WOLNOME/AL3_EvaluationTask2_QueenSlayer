@@ -1,39 +1,44 @@
 #pragma once
 #include "Model.h"
 #include "WorldTransform.h"
+#include "vector"
 
-// パーティクルの数
-const int kParticleNum_ = 5;
-
-//パーティクルの種類
+// パーティクルの種類
 enum ParticleKind {
 	DIFFUSION,
 	POP,
 	SMOKE,
 };
 
+//パーティクルデータ
+typedef struct ParticleData {
+	WorldTransform worldTransform;
+	std::unique_ptr<Model> model;
+	Vector3 velocity;
+	uint32_t textureHandle;
+} ParticleData;
+
 class Particle {
 public:
 	Particle();
 	~Particle();
 
-	void Initialize(WorldTransform* worldTransform,uint32_t textureHandle,ParticleKind particleKind);
+	void Initialize(const WorldTransform* worldTransform, uint32_t textureHandle, ParticleKind particleKind, uint32_t particleNum);
 	void Update();
 	void Draw(const ViewProjection& viewProjection);
 
 private:
-	// ワールドトランスフォーム
-	WorldTransform worldTransform_[kParticleNum_];
-	// モデル
-	std::unique_ptr<Model> modelParticle_[kParticleNum_];
-	//使うテクスチャハンドル
-	uint32_t textureHandle_;
+	//パーティクルデータ
+	ParticleData particle_[30];
 
 private:
-	//パーティクルの種類
+	// パーティクルの数
+	size_t particleNum_ = 0;
+	// パーティクルの種類
 	ParticleKind particleKind_;
-	//回転速度
-	const float kRotateSpeed_ = 0.3f;
-	//移動速度
-	Vector3 velocity_[kParticleNum_];
+	// 回転速度
+	const float kRotateSpeed_ = 0.6f;
+	//重力
+	const Vector3 kGravity_ = {0.0f, -0.01f, 0.0f};
+
 };

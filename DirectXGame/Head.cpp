@@ -47,6 +47,7 @@ void Head::Update() {
 		bullet->Update();
 	}
 
+	
 	// 行列の再計算と転送
 	worldTransform_.UpdateMatrix();
 }

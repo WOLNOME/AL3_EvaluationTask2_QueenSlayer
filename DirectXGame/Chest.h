@@ -48,6 +48,7 @@ public: // セッター
 	void SetIsDamageSmall(bool isDamageSmall) { isDamageSmall_ = isDamageSmall; }
 	void SetIsDamageMedium(bool isDamageMedium) { isDamageMedium_ = isDamageMedium; }
 	void SetIsDamageLarge(bool isDamageLarge) { isDamageLarge_ = isDamageLarge; }
+	void SetAccumlatePowerTime(uint32_t accumlatePowerTime) { accumulatePowerTime_ = accumlatePowerTime; }
 
 private:
 	// ワールド変換データ
@@ -73,7 +74,7 @@ private:
 	// 各フェーズで使うタイマー
 	uint32_t timer_ = 0;
 	// 各フェーズの時間
-	const uint32_t accumulatePowerTime_ = 120;
+	uint32_t accumulatePowerTime_ = 120;
 	const uint32_t shootTime_ = 60;
 	// 速度
 	Vector3 velocity_ = {0.0f, 0.0f, 0.0f};

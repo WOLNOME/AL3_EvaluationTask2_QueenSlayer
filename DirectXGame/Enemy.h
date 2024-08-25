@@ -57,7 +57,7 @@ private:
 
 public: // 定数
 	//最大HP
-	const uint32_t kMaxHP_ = 1500;
+	const uint32_t kMaxHP_ = 1200;
 
 private:
 	// 入力
@@ -85,7 +85,7 @@ private:
 	// アクションタイマー
 	uint32_t timer_ = 0;
 	// ストップタイマー制限時間
-	const uint32_t kStopTime_ = 180;
+	const uint32_t kStopTime_ = 140;
 
 	// 敵の体力
 	uint32_t nowHP_;

@@ -117,6 +117,13 @@ void Enemy::Update() {
 	//被弾処理
 	Damage();
 
+	// HPが半分以下になったら行動速度をあげる
+	if (nowHP_ < kMaxHP_ / 2) {
+		head_->SetAccumlatePowerTime(70);
+		chest_->SetAccumlatePowerTime(70);
+		stomach_->SetAccumlatePowerTime(70);
+	}
+
 	//体力0になったら死ぬ
 	if (nowHP_ <= 0) {
 		isDead_ = true;

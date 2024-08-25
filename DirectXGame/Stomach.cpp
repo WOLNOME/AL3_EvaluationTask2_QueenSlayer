@@ -140,24 +140,27 @@ void Stomach::Attack() {
 		// タイマーインクリメント
 		timer_++;
 
-		//  弾を生成
-		EnemyBullet* newBullet = new EnemyBullet();
-		// 弾の発射位置を確定
-		Vector3 bulletInitPosition = GetWorldPosition();
-		// シード値
-		srand((int)std::powf((float)timer_, 3));
-		// θ
-		float theta = float(rand() % 360) / 180.0f * pi;
-		// 弾の速度(ベクトル)を確定
-		Vector3 velocity;
-		velocity.x = std::cosf(theta);
-		velocity.y = 0;
-		velocity.z = std::sinf(theta);
-		// 弾を初期化
-		newBullet->Initialize(modelBullet_.get(), bulletInitPosition, velocity, BulletKind::Diffusion);
+		//3fに1個弾を出す
+		if (timer_ % 3 == 1) {
+			//  弾を生成
+			EnemyBullet* newBullet = new EnemyBullet();
+			// 弾の発射位置を確定
+			Vector3 bulletInitPosition = GetWorldPosition();
+			// シード値
+			srand((int)std::powf((float)timer_, 3));
+			// θ
+			float theta = float(rand() % 360) / 180.0f * pi;
+			// 弾の速度(ベクトル)を確定
+			Vector3 velocity;
+			velocity.x = std::cosf(theta);
+			velocity.y = 0;
+			velocity.z = std::sinf(theta);
+			// 弾を初期化
+			newBullet->Initialize(modelBullet_.get(), bulletInitPosition, velocity, BulletKind::Diffusion);
 
-		// 弾を登録する
-		bullets_.push_back(newBullet);
+			// 弾を登録する
+			bullets_.push_back(newBullet);
+		}
 
 		// 制限時間に達したら
 		if (timer_ == accumulatePowerTime_) {

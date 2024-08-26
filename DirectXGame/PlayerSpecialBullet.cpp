@@ -42,7 +42,7 @@ void PlayerSpecialBullet::Update() {
 
 		// 時間経過でデス
 		if (--deathTimer_ <= 0) {
-			isDeadParticle_ = true;
+			isDead_ = true;
 		}
 	} 
 	//死亡演出

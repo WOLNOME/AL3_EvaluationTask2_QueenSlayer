@@ -41,7 +41,8 @@ public: // ゲッター
 	int GetHP() { return nowHP_; }
 	// HP獲得
 	int GetSPGauge() { return nowSPGauge_; }
-
+	//必殺弾演出判定
+	bool GetIsSpecialBulletDirection() { return isSpecialBulletDirection_; }
 
 public: // セッター
 	void SetStageScene(StageScene* stageScene) { stageScene_ = stageScene; }
@@ -50,7 +51,7 @@ public: // セッター
 public:
 	//最大体力
 	const int kMaxHP_ = 8;
-	const int kMaxSPGauge_ = 7;
+	const int kMaxSPGauge_ = 6;
 
 
 
@@ -94,4 +95,12 @@ private:
 	int nowInviTimer_;
 	bool isInvincible_;
 	bool isDisplay_;
+
+	//必殺弾演出中判定
+	bool isSpecialBulletDirection_ = false;
+	//ヒットストップは一度きりにするためのフラグ
+	bool isHitStopOnce_ = false;
+	//必殺弾命中時ヒットストップの時間
+	const int kHitStopTime_ = 8;
+	int hitStopTimer_ = 0;
 };

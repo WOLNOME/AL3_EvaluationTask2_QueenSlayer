@@ -27,6 +27,8 @@ public: // ゲッター
 	Vector3 GetWorldPosition() override;
 	// 半径
 	float GetRadius() override { return radius_; }
+	//演出中
+	bool GetIsDeadParticle() { return isDeadParticle_; }
 
 public: // セッター
 private:

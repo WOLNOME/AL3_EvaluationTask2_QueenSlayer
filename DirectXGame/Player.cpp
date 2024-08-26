@@ -80,7 +80,25 @@ void Player::Update() {
 		bullet->Update();
 	}
 
-	//プレイヤーのピンチ状態を伝える
+	// 必殺弾演出中判定
+	for (PlayerSpecialBullet* bullet : specialBullets_) {
+		if (bullet->GetIsDeadParticle() && !isHitStopOnce_) {
+			isSpecialBulletDirection_ = true;
+			isHitStopOnce_ = true;
+		}
+	}
+	// ヒットストップ処理
+	if (isSpecialBulletDirection_) {
+		// タイマーインクリメント
+		hitStopTimer_++;
+		// 規定時間になったら
+		if (hitStopTimer_ == kHitStopTime_) {
+			isSpecialBulletDirection_ = false;
+			hitStopTimer_ = 0;
+		}
+	}
+
+	// プレイヤーのピンチ状態を伝える
 	if (nowHP_ <= 3) {
 		stand_->SetIsPlayerCrisis(true);
 	} else {
@@ -178,6 +196,8 @@ void Player::Attack() {
 			// SP消費
 			isUseSP_ = false;
 			nowSPGauge_ = 0;
+			// 弾が生成されたらヒットストップフラグを基に戻す。
+			isHitStopOnce_ = false;
 		}
 	}
 }

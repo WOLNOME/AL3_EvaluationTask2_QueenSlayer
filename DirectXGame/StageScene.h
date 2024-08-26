@@ -76,5 +76,12 @@ private:
 
 	// 衝突マネージャー
 	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
+
+private:
+	//タイマー
+	int timer_ = 0;
+	//何fに更新処理を行うか変数
+	int framePerUpdate_ = 1;
+
 };
 

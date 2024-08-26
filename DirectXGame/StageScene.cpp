@@ -89,43 +89,59 @@ void StageScene::Update() {
 		}
 	}
 #endif // _DEBUG
-	// カメラの処理
-	if (isDebugCameraActive_) {
-		// デバッグカメラの更新
-		debugCamera_->Update();
-		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
-		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
-		// ビュープロジェクション行列の転送
-		viewProjection_.TransferMatrix();
 
+	//必殺弾が当たったらヒットストップ掛ける
+	if (player_->GetIsSpecialBulletDirection()) {
+		framePerUpdate_ = 3;
 	} else {
-		// TPSカメラの更新
-		tpsCamera_->Update();
-		viewProjection_.matView = tpsCamera_->GetViewProjection().matView;
-		viewProjection_.matProjection = tpsCamera_->GetViewProjection().matProjection;
-		// ビュープロジェクション行列の更新と転送
-		viewProjection_.TransferMatrix();
+		framePerUpdate_ = 1;
+	}
+	//クリアしたらゆっくりになる
+	if (enemy_->GetHP() <= 0) {
+		framePerUpdate_ = 3;
 	}
 
-	// レティクルの更新
-	reticle_->Update(viewProjection_);
-	// 自キャラの更新
-	player_->Update();
-	// 敵キャラの更新
-	enemy_->Update();
-	// 天球の更新
-	skydome_->Update();
-	// 地面の更新
-	ground_->Update();
-	// 背景の更新
-	background_->Update();
-	// 光玉の更新
-	for (ShineBall* shineBall : shineBalls_) {
-		shineBall->Update();
-	}
-	//UIの更新
-	ui_->Update();
+	//タイマーインクリメント
+	timer_++;
+	//nfに1回更新処理を行う
+	if (timer_ % framePerUpdate_ == 0) {
+		// カメラの処理
+		if (isDebugCameraActive_) {
+			// デバッグカメラの更新
+			debugCamera_->Update();
+			viewProjection_.matView = debugCamera_->GetViewProjection().matView;
+			viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+			// ビュープロジェクション行列の転送
+			viewProjection_.TransferMatrix();
 
+		} else {
+			// TPSカメラの更新
+			tpsCamera_->Update();
+			viewProjection_.matView = tpsCamera_->GetViewProjection().matView;
+			viewProjection_.matProjection = tpsCamera_->GetViewProjection().matProjection;
+			// ビュープロジェクション行列の更新と転送
+			viewProjection_.TransferMatrix();
+		}
+
+		// レティクルの更新
+		reticle_->Update(viewProjection_);
+		// 自キャラの更新
+		player_->Update();
+		// 敵キャラの更新
+		enemy_->Update();
+		// 天球の更新
+		skydome_->Update();
+		// 地面の更新
+		ground_->Update();
+		// 背景の更新
+		background_->Update();
+		// 光玉の更新
+		for (ShineBall* shineBall : shineBalls_) {
+			shineBall->Update();
+		}
+		// UIの更新
+		ui_->Update();
+	}
 	// 当たり判定処理
 	CheckAllCollision();
 

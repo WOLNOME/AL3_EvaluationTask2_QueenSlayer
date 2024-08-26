@@ -197,7 +197,7 @@ void Stomach::Jump() {
 		worldTransform_.scale_.y = Lerp(1.0f, kReducation_, ((float)timer_ / accumulatePowerTime_));
 
 		// 制限時間に達したら
-		if (timer_ == accumulatePowerTime_) {
+		if (timer_ >= accumulatePowerTime_) {
 			// タイマーリセット
 			timer_ = 0;
 			// 座標リセット

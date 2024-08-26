@@ -177,6 +177,9 @@
     <ClCompile Include="Gradation.cpp">
       <Filter>ソース ファイル\program</Filter>
     </ClCompile>
+    <ClCompile Include="Pause.cpp">
+      <Filter>ソース ファイル\program</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3d\ViewProjection.h">
@@ -348,6 +351,9 @@
       <Filter>ヘッダー ファイル\scene</Filter>
     </ClInclude>
     <ClInclude Include="Gradation.h">
+      <Filter>ヘッダー ファイル\program</Filter>
+    </ClInclude>
+    <ClInclude Include="Pause.h">
       <Filter>ヘッダー ファイル\program</Filter>
     </ClInclude>
   </ItemGroup>

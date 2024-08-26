@@ -46,6 +46,8 @@ void StageScene::Init(Input* input, Audio* audio) {
 	collisionManager_ = std::make_unique<CollisionManager>();
 	// UIの生成
 	ui_ = std::make_unique<UI>();
+	//ポーズメニュー生成
+	pause_ = std::make_unique<Pause>(input_);
 
 	// プレイヤーにシーンを渡す
 	player_->SetStageScene(this);
@@ -73,10 +75,15 @@ void StageScene::Init(Input* input, Audio* audio) {
 	// UIの初期化
 	ui_->Initialize();
 
+
 	// BGMのサウンドハンドル
 	soundHandleBGM_ = audio_->LoadWave("Audio/stageBGM.wav");
 	//最初からBGM再生
 	isSoundPlayBGM_ = true;
+
+
+	//変数系
+	isPause_ = false;
 
 }
 
@@ -98,79 +105,104 @@ void StageScene::Update() {
 		}
 	}
 #endif // _DEBUG
-
-	// 必殺弾が当たったらヒットストップ掛ける
-	if (player_->GetIsSpecialBulletDirection()) {
-		framePerUpdate_ = 3;
-	} else {
-		framePerUpdate_ = 1;
-	}
-	// クリアしたらゆっくりになる
-	if (enemy_->GetHP() <= 0) {
-		framePerUpdate_ = 3;
-	}
-
-	// タイマーインクリメント
-	timer_++;
-	// nfに1回更新処理を行う
-	if (timer_ % framePerUpdate_ == 0) {
-		// カメラの処理
-		if (isDebugCameraActive_) {
-			// デバッグカメラの更新
-			debugCamera_->Update();
-			viewProjection_.matView = debugCamera_->GetViewProjection().matView;
-			viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
-			// ビュープロジェクション行列の転送
-			viewProjection_.TransferMatrix();
-
+	//ポーズメニュー移行処理
+	if (input_->TriggerKey(DIK_ESCAPE)) {
+		if (!isPause_) {
+			isPause_ = true;
+			//ポーズメニュー初期化
+			pause_->Initialize();
 		} else {
-			// TPSカメラの更新
-			tpsCamera_->Update();
-			viewProjection_.matView = tpsCamera_->GetViewProjection().matView;
-			viewProjection_.matProjection = tpsCamera_->GetViewProjection().matProjection;
-			// ビュープロジェクション行列の更新と転送
-			viewProjection_.TransferMatrix();
+			isPause_ = false;
+		}
+	}
+	//ポーズメニュー中処理
+	if (isPause_) {
+		//ポーズの更新
+		pause_->Update();
+		//コンティニューボタン押したら
+		if (pause_->GetIsContinue()) {
+			isPause_ = false;
+		}
+		//BackToTitleボタン押したら
+		if (pause_->GetIsBackToTitle()) {
+			NextScene = SCENE::TITLE;
+		}
+	}
+	//通常ゲーム処理
+	else {
+		// 必殺弾が当たったらヒットストップ掛ける
+		if (player_->GetIsSpecialBulletDirection()) {
+			framePerUpdate_ = 3;
+		} else {
+			framePerUpdate_ = 1;
+		}
+		// クリアしたらゆっくりになる
+		if (enemy_->GetHP() <= 0) {
+			framePerUpdate_ = 3;
 		}
 
-		// レティクルの更新
-		reticle_->Update(viewProjection_);
-		// 自キャラの更新
-		player_->Update();
-		// 敵キャラの更新
-		enemy_->Update();
-		// 天球の更新
-		skydome_->Update();
-		// 地面の更新
-		ground_->Update();
-		// 背景の更新
-		background_->Update();
-		// 光玉の更新
-		for (ShineBall* shineBall : shineBalls_) {
-			shineBall->Update();
+		// タイマーインクリメント
+		timer_++;
+		// nfに1回更新処理を行う
+		if (timer_ % framePerUpdate_ == 0) {
+			// カメラの処理
+			if (isDebugCameraActive_) {
+				// デバッグカメラの更新
+				debugCamera_->Update();
+				viewProjection_.matView = debugCamera_->GetViewProjection().matView;
+				viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+				// ビュープロジェクション行列の転送
+				viewProjection_.TransferMatrix();
+
+			} else {
+				// TPSカメラの更新
+				tpsCamera_->Update();
+				viewProjection_.matView = tpsCamera_->GetViewProjection().matView;
+				viewProjection_.matProjection = tpsCamera_->GetViewProjection().matProjection;
+				// ビュープロジェクション行列の更新と転送
+				viewProjection_.TransferMatrix();
+			}
+
+			// レティクルの更新
+			reticle_->Update(viewProjection_);
+			// 自キャラの更新
+			player_->Update();
+			// 敵キャラの更新
+			enemy_->Update();
+			// 天球の更新
+			skydome_->Update();
+			// 地面の更新
+			ground_->Update();
+			// 背景の更新
+			background_->Update();
+			// 光玉の更新
+			for (ShineBall* shineBall : shineBalls_) {
+				shineBall->Update();
+			}
+			// UIの更新
+			ui_->Update();
 		}
-		// UIの更新
-		ui_->Update();
-	}
-	// 当たり判定処理
-	CheckAllCollision();
+		// 当たり判定処理
+		CheckAllCollision();
 
-	// 光玉生成処理
-	CreateShineBall();
+		// 光玉生成処理
+		CreateShineBall();
 
-	// クリアシーン遷移処理
-	if (enemy_->GetHP() <= 0) {
-		NextScene = RESULT;
-	}
-	// ゲームオーバー遷移処理
-	if (player_->GetHP() <= 0) {
-		NextScene = GAMEOVER;
-	}
+		// クリアシーン遷移処理
+		if (enemy_->GetHP() <= 0) {
+			NextScene = RESULT;
+		}
+		// ゲームオーバー遷移処理
+		if (player_->GetHP() <= 0) {
+			NextScene = GAMEOVER;
+		}
 
 #ifdef _DEBUG
-	ImGui::Begin("scene");
-	ImGui::Text("lengthPtoE : %f", Length(Subtract(player_->GetWorldPostion(), enemy_->GetStomach()->GetWorldPosition())));
-	ImGui::End();
+		ImGui::Begin("scene");
+		ImGui::Text("lengthPtoE : %f", Length(Subtract(player_->GetWorldPostion(), enemy_->GetStomach()->GetWorldPosition())));
+		ImGui::End();
 #endif // _DEBUG
+	}
 }
 
 void StageScene::Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* dxCommon_) {
@@ -233,6 +265,10 @@ void StageScene::Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* dxC
 	tpsCamera_->DrawUI();
 	// UI描画
 	ui_->Draw();
+	//ポーズ中スプライト処理
+	if (isPause_) {
+		pause_->DrawUI();
+	}
 	
 
 	// スプライト描画後処理

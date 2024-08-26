@@ -15,6 +15,7 @@
 #include "Reticle.h"
 #include "UI.h"
 #include "Audio.h"
+#include "Pause.h"
 
 
 class StageScene :	public BaseScene
@@ -75,6 +76,8 @@ private:
 
 	//UI
 	std::unique_ptr<UI> ui_ = nullptr;
+	//ポーズメニュー
+	std::unique_ptr<Pause> pause_ = nullptr;
 
 	// 衝突マネージャー
 	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
@@ -85,11 +88,14 @@ private:
 	bool isSoundPlayBGM_ = false;
 	const float soundVolumeBGM_ = 0.45f;
 
+
 private:
 	//タイマー
 	int timer_ = 0;
 	//何fに更新処理を行うか変数
 	int framePerUpdate_ = 1;
+	//ポーズ中か判定
+	bool isPause_;
 
 };
 

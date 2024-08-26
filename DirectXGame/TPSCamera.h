@@ -3,6 +3,8 @@
 #include "Input.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include "Sprite.h"
+#include "memory"
 #include <cmath>
 
 //ロックオンできる部位
@@ -25,6 +27,7 @@ public:
 	/// 更新
 	/// </summary>
 	void Update();
+	void DrawUI();
 
 public://関数
 	void LockOnCameraProcess();
@@ -48,6 +51,12 @@ private:
 	ViewProjection viewProjection_;
 	//ステージシーン
 	StageScene* stageScene_ = nullptr;
+	//ロックオンターゲットスプライト
+	std::unique_ptr<Sprite> spriteLockOnTarget_ = nullptr;
+	//スプライトのテクスチャハンドル
+	uint32_t textureHandleLockOnTarget_;
+	//スプライトのサイズ取得
+	Vector2 lockOnTargetSize_;
 
 private://調整変数
 	// カメラからプレイヤーへの方向
@@ -68,9 +77,11 @@ private://調整変数
 	bool isLockOn = false;//ロックオン状態か
 	bool isTransition = false;//ロックオン遷移状態か
 	// ロックオン遷移フレーム
-	const uint32_t kTransitionFrame = 6;
+	const int kTransitionFrame = 6;
 	//遷移カウントダウン
-	uint32_t countTransition_ = 0;
+	int countTransition_ = 0;
 	//ロックオン中の部位
 	Parts lockOnParts;
+	//ロックオンUIの最終的なサイズ比
+	const float kLockOnTargetGoalSize_ = 1.0f / 8.0f;
 };

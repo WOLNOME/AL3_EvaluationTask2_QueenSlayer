@@ -15,8 +15,10 @@ void UI::Initialize() {
 	texturePlayerGreenHP_ = TextureManager::Load("UI/PlayerGreenHP.png");
 	texturePlayerFrameHP_ = TextureManager::Load("UI/PlayerFrameHP.png");
 	texturePlayerYellowSP_ = TextureManager::Load("UI/PlayerYellowSP.png");
+	texturePlayerMaxSP_ = TextureManager::Load("UI/PlayerMaxSP.png");
 	texturePlayerFrameSP_ = TextureManager::Load("UI/PlayerFrameSP.png");
 	textureDefaultUI_ = TextureManager::Load("UI/DefaultUI.png");
+	textureInductionSP_ = TextureManager::Load("UI/inductionSPUI.png");
 
 	// 2Dスプライト
 	spriteEnemyGreenHP_.reset(Sprite::Create(textureEnemyGreenHP_, {WinApp::kWindowWidth / 2.0f, 85}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
@@ -25,8 +27,10 @@ void UI::Initialize() {
 	spritePlayerGreenHP_.reset(Sprite::Create(texturePlayerGreenHP_, {WinApp::kWindowWidth / 2.0f, 475}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
 	spritePlayerFrameHP_.reset(Sprite::Create(texturePlayerFrameHP_, {WinApp::kWindowWidth / 2.0f, 475}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
 	spritePlayerYellowSP_.reset(Sprite::Create(texturePlayerYellowSP_, {WinApp::kWindowWidth / 2.0f, 485}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
+	spritePlayerMaxSP_.reset(Sprite::Create(texturePlayerMaxSP_, {WinApp::kWindowWidth / 2.0f, 485}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
 	spritePlayerFrameSP_.reset(Sprite::Create(texturePlayerFrameSP_, {WinApp::kWindowWidth / 2.0f, 485}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
 	spriteDefaultUI_.reset(Sprite::Create(textureDefaultUI_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
+	spriteInductionSP_.reset(Sprite::Create(textureInductionSP_, {WinApp::kWindowWidth / 2.0f, 575}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
 
 	//サイズ取得
 	enemyGreenHPSize_ = spriteEnemyGreenHP_->GetSize();
@@ -53,6 +57,19 @@ void UI::Update() {
 	newPlayerYellowSPSize.x = max(newPlayerYellowSPSize.x, 0.0f);
 	newPlayerYellowSPSize.x = min(newPlayerYellowSPSize.x, playerYellowSPSize_.x);
 	spritePlayerYellowSP_->SetSize(newPlayerYellowSPSize);
+	//SP誘導UI点滅処理
+	blinkingTimer_++;
+	if (blinkingTimer_ % kBlinkingTimeInductionSP_ == 0) {
+		if (isDisplayInductionSP_) {
+			isDisplayInductionSP_ = false;
+		} else {
+			isDisplayInductionSP_ = true;
+		}
+	}
+	if (blinkingTimer_ == kBlinkingTimeInductionSP_ * 100) {
+		blinkingTimer_ = 0;
+	}
+
 }
 
 void UI::Draw() { 
@@ -63,6 +80,16 @@ void UI::Draw() {
 	spritePlayerFrameHP_->Draw();
 	spritePlayerGreenHP_->Draw();
 	spritePlayerFrameSP_->Draw();
-	spritePlayerYellowSP_->Draw();
+	//playerSPゲージによって
+	if (stageScene_->GetPlayer()->GetSPGauge() >= stageScene_->GetPlayer()->kMaxSPGauge_) {
+		spritePlayerMaxSP_->Draw();
+		//SP誘導UI
+		if (isDisplayInductionSP_) {
+			spriteInductionSP_->Draw();
+		}
+
+	} else {
+		spritePlayerYellowSP_->Draw();
+	}
 	spriteDefaultUI_->Draw();
 }

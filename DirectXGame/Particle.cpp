@@ -1,6 +1,6 @@
 #include "Particle.h"
-#include "TextureManager.h"
 #include "Function.h"
+#include "TextureManager.h"
 #include "time.h"
 
 Particle::Particle() {}
@@ -131,7 +131,9 @@ void Particle::Update() {
 
 	// 回転
 	for (uint32_t i = 0; i < particleNum_; i++) {
-		particle_[i].worldTransform.rotation_.y += kRotateSpeed_;
+		particle_[i].worldTransform.rotation_.x += kRotateSpeed_;
+		particle_[i].worldTransform.rotation_.y += kRotateSpeed_ + 0.2f;
+		particle_[i].worldTransform.rotation_.z += kRotateSpeed_ + 0.4f;
 	}
 
 	// ワールドトランスフォームの更新

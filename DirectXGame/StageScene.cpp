@@ -229,8 +229,11 @@ void StageScene::Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* dxC
 
 	// 2Dレティクル描画
 	reticle_->DrawUI();
+	//ロックオンUI描画
+	tpsCamera_->DrawUI();
 	// UI描画
 	ui_->Draw();
+	
 
 	// スプライト描画後処理
 	Sprite::PostDraw();

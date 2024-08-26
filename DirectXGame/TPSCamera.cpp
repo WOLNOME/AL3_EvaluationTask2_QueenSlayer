@@ -1,6 +1,8 @@
 #include "TPSCamera.h"
 #include "Function.h"
 #include "StageScene.h"
+#include "TextureManager.h"
+#include "WinApp.h"
 #include <imgui.h>
 
 void TPSCamera::Initialize(Input* input) {
@@ -16,6 +18,13 @@ void TPSCamera::Initialize(Input* input) {
 	viewProjection_.Initialize();
 	// directionの初期化
 	direction_ = Normalize(Subtract(toCenterDirectionLocal_, worldTransform_.translation_));
+
+	//ロックオンスプライトのテクスチャを読み込む
+	textureHandleLockOnTarget_ = TextureManager::Load("lockOnTarget.png"); 
+	//2Dスプライト
+	spriteLockOnTarget_.reset(Sprite::Create(textureHandleLockOnTarget_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
+	//2Dスプライトの元のサイズ取得
+	lockOnTargetSize_ = spriteLockOnTarget_->GetSize();
 }
 
 void TPSCamera::Update() {
@@ -79,11 +88,24 @@ void TPSCamera::Update() {
 #endif // _DEBUG
 }
 
+void TPSCamera::DrawUI() {
+	//ロックオン遷移状態か、ロックオン状態の時のみ
+	if (isTransition || isLockOn) {
+		spriteLockOnTarget_->Draw();
+	}
+}
+
 void TPSCamera::LockOnCameraProcess() {
 	// ロックオン遷移処理
 	if (isTransition) {
 		// カウントをインクリメント
 		countTransition_++;
+
+		//ロックオンUIのサイズを小さくする
+		Vector2 newLockOnTargetSize;
+		newLockOnTargetSize.x = lockOnTargetSize_.x - (lockOnTargetSize_.x - (lockOnTargetSize_.x * kLockOnTargetGoalSize_)) * ((float)countTransition_ / kTransitionFrame);
+		newLockOnTargetSize.y = lockOnTargetSize_.y - (lockOnTargetSize_.y - (lockOnTargetSize_.y * kLockOnTargetGoalSize_)) * ((float)countTransition_ / kTransitionFrame);
+		spriteLockOnTarget_->SetSize(newLockOnTargetSize);
 
 		// エネミー→回転中心座標のベクトルを獲得(slerp用に長さを揃える)
 		Vector3 enemyToCenterOfRotation;
@@ -123,6 +145,8 @@ void TPSCamera::LockOnCameraProcess() {
 			isTransition = false;
 			// カウントリセット
 			countTransition_ = 0;
+			//ロックオンUIサイズセット
+			spriteLockOnTarget_->SetSize({lockOnTargetSize_.x * kLockOnTargetGoalSize_, lockOnTargetSize_.y * kLockOnTargetGoalSize_});
 		}
 	}
 	// ロックオン中処理

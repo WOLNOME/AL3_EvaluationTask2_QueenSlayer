@@ -4,9 +4,12 @@ GameOverScene::GameOverScene() { NextScene = GAMEOVER; }
 
 GameOverScene::~GameOverScene() {}
 
-void GameOverScene::Init(Input* input) {
+void GameOverScene::Init(Input* input, Audio* audio) {
 	// 入力
 	input_ = input;
+	//オーディオ
+	audio_ = audio;
+
 }
 
 void GameOverScene::Update() {

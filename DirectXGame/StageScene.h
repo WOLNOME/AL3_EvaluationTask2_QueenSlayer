@@ -14,6 +14,7 @@
 #include "CollisionManager.h"
 #include "Reticle.h"
 #include "UI.h"
+#include "Audio.h"
 
 
 class StageScene :	public BaseScene
@@ -22,7 +23,7 @@ public:
 	StageScene();
 	~StageScene()override;
 public:
-	void Init(Input* input) override;
+	void Init(Input* input,Audio* audio) override;
 	void Update() override;
 	void Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* dxCommon_) override;
 
@@ -42,6 +43,8 @@ public://ゲッター
 private:
 	//入力
 	Input* input_ = nullptr;
+	//オーディオ
+	Audio* audio_ = nullptr;
 	//3Dモデル
 	std::unique_ptr<Model> modelSkydome_ = nullptr;
 	std::unique_ptr<Model> modelGround_ = nullptr;
@@ -73,9 +76,14 @@ private:
 	//UI
 	std::unique_ptr<UI> ui_ = nullptr;
 
-
 	// 衝突マネージャー
 	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
+
+	//BGM関連
+	uint32_t soundHandleBGM_;
+	uint32_t voiceHandleBGM_;
+	bool isSoundPlayBGM_ = false;
+	const float soundVolumeBGM_ = 0.45f;
 
 private:
 	//タイマー

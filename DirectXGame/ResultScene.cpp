@@ -6,9 +6,12 @@ ResultScene::ResultScene() {
 
 ResultScene::~ResultScene() {}
 
-void ResultScene::Init(Input* input) {
+void ResultScene::Init(Input* input, Audio* audio) {
 	// 入力
 	input_ = input;
+	//オーディオ
+	audio_ = audio;
+
 }
 
 void ResultScene::Update() {

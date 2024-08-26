@@ -1,6 +1,7 @@
 #pragma once
 #include "BaseScene.h"
 #include "Input.h"
+#include "Audio.h"
 
 class ResultScene : public BaseScene {
 public:
@@ -8,7 +9,7 @@ public:
 	~ResultScene() override;
 
 public:
-	void Init(Input* input) override;
+	void Init(Input* input, Audio* audio) override;
 	void Update() override;
 	void Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* dxCommon_) override;
 
@@ -17,4 +18,5 @@ public:
 
 private:
 	Input* input_ = nullptr;
+	Audio* audio_ = nullptr;
 };

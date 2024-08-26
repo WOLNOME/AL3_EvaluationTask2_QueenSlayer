@@ -10,9 +10,11 @@ TitleScene::~TitleScene()
 {
 }
 
-void TitleScene::Init(Input* input) {
+void TitleScene::Init(Input* input, Audio* audio) {
 	//入力
 	input_ = input; 
+	//オーディオ
+	audio_ = audio;
 }
 
 void TitleScene::Update() {

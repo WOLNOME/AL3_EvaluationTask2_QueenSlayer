@@ -87,6 +87,7 @@ void Head::Attack() {
 		// 振動前の位置を保持
 		if (timer_ == 0) {
 			prePos = worldTransform_.translation_;
+			isCharge_ = true;
 		}
 		// タイマーインクリメント
 		timer_++;
@@ -126,6 +127,7 @@ void Head::Attack() {
 			// フラグの変更
 			isPreMove_ = false;
 			isShoot_ = true;
+			isAttack_ = true;
 		}
 	}
 	// 攻撃処理

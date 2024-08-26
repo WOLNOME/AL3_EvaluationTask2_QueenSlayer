@@ -13,11 +13,17 @@ Player::~Player() {
 	for (PlayerSpecialBullet* bullet : specialBullets_) {
 		delete bullet;
 	}
+	// SE再生中止
+	audio_->StopWave(voiceHandleFire_);
+	audio_->StopWave(voiceHandleDamage_);
+	audio_->StopWave(voiceHandleGetShineBall_);
 }
 
-void Player::Initialize(const Vector3& position, Input* input) {
+void Player::Initialize(const Vector3& position, Input* input, Audio* audio) {
 	// 入力
 	input_ = input;
+	// オーディオ
+	audio_ = audio;
 	// 車両モデルの生成
 	modelVehicle_.reset(Model::CreateFromOBJ("playerUnder", true));
 	// 砲台モデルの生成
@@ -44,6 +50,11 @@ void Player::Initialize(const Vector3& position, Input* input) {
 	nowInviTimer_ = 0;
 	isInvincible_ = false;
 	isDisplay_ = true;
+
+	// サウンドハンドル
+	soundHandleFire_ = audio_->LoadWave("Audio/fireNormalSE.wav");
+	soundHandleDamage_ = audio->LoadWave("Audio/damageNormalSE.wav");
+	soundHandleGetShineBall_ = audio_->LoadWave("Audio/getShineBallSE.wav");
 }
 
 void Player::Update() {
@@ -111,6 +122,8 @@ void Player::Update() {
 		if (nowSPGauge_ == kMaxSPGauge_) {
 			isUseSP_ = true;
 		}
+		// SP回収したらSE鳴らす
+		isSoundPlayGetShineBall_ = true;
 		vehicle_->SetIsGetShineBall(false);
 	}
 
@@ -150,6 +163,22 @@ void Player::Draw(ViewProjection& viewProjection) {
 	}
 }
 
+void Player::AudioPlay() {
+	// SE再生
+	if (isSoundPlayFire_) {
+		voiceHandleFire_ = audio_->PlayWave(soundHandleFire_, false, soundVolumeFire_);
+		isSoundPlayFire_ = false;
+	}
+	if (isSoundPlayDamage_) {
+		voiceHandleDamage_ = audio_->PlayWave(soundHandleDamage_, false, soundVolumeDamage_);
+		isSoundPlayDamage_ = false;
+	}
+	if (isSoundPlayGetShineBall_) {
+		voiceHandleGetShineBall_ = audio_->PlayWave(soundHandleGetShineBall_, false, soundVolumeGetShineBall_);
+		isSoundPlayGetShineBall_ = false;
+	}
+}
+
 void Player::Attack() {
 	// インターバル関連処理
 	if (interval_ > 0) {
@@ -169,7 +198,8 @@ void Player::Attack() {
 			velocity = Multiply(kBulletSpeed_, velocity);
 			// 弾を初期化
 			newBullet->Initialize(modelBullet_.get(), bulletInitPosition, velocity);
-
+			// SE再生
+			isSoundPlayFire_ = true;
 			// 弾を登録する
 			bullets_.push_back(newBullet);
 			// インターバルリセット
@@ -188,7 +218,8 @@ void Player::Attack() {
 			velocity = Multiply(kBulletSpeed_, velocity);
 			// 弾を初期化
 			newBullet->Initialize(modelSpecialBullet_.get(), bulletInitPosition, velocity);
-
+			// SE再生
+			isSoundPlayFire_ = true;
 			// 弾を登録する
 			specialBullets_.push_back(newBullet);
 			// インターバルリセット
@@ -207,7 +238,10 @@ void Player::Damage() {
 		if (!isInvincible_) {
 			nowHP_ -= 1;
 			isInvincible_ = true;
+			// SE鳴らす
+			isSoundPlayDamage_ = true;
 		}
+
 		vehicle_->SetIsDamage(false);
 	}
 }

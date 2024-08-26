@@ -23,7 +23,7 @@ void GameScene::Initialize() {
 	// シーンの生成
 	m_pScene = std::make_unique<TitleScene>();
 	//シーンの初期化
-	m_pScene->Init(input_);
+	m_pScene->Init(input_,audio_);
 	CurrentScene_ = TITLE;
 	NextScene_ = TITLE;
 
@@ -100,25 +100,25 @@ void GameScene::ChangeScene() {
 		switch (NextScene_) { // 引数のシーン
 		case SCENE::TITLE:
 			m_pScene = std::make_unique<TitleScene>(); // タイトルシーンを現在のシーンにする
-			m_pScene->Init(input_);
+			m_pScene->Init(input_,audio_);
 			CurrentScene_ = m_pScene->GetNextScene();
 			;
 			break;
 		case SCENE::STAGE:
 			m_pScene = std::make_unique<StageScene>(); // ステージシーンを現在のシーンにする
-			m_pScene->Init(input_);
+			m_pScene->Init(input_, audio_);
 			CurrentScene_ = m_pScene->GetNextScene();
 			;
 			break;
 		case SCENE::GAMEOVER:
 			m_pScene = std::make_unique<GameOverScene>(); // ゲームオーバーシーンを現在のシーンにする
-			m_pScene->Init(input_);
+			m_pScene->Init(input_, audio_);
 			CurrentScene_ = m_pScene->GetNextScene();
 			;
 			break;
 		case SCENE::RESULT:
 			m_pScene = std::make_unique<ResultScene>(); // リザルトシーンを現在のシーンにする
-			m_pScene->Init(input_);
+			m_pScene->Init(input_, audio_);
 			CurrentScene_ = m_pScene->GetNextScene();
 			;
 			break;

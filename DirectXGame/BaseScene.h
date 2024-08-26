@@ -5,7 +5,7 @@ class BaseScene {
 public:
 	virtual ~BaseScene() = default;
 
-	virtual void Init(Input* input) = 0;
+	virtual void Init(Input* input,Audio* audio) = 0;
 	virtual void Update() = 0;
 	virtual void Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* dxCommon_) = 0;
 

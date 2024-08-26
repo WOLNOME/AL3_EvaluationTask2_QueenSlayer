@@ -1,8 +1,9 @@
 #pragma once
+#include "Input.h"
+#include "Audio.h"
 #include "Chest.h"
 #include "Function.h"
 #include "Head.h"
-#include "Input.h"
 #include "Model.h"
 #include "Stomach.h"
 #include "WorldTransform.h"
@@ -25,9 +26,10 @@ public:
 	Enemy();
 	~Enemy();
 
-	void Initialize(const Vector3& position);
+	void Initialize(const Vector3& position,Audio* audio);
 	void Update();
 	void Draw(ViewProjection& viewProjection);
+	void AudioPlay();
 
 public: // ゲッター
 	// 腹部獲得
@@ -62,6 +64,8 @@ public: // 定数
 private:
 	// 入力
 	Input* input_ = nullptr;
+	//オーディオ
+	Audio* audio_ = nullptr;
 	// 腹部
 	std::unique_ptr<Stomach> stomach_ = nullptr;
 	std::unique_ptr<Model> modelStomach_ = nullptr;
@@ -98,4 +102,27 @@ private:
 
 	// 死亡フラグ
 	bool isDead_;
+
+private: // SE関連
+	// 攻撃時効果音
+	uint32_t soundHandleAttack_;
+	uint32_t voiceHandleAttack_;
+	bool isSoundPlayAttack_ = false;
+	const float soundVolumeAttack_ = 0.85f;
+	// 攻撃チャージ音
+	uint32_t soundHandleCharge_;
+	uint32_t voiceHandleCharge_;
+	bool isSoundPlayCharge_ = false;
+	const float soundVolumeCharge_ = 0.45f;
+	// 被弾(中)時効果音
+	uint32_t soundHandleMediumDamage_;
+	uint32_t voiceHandleMediumDamage_;
+	bool isSoundPlayMediumDamage_ = false;
+	const float soundVolumeMediumDamage_ = 0.65f;
+	// 被弾(大)時効果音
+	uint32_t soundHandleLargeDamage_;
+	uint32_t voiceHandleLargeDamage_;
+	bool isSoundPlayLargeDamage_ = false;
+	const float soundVolumeLargeDamage_ = 1.5f;
+	
 };

@@ -94,6 +94,7 @@ void Stomach::Attack() {
 		// 振動前の位置を保持
 		if (timer_ == 0) {
 			prePos = worldTransform_.translation_;
+			isCharge_ = true;
 		}
 		// タイマーインクリメント
 		timer_++;
@@ -133,6 +134,7 @@ void Stomach::Attack() {
 			// フラグの変更
 			isPreMove_ = false;
 			isShoot_ = true;
+			isAttack_ = true;
 		}
 	}
 	// 攻撃処理
@@ -189,6 +191,7 @@ void Stomach::Jump() {
 		// ため前の位置を保持
 		if (timer_ == 0) {
 			prePos = worldTransform_.translation_;
+			isCharge_ = true;
 		}
 		// タイマーインクリメント
 		timer_++;
@@ -236,6 +239,7 @@ void Stomach::Jump() {
 			isJump_ = false;
 			isAction_ = false;
 			isAccumulatePower_ = true;
+			isAttack_ = true;
 		}
 	}
 }

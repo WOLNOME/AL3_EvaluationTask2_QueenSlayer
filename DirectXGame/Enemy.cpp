@@ -5,9 +5,17 @@
 
 Enemy::Enemy() {}
 
-Enemy::~Enemy() {}
+Enemy::~Enemy() {
+	//サウンド停止
+	audio_->StopWave(voiceHandleAttack_);
+	audio_->StopWave(voiceHandleCharge_);
+	audio_->StopWave(voiceHandleMediumDamage_);
+	audio_->StopWave(voiceHandleLargeDamage_);
+}
 
-void Enemy::Initialize(const Vector3& position) {
+void Enemy::Initialize(const Vector3& position, Audio* audio) {
+	//オーディオ
+	audio_ = audio;
 	// 腹部モデルの生成
 	modelStomach_.reset(Model::CreateFromOBJ("enemyStomach", true));
 	// 胸部モデルの生成
@@ -44,6 +52,12 @@ void Enemy::Initialize(const Vector3& position) {
 	nowHP_ = kMaxHP_;
 	nowSP_ = 0;
 	isDead_ = false;
+
+	// サウンドハンドル
+	soundHandleAttack_ = audio_->LoadWave("Audio/attackEnemySE.wav");
+	soundHandleCharge_ = audio->LoadWave("Audio/chargeEnemySE.wav");
+	soundHandleMediumDamage_ = audio_->LoadWave("Audio/damageMediumSE.wav");
+	soundHandleLargeDamage_ = audio->LoadWave("Audio/damageLargeSE.wav");
 
 }
 
@@ -129,6 +143,32 @@ void Enemy::Update() {
 		isDead_ = true;
 	}
 
+	//サウンド
+	if (head_->GetIsCharge()) {
+		isSoundPlayCharge_ = true;
+		head_->SetIsCharge(false);
+	}
+	if (chest_->GetIsCharge()) {
+		isSoundPlayCharge_ = true;
+		chest_->SetIsCharge(false);
+	}
+	if (stomach_->GetIsCharge()) {
+		isSoundPlayCharge_ = true;
+		stomach_->SetIsCharge(false);
+	}
+	if (head_->GetIsAttack()) {
+		isSoundPlayAttack_ = true;
+		head_->SetIsAttack(false);
+	}
+	if (chest_->GetIsAttack()) {
+		isSoundPlayAttack_ = true;
+		chest_->SetIsAttack(false);
+	}
+	if (stomach_->GetIsAttack()) {
+		isSoundPlayAttack_ = true;
+		stomach_->SetIsAttack(false);
+	}
+
 #ifdef _DEBUG
 	ImGui::Begin("enemy");
 	ImGui::Text("enemyHP : %d/%d", nowHP_, kMaxHP_);
@@ -146,6 +186,26 @@ void Enemy::Draw(ViewProjection& viewProjection) {
 	chest_->Draw(viewProjection);
 	// 頭部描画
 	head_->Draw(viewProjection);
+}
+
+void Enemy::AudioPlay() {
+	// SE再生
+	if (isSoundPlayAttack_) {
+		voiceHandleAttack_ = audio_->PlayWave(soundHandleAttack_, false, soundVolumeAttack_);
+		isSoundPlayAttack_ = false;
+	}
+	if (isSoundPlayCharge_) {
+		voiceHandleCharge_ = audio_->PlayWave(soundHandleCharge_, false, soundVolumeCharge_);
+		isSoundPlayCharge_ = false;
+	}
+	if (isSoundPlayMediumDamage_) {
+		voiceHandleMediumDamage_ = audio_->PlayWave(soundHandleMediumDamage_, false, soundVolumeMediumDamage_);
+		isSoundPlayMediumDamage_ = false;
+	}
+	if (isSoundPlayLargeDamage_) {
+		voiceHandleLargeDamage_ = audio_->PlayWave(soundHandleLargeDamage_, false, soundVolumeLargeDamage_);
+		isSoundPlayLargeDamage_ = false;
+	}
 }
 
 void Enemy::StopAction() {
@@ -176,6 +236,8 @@ EnemyActionPattern Enemy::ActionRoulette() {
 }
 
 void Enemy::Damage() {
+	//関節部分狙うと2箇所にダメージが通るようになる
+
 	if (head_->GetIsDamageSmall()) {
 		nowHP_ -= kDamageSmall_;
 		head_->SetIsDamageSmall(false);
@@ -191,27 +253,39 @@ void Enemy::Damage() {
 
 	if (head_->GetIsDamageMedium()) {
 		nowHP_ -= kDamageMedium_;
+		// サウンド
+		isSoundPlayMediumDamage_ = true;
 		head_->SetIsDamageMedium(false);
 	}
 	if (chest_->GetIsDamageMedium()) {
 		nowHP_ -= kDamageMedium_;
+		// サウンド
+		isSoundPlayMediumDamage_ = true;
 		chest_->SetIsDamageMedium(false);
 	}
 	if (stomach_->GetIsDamageMedium()) {
 		nowHP_ -= kDamageMedium_;
+		// サウンド
+		isSoundPlayMediumDamage_ = true;
 		stomach_->SetIsDamageMedium(false);
 	}
 
 	if (head_->GetIsDamageLarge()) {
 		nowHP_ -= kDamageLarge_;
+		// サウンド
+		isSoundPlayLargeDamage_ = true;
 		head_->SetIsDamageLarge(false);
 	}
 	if (chest_->GetIsDamageLarge()) {
 		nowHP_ -= kDamageLarge_;
+		// サウンド
+		isSoundPlayLargeDamage_ = true;
 		chest_->SetIsDamageLarge(false);
 	}
 	if (stomach_->GetIsDamageLarge()) {
 		nowHP_ -= kDamageLarge_;
+		// サウンド
+		isSoundPlayLargeDamage_ = true;
 		stomach_->SetIsDamageLarge(false);
 	}
 

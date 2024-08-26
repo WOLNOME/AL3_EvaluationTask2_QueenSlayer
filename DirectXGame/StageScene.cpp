@@ -1,6 +1,6 @@
 #include "StageScene.h"
-#include "time.h"
 #include "ImGuiManager.h"
+#include "time.h"
 
 StageScene::StageScene() { NextScene = STAGE; }
 
@@ -9,11 +9,15 @@ StageScene::~StageScene() {
 	for (ShineBall* shineBall : shineBalls_) {
 		delete shineBall;
 	}
+	// BGMストップ
+	audio_->StopWave(voiceHandleBGM_);
 }
 
-void StageScene::Init(Input* input) {
+void StageScene::Init(Input* input, Audio* audio) {
 	// 入力
 	input_ = input;
+	// オーディオ
+	audio_ = audio;
 	// 3Dモデルの生成
 	modelSkydome_.reset(Model::CreateFromOBJ("skydome", true));
 	modelGround_.reset(Model::CreateFromOBJ("ground", true));
@@ -40,7 +44,7 @@ void StageScene::Init(Input* input) {
 	background_ = std::make_unique<Background>();
 	// 衝突マネージャの生成
 	collisionManager_ = std::make_unique<CollisionManager>();
-	//UIの生成
+	// UIの生成
 	ui_ = std::make_unique<UI>();
 
 	// プレイヤーにシーンを渡す
@@ -49,7 +53,7 @@ void StageScene::Init(Input* input) {
 	enemy_->SetStageScene(this);
 	// TPSカメラにシーンを渡す
 	tpsCamera_->SetStageScene(this);
-	//UIにシーンを渡す
+	// UIにシーンを渡す
 	ui_->SetStageScene(this);
 
 	// TPSカメラの初期化
@@ -57,17 +61,22 @@ void StageScene::Init(Input* input) {
 	// レティクル初期化
 	reticle_->Initialize();
 	// 自キャラの初期化
-	player_->Initialize({0.0f, 0.3f, 20.0f}, input_);
+	player_->Initialize({0.0f, 0.3f, 20.0f}, input_,audio_);
 	// 敵キャラの初期化
-	enemy_->Initialize({0.0f, 1.5f, 0.0f});
+	enemy_->Initialize({0.0f, 1.5f, 0.0f},audio_);
 	// 天球の初期化
 	skydome_->Initialize(modelSkydome_.get(), {0.0f, 0.0f, 0.0f});
 	// 地面の初期化
 	ground_->Initialize(modelGround_.get(), {0.0f, 0.0f, 0.0f});
 	// 背景の初期化
 	background_->Initialize({0.0f, 0.0f, 0.0f});
-	//UIの初期化
+	// UIの初期化
 	ui_->Initialize();
+
+	// BGMのサウンドハンドル
+	soundHandleBGM_ = audio_->LoadWave("Audio/stageBGM.wav");
+	//最初からBGM再生
+	isSoundPlayBGM_ = true;
 
 }
 
@@ -90,20 +99,20 @@ void StageScene::Update() {
 	}
 #endif // _DEBUG
 
-	//必殺弾が当たったらヒットストップ掛ける
+	// 必殺弾が当たったらヒットストップ掛ける
 	if (player_->GetIsSpecialBulletDirection()) {
 		framePerUpdate_ = 3;
 	} else {
 		framePerUpdate_ = 1;
 	}
-	//クリアしたらゆっくりになる
+	// クリアしたらゆっくりになる
 	if (enemy_->GetHP() <= 0) {
 		framePerUpdate_ = 3;
 	}
 
-	//タイマーインクリメント
+	// タイマーインクリメント
 	timer_++;
-	//nfに1回更新処理を行う
+	// nfに1回更新処理を行う
 	if (timer_ % framePerUpdate_ == 0) {
 		// カメラの処理
 		if (isDebugCameraActive_) {
@@ -148,15 +157,14 @@ void StageScene::Update() {
 	// 光玉生成処理
 	CreateShineBall();
 
-	//クリアシーン遷移処理
+	// クリアシーン遷移処理
 	if (enemy_->GetHP() <= 0) {
 		NextScene = RESULT;
 	}
-	//ゲームオーバー遷移処理
+	// ゲームオーバー遷移処理
 	if (player_->GetHP() <= 0) {
 		NextScene = GAMEOVER;
 	}
-
 
 #ifdef _DEBUG
 	ImGui::Begin("scene");
@@ -221,12 +229,29 @@ void StageScene::Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* dxC
 
 	// 2Dレティクル描画
 	reticle_->DrawUI();
-	//UI描画
+	// UI描画
 	ui_->Draw();
-
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
+
+#pragma endregion
+
+#pragma region BGM,SE関連
+	/// <summary>
+	/// ここにAudio関連の処理を追加できる
+	/// </summary>
+
+	// BGMやSE関連
+	if (isSoundPlayBGM_) {
+		voiceHandleBGM_ = audio_->PlayWave(soundHandleBGM_, true, soundVolumeBGM_);
+		isSoundPlayBGM_ = false;
+	}
+	//プレイヤー周り効果音
+	player_->AudioPlay();
+	//敵周り効果音
+	enemy_->AudioPlay();
+
 
 #pragma endregion
 }
@@ -237,7 +262,7 @@ void StageScene::CheckAllCollision() {
 
 	// 自弾リストの取得
 	const std::list<PlayerBullet*>& playerBullets = player_->GetBullets();
-	//必殺弾リストの取得
+	// 必殺弾リストの取得
 	const std::list<PlayerSpecialBullet*>& playerSpecialBullets = player_->GetSpecialBullets();
 	// 敵弾リストの取得
 	const std::list<EnemyBullet*>& enemyBulletsStomach = enemy_->GetStomach()->GetBullets();
@@ -254,7 +279,7 @@ void StageScene::CheckAllCollision() {
 	for (PlayerBullet* pbullet : playerBullets) {
 		colliders_.push_back(pbullet);
 	}
-	//必殺弾コライダーをリストに登録
+	// 必殺弾コライダーをリストに登録
 	for (PlayerSpecialBullet* pbullet : playerSpecialBullets) {
 		colliders_.push_back(pbullet);
 	}

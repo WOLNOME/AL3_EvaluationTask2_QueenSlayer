@@ -41,6 +41,8 @@ public: // ゲッター
 	bool GetIsDamageSmall() { return isDamageSmall_; }
 	bool GetIsDamageMedium() { return isDamageMedium_; }
 	bool GetIsDamageLarge() { return isDamageLarge_; }
+	bool GetIsCharge() { return isCharge_; }
+	bool GetIsAttack() { return isAttack_; }
 
 public: // セッター
 	void SetStageScene(StageScene* stageScene) { stageScene_ = stageScene; }
@@ -49,6 +51,8 @@ public: // セッター
 	void SetIsDamageMedium(bool isDamageMedium) { isDamageMedium_ = isDamageMedium; }
 	void SetIsDamageLarge(bool isDamageLarge) { isDamageLarge_ = isDamageLarge; }
 	void SetAccumlatePowerTime(int accumlatePowerTime) { accumulatePowerTime_ = accumlatePowerTime; }
+	void SetIsCharge(bool isCharge) { isCharge_ = isCharge; }
+	void SetIsAttack(bool isAttack) { isAttack_ = isAttack; }
 
 private:
 	// ワールド変換データ
@@ -91,5 +95,9 @@ private:
 	bool isDamageMedium_ = false;
 	// 大ダメージ蓄積フラグ
 	bool isDamageLarge_ = false;
+
+	// サウンドフラグ
+	bool isCharge_ = false;
+	bool isAttack_ = false;
 
 };

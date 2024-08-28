@@ -1,13 +1,13 @@
 #include "GameScene.h"
 #include "AxisIndicator.h"
 #include "BaseScene.h"
+#include "GameOverScene.h"
 #include "ImGuiManager.h"
 #include "PrimitiveDrawer.h"
-#include "TitleScene.h"
-#include "StageScene.h"
 #include "ResultScene.h"
-#include "GameOverScene.h"
+#include "StageScene.h"
 #include "TextureManager.h"
+#include "TitleScene.h"
 #include <cassert>
 
 GameScene::GameScene() {}
@@ -22,17 +22,16 @@ void GameScene::Initialize() {
 
 	// シーンの生成
 	m_pScene = std::make_unique<TitleScene>();
-	//シーンの初期化
-	m_pScene->Init(input_,audio_);
+	// シーンの初期化
+	m_pScene->Init(input_, audio_);
 	CurrentScene_ = TITLE;
 	NextScene_ = TITLE;
 
-	//シーン遷移生成
+	// シーン遷移生成
 	gradation_ = std::make_unique<Gradation>();
 	AnimationFrame_ = 0;
 	isInNow_ = false;
 	isOutNow_ = false;
-
 }
 
 void GameScene::Update() {
@@ -44,9 +43,9 @@ void GameScene::Update() {
 	}
 	// シーンの切り替え処理
 	ChangeScene();
+	// 各シーンからアプリの終了合図を受け取る
+	isExit_ = m_pScene->GetIsExit();
 
-
-	
 #ifdef _DEBUG
 	ImGui::Begin("debug");
 	int nowScene = CurrentScene_;
@@ -54,7 +53,6 @@ void GameScene::Update() {
 
 	ImGui::End();
 #endif // _DEBUG
-
 }
 
 void GameScene::Draw() {
@@ -62,7 +60,7 @@ void GameScene::Draw() {
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 	// シーンの描画処理
 	m_pScene->Draw(commandList, dxCommon_);
-	//シーン遷移描画
+	// シーン遷移描画
 	gradation_->Draw(commandList);
 }
 
@@ -100,7 +98,7 @@ void GameScene::ChangeScene() {
 		switch (NextScene_) { // 引数のシーン
 		case SCENE::TITLE:
 			m_pScene = std::make_unique<TitleScene>(); // タイトルシーンを現在のシーンにする
-			m_pScene->Init(input_,audio_);
+			m_pScene->Init(input_, audio_);
 			CurrentScene_ = m_pScene->GetNextScene();
 			;
 			break;
@@ -123,7 +121,6 @@ void GameScene::ChangeScene() {
 			;
 			break;
 
-
 		default:
 			break;
 		}
@@ -145,5 +142,4 @@ void GameScene::ChangeScene() {
 			gradation_->SetIsDraw(false);
 		}
 	}
-
 }

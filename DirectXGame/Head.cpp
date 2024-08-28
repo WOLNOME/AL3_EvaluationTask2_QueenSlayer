@@ -7,58 +7,149 @@
 Head::Head() {}
 
 Head::~Head() {
-	// 解放
-	for (EnemyBullet* bullet : bullets_) {
-		delete bullet;
-	}
-}
-
-void Head::Initialize(Model* model, const float rad) {
-	// NULLポインタチェック
-	assert(model);
-	model_ = model;
-	// 弾モデルの生成
-	modelBullet_.reset(Model::CreateFromOBJ("enemyBullet", true));
-	// ワールドトランスフォーム設定
-	worldTransform_.Initialize();
-	// 半径をセット
-	radius_ = rad;
-	// テクスチャ
-	textureHandle_ = TextureManager::Load("enemyHead/enemyHead.png");
-	// 位置を半径に応じて変える
-	worldTransform_.translation_ = {0.0f, radius_ * 2.0f, 0.0f};
-	initPos = worldTransform_.translation_;
-	// 衝突属性を設定(自分の属性)
-	SetCollisionAttribute(kCollisionAttributeEnemy);
-}
-
-void Head::Update() {
-	// デスフラグの立った弾を削除
-	bullets_.remove_if([](EnemyBullet* bullet) {
-		if (bullet->isDead()) {
+	switch (useScene_) {
+	case USETITLE:
+		break;
+	case USESTAGE:
+		// 解放
+		for (EnemyBullet* bullet : bullets_) {
 			delete bullet;
-			return true;
 		}
-		return false;
-	});
+		break;
+	case USEDIRECTION:
+		break;
+	default:
+		break;
+	}
+	
+}
 
-	// 弾更新
-	for (EnemyBullet* bullet : bullets_) {
-		bullet->Update();
+void Head::Initialize(Model* model, const float rad, UseScene useScene) {
+	// 使用されるシーン設定
+	useScene_ = useScene;
+
+	switch (useScene_) {
+	case USETITLE:
+		// NULLポインタチェック
+		assert(model);
+		model_ = model;
+		// ワールドトランスフォーム設定
+		worldTransform_.Initialize();
+		// 半径をセット
+		radius_ = rad;
+		// テクスチャ
+		textureHandle_ = TextureManager::Load("enemyHead/enemyHead.png");
+		// 位置を半径に応じて変える
+		worldTransform_.translation_ = {0.0f, radius_ * 2.0f, 0.0f};
+		initPos = worldTransform_.translation_;
+		break;
+	case USESTAGE:
+		// NULLポインタチェック
+		assert(model);
+		model_ = model;
+		// 弾モデルの生成
+		modelBullet_.reset(Model::CreateFromOBJ("enemyBullet", true));
+		// ワールドトランスフォーム設定
+		worldTransform_.Initialize();
+		// 半径をセット
+		radius_ = rad;
+		// テクスチャ
+		textureHandle_ = TextureManager::Load("enemyHead/enemyHead.png");
+		// 位置を半径に応じて変える
+		worldTransform_.translation_ = {0.0f, radius_ * 2.0f, 0.0f};
+		initPos = worldTransform_.translation_;
+		// 衝突属性を設定(自分の属性)
+		SetCollisionAttribute(kCollisionAttributeEnemy);
+
+		// パーティクル生成
+		particle_ = std::make_unique<Particle>();
+		// テクスチャハンドル取得
+		textureHandleParticle_ = TextureManager::Load("particle/ParticleSand.png");
+		// パーティクル初期化
+		particle_->Initialize(&worldTransform_, textureHandleParticle_, ParticleKind::POP, 40, false);
+		// パーティクルタイマー
+		particleTimer_ = 0;
+		break;
+	case USEDIRECTION:
+		break;
+	default:
+		break;
 	}
 
 	
-	// 行列の再計算と転送
-	worldTransform_.UpdateMatrix();
+}
+
+void Head::Update() {
+	switch (useScene_) {
+	case USETITLE:
+		// 行列の再計算と転送
+		worldTransform_.UpdateMatrix();
+		break;
+	case USESTAGE:
+		// デスフラグの立った弾を削除
+		bullets_.remove_if([](EnemyBullet* bullet) {
+			if (bullet->isDead()) {
+				delete bullet;
+				return true;
+			}
+			return false;
+		});
+
+		// パーティクル更新
+		if (isParticle_) {
+			// タイマーインクリメント
+			particleTimer_++;
+			// パーティクル更新
+			particle_->Update();
+			// タイマー規定時間に達したら
+			if (particleTimer_ >= kMaxParticleTime_) {
+				particleTimer_ = 0;
+				isParticle_ = false;
+			}
+		}
+
+		// 弾更新
+		for (EnemyBullet* bullet : bullets_) {
+			bullet->Update();
+		}
+
+		// 行列の再計算と転送
+		worldTransform_.UpdateMatrix();
+		break;
+	case USEDIRECTION:
+		break;
+	default:
+		break;
+	}
+
+	
 }
 
 void Head::Draw(ViewProjection& viewProjection) {
-	// 頭部本体描画
-	model_->Draw(worldTransform_, viewProjection, textureHandle_);
-	// 弾描画
-	for (EnemyBullet* bullet : bullets_) {
-		bullet->Draw(viewProjection);
+	switch (useScene_) {
+	case USETITLE:
+		// 頭部本体描画
+		model_->Draw(worldTransform_, viewProjection, textureHandle_);
+		break;
+	case USESTAGE:
+		// 頭部本体描画
+		model_->Draw(worldTransform_, viewProjection, textureHandle_);
+		// 弾描画
+		for (EnemyBullet* bullet : bullets_) {
+			bullet->Draw(viewProjection);
+		}
+		// パーティクル描画
+		if (isParticle_) {
+			particle_->Draw(viewProjection);
+		}
+		break;
+	case USEDIRECTION:
+		break;
+	default:
+		break;
 	}
+
+	
 }
 
 void Head::OnCollision() {
@@ -128,6 +219,9 @@ void Head::Attack() {
 			isPreMove_ = false;
 			isShoot_ = true;
 			isAttack_ = true;
+			isParticle_ = true;
+			// パーティクルポジション初期化
+			particle_->Initialize(&worldTransform_, textureHandleParticle_, ParticleKind::POP, 0, true);
 		}
 	}
 	// 攻撃処理

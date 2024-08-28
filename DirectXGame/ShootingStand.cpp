@@ -19,7 +19,7 @@ void ShootingStand::Initialize(Model* model) {
 	//テクスチャハンドル
 	textureHandle_ = TextureManager::Load("particle/ParticleSmoke.png");
 	// パーティクル初期化
-	particle_->Initialize(&worldTransform_, textureHandle_, ParticleKind::SMOKE, 25);
+	particle_->Initialize(&worldTransform_, textureHandle_, ParticleKind::SMOKE, 25,false);
 	
 }
 

@@ -11,8 +11,10 @@ public:
 
 public:
 	virtual SCENE GetNextScene() = 0;
+	virtual bool GetIsExit() = 0;
 
 protected:
 	// それぞれのシーンにシーン遷移タイミングと遷移先を任せる
 	SCENE NextScene;
+	bool isExit;
 };

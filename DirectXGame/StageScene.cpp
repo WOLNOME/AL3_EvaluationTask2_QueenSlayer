@@ -2,7 +2,10 @@
 #include "ImGuiManager.h"
 #include "time.h"
 
-StageScene::StageScene() { NextScene = STAGE; }
+StageScene::StageScene() { 
+	NextScene = STAGE;
+	isExit = false;
+ }
 
 StageScene::~StageScene() {
 	// 解放
@@ -65,7 +68,7 @@ void StageScene::Init(Input* input, Audio* audio) {
 	// 自キャラの初期化
 	player_->Initialize({0.0f, 0.3f, 20.0f}, input_,audio_);
 	// 敵キャラの初期化
-	enemy_->Initialize({0.0f, 1.5f, 0.0f},audio_);
+	enemy_->Initialize({0.0f, 1.5f, 0.0f},audio_,UseScene::USESTAGE);
 	// 天球の初期化
 	skydome_->Initialize(modelSkydome_.get(), {0.0f, 0.0f, 0.0f});
 	// 地面の初期化

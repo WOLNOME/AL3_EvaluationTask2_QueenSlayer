@@ -36,6 +36,7 @@ private:
 
 public://ゲッター
 	SCENE GetNextScene()override { return NextScene; }
+	bool GetIsExit() override { return isExit; }
 	Player* GetPlayer() { return player_.get(); }
 	TPSCamera* GetTPSCamera() { return tpsCamera_.get(); }
 	Reticle* GetReticle() { return reticle_.get(); }

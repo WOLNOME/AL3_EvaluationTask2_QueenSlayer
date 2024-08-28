@@ -13,7 +13,7 @@ public:
 	Head();
 	~Head();
 
-	void Initialize(Model* model, const float rad);
+	void Initialize(Model* model, const float rad, UseScene useScene);
 	void Update();
 	void Draw(ViewProjection& viewProjection);
 
@@ -98,4 +98,18 @@ private:
 	bool isCharge_ = false;
 	bool isAttack_ = false;
 
+	// 使われるシーン
+	UseScene useScene_;
+
+private: // 演出系
+	// パーティクル
+	std::unique_ptr<Particle> particle_ = nullptr;
+	// テクスチャハンドル
+	uint32_t textureHandleParticle_;
+	// 演出中判定
+	bool isParticle_;
+	// パーティクル長さ
+	const int kMaxParticleTime_ = 40;
+	// パーティクルタイマー
+	int particleTimer_;
 };

@@ -18,6 +18,7 @@ enum EnemyActionPattern {
 	kAllActionNum,
 };
 
+
 // 前方宣言
 class StageScene;
 
@@ -26,7 +27,7 @@ public:
 	Enemy();
 	~Enemy();
 
-	void Initialize(const Vector3& position,Audio* audio);
+	void Initialize(const Vector3& position,Audio* audio,UseScene useScene);
 	void Update();
 	void Draw(ViewProjection& viewProjection);
 	void AudioPlay();
@@ -50,8 +51,6 @@ public: // セッター
 	void SetSP(int newSP) { nowSP_ = newSP; }
 
 private:
-	// STOPアクション
-	void StopAction();
 	// 次のアクションルーレット
 	EnemyActionPattern ActionRoulette();
 	// 被弾処理
@@ -85,11 +84,8 @@ private:
 	EnemyActionPattern action_ = Stop;
 
 	// アクション中フラグ
-	bool isAction_ = true;
-	// アクションタイマー
-	int timer_ = 0;
-	// ストップタイマー制限時間
-	const int kStopTime_ = 140;
+	bool isAction_ = false;
+
 
 	// 敵の体力
 	int nowHP_;
@@ -102,6 +98,9 @@ private:
 
 	// 死亡フラグ
 	bool isDead_;
+
+	//使われるシーン
+	UseScene useScene_;
 
 private: // SE関連
 	// 攻撃時効果音

@@ -47,6 +47,8 @@ public: // メンバ関数
 public:
 	// シーンを変える関数
 	void ChangeScene(); 
+public://ゲッター
+	bool GetIsExit() { return isExit_; }
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -64,6 +66,9 @@ private: // メンバ変数
 	int AnimationFrame_;
 	bool isInNow_;
 	bool isOutNow_;
+
+	//アプリ終了フラグ
+	bool isExit_ = false;
 
 	/// <summary>
 	/// ゲームシーン用

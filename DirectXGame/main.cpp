@@ -91,6 +91,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		imguiManager->Draw();
 		// 描画終了
 		dxCommon->PostDraw();
+
+		//終了処理
+		if (gameScene->GetIsExit()) {
+			break;
+		}
+
 	}
 
 	// 各種解放

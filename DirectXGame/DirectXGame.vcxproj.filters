@@ -76,6 +76,12 @@
     <Filter Include="ソース ファイル\program\collision">
       <UniqueIdentifier>{033a0865-97e0-4ca1-bbef-bc27d8f302e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\program\camera">
+      <UniqueIdentifier>{b3217c40-5473-45a7-a9e8-74457b15f7c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\program\camera">
+      <UniqueIdentifier>{0f5beab2-9d4f-47ed-bad1-b2e8f24748f0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="base\DirectXCommon.cpp">
@@ -112,9 +118,6 @@
       <Filter>ソース ファイル\program</Filter>
     </ClCompile>
     <ClCompile Include="Ground.cpp">
-      <Filter>ソース ファイル\program</Filter>
-    </ClCompile>
-    <ClCompile Include="TPSCamera.cpp">
       <Filter>ソース ファイル\program</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
@@ -178,6 +181,15 @@
       <Filter>ソース ファイル\program</Filter>
     </ClCompile>
     <ClCompile Include="Pause.cpp">
+      <Filter>ソース ファイル\program</Filter>
+    </ClCompile>
+    <ClCompile Include="TPSCamera.cpp">
+      <Filter>ソース ファイル\program\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleCamera.cpp">
+      <Filter>ソース ファイル\program\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleUI.cpp">
       <Filter>ソース ファイル\program</Filter>
     </ClCompile>
   </ItemGroup>
@@ -287,9 +299,6 @@
     <ClInclude Include="Ground.h">
       <Filter>ヘッダー ファイル\program</Filter>
     </ClInclude>
-    <ClInclude Include="TPSCamera.h">
-      <Filter>ヘッダー ファイル\program</Filter>
-    </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>ヘッダー ファイル\program\player</Filter>
     </ClInclude>
@@ -354,6 +363,15 @@
       <Filter>ヘッダー ファイル\program</Filter>
     </ClInclude>
     <ClInclude Include="Pause.h">
+      <Filter>ヘッダー ファイル\program</Filter>
+    </ClInclude>
+    <ClInclude Include="TPSCamera.h">
+      <Filter>ヘッダー ファイル\program\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleCamera.h">
+      <Filter>ヘッダー ファイル\program\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleUI.h">
       <Filter>ヘッダー ファイル\program</Filter>
     </ClInclude>
   </ItemGroup>

@@ -127,6 +127,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerBullet.cpp" />
     <ClCompile Include="PlayerSpecialBullet.cpp" />
+    <ClCompile Include="TitleCamera.cpp" />
     <ClCompile Include="ResultScene.cpp" />
     <ClCompile Include="Reticle.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
@@ -136,6 +137,7 @@
     <ClCompile Include="StageScene.cpp" />
     <ClCompile Include="Stomach.cpp" />
     <ClCompile Include="TitleScene.cpp" />
+    <ClCompile Include="TitleUI.cpp" />
     <ClCompile Include="TPSCamera.cpp" />
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="Vehicle.cpp" />
@@ -188,6 +190,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerBullet.h" />
     <ClInclude Include="PlayerSpecialBullet.h" />
+    <ClInclude Include="TitleCamera.h" />
     <ClInclude Include="ResultScene.h" />
     <ClInclude Include="Reticle.h" />
     <ClInclude Include="scene\GameScene.h" />
@@ -197,6 +200,7 @@
     <ClInclude Include="StageScene.h" />
     <ClInclude Include="Stomach.h" />
     <ClInclude Include="TitleScene.h" />
+    <ClInclude Include="TitleUI.h" />
     <ClInclude Include="TPSCamera.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="Vehicle.h" />

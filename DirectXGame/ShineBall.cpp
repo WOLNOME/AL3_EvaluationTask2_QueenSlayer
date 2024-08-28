@@ -32,7 +32,7 @@ void ShineBall::Initialize(Model* model, const Vector3& position, const Vector3&
 	// パーティクル生成
 	particle_ = std::make_unique<Particle>();
 	// パーティクル初期化
-	particle_->Initialize(&worldTransform_, 0, ParticleKind::POP, 6);
+	particle_->Initialize(&worldTransform_, 0, ParticleKind::POP, 6,false);
 	// パーティクルタイマー
 	particleTimer_ = 0;
 }

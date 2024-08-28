@@ -63,7 +63,7 @@ private:
 	bool isContinue_;
 	bool isExit_;
 	int slidePage_;
-	const float kBlackBackAlpha_ = 0.5f;
+	const float kBlackBackAlpha_ = 0.7f;
 	const float kStrngthButtonRatio_ = 1.2f;
 
 };

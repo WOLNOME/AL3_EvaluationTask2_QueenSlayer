@@ -2,15 +2,24 @@
 
 ResultScene::ResultScene() { 
 	NextScene = RESULT;
+	isExit = false;
 }
 
-ResultScene::~ResultScene() {}
+ResultScene::~ResultScene() {
+	// BGMストップ
+	audio_->StopWave(voiceHandleBGM_);
+}
 
 void ResultScene::Init(Input* input, Audio* audio) {
 	// 入力
 	input_ = input;
 	//オーディオ
 	audio_ = audio;
+
+	// BGMのサウンドハンドル
+	soundHandleBGM_ = audio_->LoadWave("Audio/resultBGM.wav");
+	// 最初からBGM再生
+	isSoundPlayBGM_ = true;
 
 }
 
@@ -59,6 +68,19 @@ void ResultScene::Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* dx
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
+
+#pragma endregion
+
+#pragma region BGM,SE関連
+	/// <summary>
+	/// ここにAudio関連の処理を追加できる
+	/// </summary>
+
+	// BGMやSE関連
+	if (isSoundPlayBGM_) {
+		voiceHandleBGM_ = audio_->PlayWave(soundHandleBGM_, true, soundVolumeBGM_);
+		isSoundPlayBGM_ = false;
+	}
 
 #pragma endregion
 }

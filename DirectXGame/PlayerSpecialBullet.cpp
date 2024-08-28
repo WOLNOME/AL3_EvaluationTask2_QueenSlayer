@@ -25,7 +25,7 @@ void PlayerSpecialBullet::Initialize(Model* model, const Vector3& position, cons
 	// パーティクル生成
 	particle_ = std::make_unique<Particle>();
 	// パーティクル初期化
-	particle_->Initialize(&worldTransform_, 0, ParticleKind::POP, 25);
+	particle_->Initialize(&worldTransform_, 0, ParticleKind::POP, 25,false);
 	// パーティクルタイマー
 	particleTimer_ = 0;
 }

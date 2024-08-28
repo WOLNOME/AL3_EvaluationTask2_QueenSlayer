@@ -31,7 +31,7 @@ void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector
 	// テクスチャハンドル取得
 	textureHandleParticle_ = TextureManager::Load("particle/ParticleRed.png");
 	// パーティクル初期化
-	particle_->Initialize(&worldTransform_, textureHandleParticle_, ParticleKind::DIFFUSION, 4);
+	particle_->Initialize(&worldTransform_, textureHandleParticle_, ParticleKind::DIFFUSION, 4,false);
 	// パーティクルタイマー
 	particleTimer_ = 0;
 }

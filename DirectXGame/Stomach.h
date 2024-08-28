@@ -1,9 +1,10 @@
 #pragma once
 #include "Collider.h"
+#include "EnemyBullet.h"
 #include "Function.h"
 #include "Model.h"
+#include "Particle.h"
 #include "WorldTransform.h"
-#include "EnemyBullet.h"
 
 // 前方宣言
 class StageScene;
@@ -13,7 +14,7 @@ public:
 	Stomach();
 	~Stomach();
 
-	void Initialize(Model* model, const Vector3& position, const float rad);
+	void Initialize(Model* model, const Vector3& position, const float rad, UseScene useScene);
 	void Update();
 	void Draw(ViewProjection& viewProjection);
 
@@ -24,6 +25,7 @@ public: // 関数
 	void OnSpecialCollision() override;
 	void Attack();
 	void Jump();
+	void Stop();
 
 public: // ゲッター
 	const WorldTransform& GetWorldTransform() { return worldTransform_; }
@@ -35,6 +37,8 @@ public: // ゲッター
 	float GetRadius() override { return radius_; }
 	// 攻撃中コールバック
 	bool GetIsAction() { return isAction_; }
+	// 停止中コールバック
+	bool GetIsStop() { return isStop_; }
 	// 光玉蓄積許可
 	bool GetIsHit() { return isHit_; }
 	// 被弾ゲッター
@@ -75,17 +79,19 @@ private:
 	bool isPreMove_ = false;
 	bool isShoot_ = false;
 	bool isJump_ = false;
+	bool isStop_ = false;
 
 	// 各フェーズで使うタイマー
 	int timer_ = 0;
 	// 各フェーズの時間
 	int accumulatePowerTime_ = 120;
 	const int shootTime_ = 60;
-	//速度
+	const int stopTime_ = 140;
+	// 速度
 	Vector3 velocity_ = {0.0f, 0.0f, 0.0f};
-	//最大縮小値
-	const float kReducation_ = 0.7f;
-	//振動前の座標を保持
+	// 最大縮小値
+	const float kReduction_ = 0.7f;
+	// 振動前の座標を保持
 	Vector3 prePos;
 	// 光玉蓄積フラグ
 	bool isHit_ = false;
@@ -100,4 +106,27 @@ private:
 	bool isCharge_ = false;
 	bool isAttack_ = false;
 
+	// 使われるシーン
+	UseScene useScene_;
+
+	// 停止中拡縮処理
+	const int kExpansionTime_ = stopTime_ / 14 * 5;
+	const int kReductionTime_ = stopTime_ / 14 * 2;
+	bool isExpansion_ = false;
+	bool isReduction_ = false;
+	int scalingTime_ = 0;
+	float addScale_ = 0.0f;
+	const float goalScale_ = 0.2f;
+
+private: // 演出系
+	// パーティクル
+	std::unique_ptr<Particle> particle_ = nullptr;
+	// テクスチャハンドル
+	uint32_t textureHandleParticle_;
+	// 演出中判定
+	bool isParticle_;
+	// パーティクル長さ
+	const int kMaxParticleTime_ = 40;
+	// パーティクルタイマー
+	int particleTimer_;
 };

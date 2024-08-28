@@ -18,6 +18,13 @@ enum SCENE {
 	RESULT,
 };
 
+// 使われるシーン
+enum UseScene {
+	USETITLE,
+	USESTAGE,
+	USEDIRECTION,
+};
+
 // 構造体
 struct Matrix3x3 {
 	float m[3][3];

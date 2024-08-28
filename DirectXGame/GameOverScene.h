@@ -15,9 +15,17 @@ public:
 
 public:
 	SCENE GetNextScene() override { return NextScene; }
+	bool GetIsExit() override { return isExit; }
 
 private:
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
+
+private://変数
+	// BGM関連
+	uint32_t soundHandleBGM_;
+	uint32_t voiceHandleBGM_;
+	bool isSoundPlayBGM_ = false;
+	const float soundVolumeBGM_ = 0.6f;
 
 };

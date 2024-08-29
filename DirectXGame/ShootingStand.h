@@ -9,7 +9,7 @@ public:
 	ShootingStand();
 	~ShootingStand();
 
-	void Initialize(Model* model);
+	void Initialize(Model* model,UseScene useScene);
 	void Update(const Vector3 underPosition, const Vector3 cameraDir);
 	void Draw(const ViewProjection& viewProjection);
 
@@ -19,12 +19,17 @@ public: // ゲッター
 
 public: // セッター
 	void SetIsPlayerCrisis(bool isPlayerCrisis) { isPlayerCrisis_ = isPlayerCrisis; }
+	void SetParent(const WorldTransform* parent) { worldTransform_.parent_ = parent; }
 
 private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 	// モデル
 	Model* model_ = nullptr;
+	//テクスチャハンドル
+	uint32_t textureHandle_;
+	//使われるシーン
+	UseScene useScene_;
 
 private:
 	// 砲台の装着位置
@@ -36,7 +41,7 @@ private: // 演出系
 	// パーティクル
 	std::unique_ptr<Particle> particle_ = nullptr;
 	//テクスチャハンドル
-	uint32_t textureHandle_;
+	uint32_t textureHandleParticle_;
 	// 演出中判定
 	bool isParticle_ = false;
 	//プレイヤーがピンチ状態かを取得するフラグ

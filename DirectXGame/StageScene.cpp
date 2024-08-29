@@ -1,5 +1,6 @@
 #include "StageScene.h"
 #include "ImGuiManager.h"
+#include "TextureManager.h"
 #include "time.h"
 
 StageScene::StageScene() { 
@@ -21,10 +22,11 @@ void StageScene::Init(Input* input, Audio* audio) {
 	input_ = input;
 	// オーディオ
 	audio_ = audio;
-	// 3Dモデルの生成
-	modelSkydome_.reset(Model::CreateFromOBJ("skydome", true));
-	modelGround_.reset(Model::CreateFromOBJ("ground", true));
-	modelShineBall_.reset(Model::CreateFromOBJ("shineBall", true));
+	
+	//テクスチャハンドル
+	textureHandleSkydome_ = TextureManager::Load("skydome/sky_sphere.png");
+	textureHandleGround_ = TextureManager::Load("ground/ground.png");
+
 	// ビュープロジェクションの初期化
 	viewProjection_.farZ = 2000.0f;
 	viewProjection_.Initialize();
@@ -66,13 +68,13 @@ void StageScene::Init(Input* input, Audio* audio) {
 	// レティクル初期化
 	reticle_->Initialize();
 	// 自キャラの初期化
-	player_->Initialize({0.0f, 0.3f, 20.0f}, input_,audio_);
+	player_->Initialize({0.0f, 0.3f, 20.0f}, input_,audio_,UseScene::USESTAGE);
 	// 敵キャラの初期化
 	enemy_->Initialize({0.0f, 1.5f, 0.0f},audio_,UseScene::USESTAGE);
 	// 天球の初期化
-	skydome_->Initialize(modelSkydome_.get(), {0.0f, 0.0f, 0.0f});
+	skydome_->Initialize({0.0f, 0.0f, 0.0f},textureHandleSkydome_);
 	// 地面の初期化
-	ground_->Initialize(modelGround_.get(), {0.0f, 0.0f, 0.0f});
+	ground_->Initialize({0.0f, 0.0f, 0.0f},textureHandleGround_);
 	// 背景の初期化
 	background_->Initialize({0.0f, 0.0f, 0.0f});
 	// UIの初期化
@@ -142,6 +144,8 @@ void StageScene::Update() {
 		// クリアしたらゆっくりになる
 		if (enemy_->GetHP() <= 0) {
 			framePerUpdate_ = 3;
+		} else if (player_->GetHP() <= 0) {
+			framePerUpdate_ = 3;
 		}
 
 		// タイマーインクリメント
@@ -196,8 +200,10 @@ void StageScene::Update() {
 			NextScene = RESULT;
 		}
 		// ゲームオーバー遷移処理
-		if (player_->GetHP() <= 0) {
-			NextScene = GAMEOVER;
+		else if (player_->GetHP() <= 0) {
+			if (NextScene == STAGE) {
+				NextScene = GAMEOVER;
+			}
 		}
 
 #ifdef _DEBUG
@@ -366,7 +372,7 @@ void StageScene::CreateShineBall() {
 		velocity.z = 0.3f * std::sinf(theta);
 
 		// 弾を初期化
-		shineBall->Initialize(modelShineBall_.get(), ballInitPosition, velocity);
+		shineBall->Initialize(ballInitPosition, velocity);
 
 		// 弾を登録する
 		shineBalls_.push_back(shineBall);

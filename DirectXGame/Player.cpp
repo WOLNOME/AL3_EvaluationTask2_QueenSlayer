@@ -6,160 +6,233 @@
 Player::Player() {}
 
 Player::~Player() {
-	// 解放
-	for (PlayerBullet* bullet : bullets_) {
-		delete bullet;
+	switch (useScene_) {
+	case USETITLE:
+		break;
+	case USESTAGE:
+		// 解放
+		for (PlayerBullet* bullet : bullets_) {
+			delete bullet;
+		}
+		for (PlayerSpecialBullet* bullet : specialBullets_) {
+			delete bullet;
+		}
+		// SE再生中止
+		audio_->StopWave(voiceHandleFire_);
+		audio_->StopWave(voiceHandleDamage_);
+		audio_->StopWave(voiceHandleGetShineBall_);
+		break;
+	case USEDIRECTION:
+		break;
+	default:
+		break;
 	}
-	for (PlayerSpecialBullet* bullet : specialBullets_) {
-		delete bullet;
-	}
-	// SE再生中止
-	audio_->StopWave(voiceHandleFire_);
-	audio_->StopWave(voiceHandleDamage_);
-	audio_->StopWave(voiceHandleGetShineBall_);
 }
 
-void Player::Initialize(const Vector3& position, Input* input, Audio* audio) {
-	// 入力
-	input_ = input;
-	// オーディオ
-	audio_ = audio;
-	// 車両モデルの生成
-	modelVehicle_.reset(Model::CreateFromOBJ("playerUnder", true));
-	// 砲台モデルの生成
-	modelStand_.reset(Model::CreateFromOBJ("playerAbove", true));
-	// 弾モデルの生成
-	modelBullet_.reset(Model::CreateFromOBJ("playerBullet", true));
-	// 必殺弾モデルの生成
-	modelSpecialBullet_.reset(Model::CreateFromOBJ("playerSpecialBullet", true));
-	// 車両の生成
-	vehicle_ = std::make_unique<Vehicle>();
-	// 車両にstageSceneをセット
-	vehicle_->SetStageScene(stageScene_);
-	// 車両の初期化
-	vehicle_->Initialize(input_, modelVehicle_.get(), position);
-	// 砲台の生成
-	stand_ = std::make_unique<ShootingStand>();
-	// 砲台の初期化
-	stand_->Initialize(modelStand_.get());
+void Player::Initialize(const Vector3& position, Input* input, Audio* audio, UseScene useScene) {
+	// 使われるシーン設定
+	useScene_ = useScene;
 
-	/// パラメーター
-	nowHP_ = kMaxHP_;
-	nowSPGauge_ = 0;
-	isDead_ = false;
-	nowInviTimer_ = 0;
-	isInvincible_ = false;
-	isDisplay_ = true;
+	switch (useScene_) {
+	case USETITLE:
+		break;
+	case USESTAGE:
+		// 入力
+		input_ = input;
+		// オーディオ
+		audio_ = audio;
+		// 車両モデルの生成
+		modelVehicle_.reset(Model::CreateFromOBJ("playerUnder", true));
+		// 砲台モデルの生成
+		modelStand_.reset(Model::CreateFromOBJ("playerAbove", true));
+		// 弾モデルの生成
+		modelBullet_.reset(Model::CreateFromOBJ("playerBullet", true));
+		// 必殺弾モデルの生成
+		modelSpecialBullet_.reset(Model::CreateFromOBJ("playerSpecialBullet", true));
+		// 車両の生成
+		vehicle_ = std::make_unique<Vehicle>();
+		// 車両にstageSceneをセット
+		vehicle_->SetStageScene(stageScene_);
+		// 車両の初期化
+		vehicle_->Initialize(input_, modelVehicle_.get(), position, useScene_);
+		// 砲台の生成
+		stand_ = std::make_unique<ShootingStand>();
+		// 砲台の初期化
+		stand_->Initialize(modelStand_.get(), useScene_);
 
-	// サウンドハンドル
-	soundHandleFire_ = audio_->LoadWave("Audio/fireNormalSE.wav");
-	soundHandleDamage_ = audio->LoadWave("Audio/damageNormalSE.wav");
-	soundHandleGetShineBall_ = audio_->LoadWave("Audio/getShineBallSE.wav");
+		/// パラメーター
+		nowHP_ = kMaxHP_;
+		nowSPGauge_ = 0;
+		isDead_ = false;
+		nowInviTimer_ = 0;
+		isInvincible_ = false;
+		isDisplay_ = true;
+
+		// サウンドハンドル
+		soundHandleFire_ = audio_->LoadWave("Audio/fireNormalSE.wav");
+		soundHandleDamage_ = audio->LoadWave("Audio/damageNormalSE.wav");
+		soundHandleGetShineBall_ = audio_->LoadWave("Audio/getShineBallSE.wav");
+		break;
+	case USEDIRECTION:
+		break;
+	case USEGAMEOVER:
+		// 車両モデルの生成
+		modelVehicle_.reset(Model::CreateFromOBJ("playerUnder", true));
+		// 砲台モデルの生成
+		modelStand_.reset(Model::CreateFromOBJ("playerAbove", true));
+		// 車両の生成
+		vehicle_ = std::make_unique<Vehicle>();
+		// 車両の初期化
+		vehicle_->Initialize(input_, modelVehicle_.get(), position, useScene_);
+		// 砲台の生成
+		stand_ = std::make_unique<ShootingStand>();
+		// 砲台と車両をペアレント設定
+		stand_->SetParent(&vehicle_->GetWorldTransform());
+		// 砲台の初期化
+		stand_->Initialize(modelStand_.get(), useScene_);
+		break;
+	default:
+		break;
+	}
 }
 
 void Player::Update() {
-	// デスフラグの立った弾を削除
-	bullets_.remove_if([](PlayerBullet* bullet) {
-		if (bullet->isDead()) {
-			delete bullet;
-			return true;
+	switch (useScene_) {
+	case USETITLE:
+		break;
+	case USESTAGE:
+		// デスフラグの立った弾を削除
+		bullets_.remove_if([](PlayerBullet* bullet) {
+			if (bullet->isDead()) {
+				delete bullet;
+				return true;
+			}
+			return false;
+		});
+		specialBullets_.remove_if([](PlayerSpecialBullet* bullet) {
+			if (bullet->isDead()) {
+				delete bullet;
+				return true;
+			}
+			return false;
+		});
+
+		// 攻撃処理
+		Attack();
+
+		// 車両の更新
+		vehicle_->Update();
+		// 砲台の更新
+		cameraDir = {stageScene_->GetTPSCamera()->GetDirectionToPlayer().x, 0.0f, stageScene_->GetTPSCamera()->GetDirectionToPlayer().z};
+		stand_->Update(vehicle_->GetLocalPosition(), cameraDir);
+		// 弾更新
+		for (PlayerBullet* bullet : bullets_) {
+			bullet->Update();
 		}
-		return false;
-	});
-	specialBullets_.remove_if([](PlayerSpecialBullet* bullet) {
-		if (bullet->isDead()) {
-			delete bullet;
-			return true;
+		// 必殺弾更新
+		for (PlayerSpecialBullet* bullet : specialBullets_) {
+			bullet->Update();
 		}
-		return false;
-	});
 
-	// 攻撃処理
-	Attack();
-
-	// 車両の更新
-	vehicle_->Update();
-	// 砲台の更新
-	Vector3 cameraDir = {stageScene_->GetTPSCamera()->GetDirectionToPlayer().x, 0.0f, stageScene_->GetTPSCamera()->GetDirectionToPlayer().z};
-	stand_->Update(vehicle_->GetLocalPosition(), cameraDir);
-	// 弾更新
-	for (PlayerBullet* bullet : bullets_) {
-		bullet->Update();
-	}
-	// 必殺弾更新
-	for (PlayerSpecialBullet* bullet : specialBullets_) {
-		bullet->Update();
-	}
-
-	// 必殺弾演出中判定
-	for (PlayerSpecialBullet* bullet : specialBullets_) {
-		if (bullet->GetIsDeadParticle() && !isHitStopOnce_) {
-			isSpecialBulletDirection_ = true;
-			isHitStopOnce_ = true;
+		// 必殺弾演出中判定
+		for (PlayerSpecialBullet* bullet : specialBullets_) {
+			if (bullet->GetIsDeadParticle() && !isHitStopOnce_) {
+				isSpecialBulletDirection_ = true;
+				isHitStopOnce_ = true;
+			}
 		}
-	}
-	// ヒットストップ処理
-	if (isSpecialBulletDirection_) {
-		// タイマーインクリメント
-		hitStopTimer_++;
-		// 規定時間になったら
-		if (hitStopTimer_ == kHitStopTime_) {
-			isSpecialBulletDirection_ = false;
-			hitStopTimer_ = 0;
+		// ヒットストップ処理
+		if (isSpecialBulletDirection_) {
+			// タイマーインクリメント
+			hitStopTimer_++;
+			// 規定時間になったら
+			if (hitStopTimer_ == kHitStopTime_) {
+				isSpecialBulletDirection_ = false;
+				hitStopTimer_ = 0;
+			}
 		}
-	}
 
-	// プレイヤーのピンチ状態を伝える
-	if (nowHP_ <= 3) {
-		stand_->SetIsPlayerCrisis(true);
-	} else {
-		stand_->SetIsPlayerCrisis(false);
-	}
-
-	// SP回収処理
-	if (vehicle_->GetIsGetShineBall()) {
-		nowSPGauge_++;
-		if (nowSPGauge_ == kMaxSPGauge_) {
-			isUseSP_ = true;
+		// プレイヤーのピンチ状態を伝える
+		if (nowHP_ <= 3) {
+			stand_->SetIsPlayerCrisis(true);
+		} else {
+			stand_->SetIsPlayerCrisis(false);
 		}
-		// SP回収したらSE鳴らす
-		isSoundPlayGetShineBall_ = true;
-		vehicle_->SetIsGetShineBall(false);
-	}
 
-	// ダメージ判定
-	Damage();
-	// 死亡判定
-	if (nowHP_ <= 0) {
-		isDead_ = true;
-	}
+		// SP回収処理
+		if (vehicle_->GetIsGetShineBall()) {
+			nowSPGauge_++;
+			if (nowSPGauge_ == kMaxSPGauge_) {
+				isUseSP_ = true;
+			}
+			// SP回収したらSE鳴らす
+			isSoundPlayGetShineBall_ = true;
+			vehicle_->SetIsGetShineBall(false);
+		}
 
-	// 無敵処理
-	Invincible();
+		// ダメージ判定
+		Damage();
+		// 死亡判定
+		if (nowHP_ <= 0) {
+			isDead_ = true;
+		}
+
+		// 無敵処理
+		Invincible();
 
 #ifdef _DEBUG
-	ImGui::Begin("player");
-	ImGui::Text("playerHP : %d/%d", nowHP_, kMaxHP_);
-	ImGui::Text("playerSPGauge : %d/%d", nowSPGauge_, kMaxSPGauge_);
-	ImGui::Text("invincible : %d", isInvincible_);
-	ImGui::End();
+		ImGui::Begin("player");
+		ImGui::Text("playerHP : %d/%d", nowHP_, kMaxHP_);
+		ImGui::Text("playerSPGauge : %d/%d", nowSPGauge_, kMaxSPGauge_);
+		ImGui::Text("invincible : %d", isInvincible_);
+		ImGui::End();
 #endif // _DEBUG
+		break;
+	case USEDIRECTION:
+		cameraDir;
+		break;
+	case USEGAMEOVER:
+		// 車両の更新
+		vehicle_->Update();
+		// 砲台の更新
+		stand_->Update({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f});
+		break;
+	default:
+		break;
+	}
 }
 
 void Player::Draw(ViewProjection& viewProjection) {
-	if (isDisplay_) {
+	switch (useScene_) {
+	case USETITLE:
+		break;
+	case USESTAGE:
+
+		if (isDisplay_) {
+			// 砲台描画
+			stand_->Draw(viewProjection);
+			// 車両描画
+			vehicle_->Draw(viewProjection);
+		}
+		// 弾描画
+		for (PlayerBullet* bullet : bullets_) {
+			bullet->Draw(viewProjection);
+		}
+		// 必殺弾描画
+		for (PlayerSpecialBullet* bullet : specialBullets_) {
+			bullet->Draw(viewProjection);
+		}
+		break;
+	case USEDIRECTION:
+		break;
+	case USEGAMEOVER:
 		// 砲台描画
 		stand_->Draw(viewProjection);
 		// 車両描画
 		vehicle_->Draw(viewProjection);
-	}
-	// 弾描画
-	for (PlayerBullet* bullet : bullets_) {
-		bullet->Draw(viewProjection);
-	}
-	// 必殺弾描画
-	for (PlayerSpecialBullet* bullet : specialBullets_) {
-		bullet->Draw(viewProjection);
+		break;
+	default:
+		break;
 	}
 }
 

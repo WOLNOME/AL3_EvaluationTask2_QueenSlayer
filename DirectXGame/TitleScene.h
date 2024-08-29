@@ -33,10 +33,9 @@ private:
 	// ビュープロジェクション
 	ViewProjection viewProjection_;
 
-	/// 3Dモデル
-	std::unique_ptr<Model> modelSkydome_ = nullptr;
-	std::unique_ptr<Model> modelGround_ = nullptr;
-
+	//モデルテクスチャ
+	uint32_t textureHandleSkydome_;
+	uint32_t textureHandleGround_;
 	/// 2Dスプライト
 
 	/// インスタンス

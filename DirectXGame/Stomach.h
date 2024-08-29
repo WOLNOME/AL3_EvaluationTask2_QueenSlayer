@@ -110,13 +110,13 @@ private:
 	UseScene useScene_;
 
 	// 停止中拡縮処理
-	const int kExpansionTime_ = stopTime_ / 14 * 5;
-	const int kReductionTime_ = stopTime_ / 14 * 2;
+	const int kExpansionTime_ = stopTime_ / 14 * 6;
+	const int kReductionTime_ = stopTime_ / 14 * 1;
 	bool isExpansion_ = false;
 	bool isReduction_ = false;
 	int scalingTime_ = 0;
 	float addScale_ = 0.0f;
-	const float goalScale_ = 0.2f;
+	const float goalScale_ = 0.15f;
 
 private: // 演出系
 	// パーティクル

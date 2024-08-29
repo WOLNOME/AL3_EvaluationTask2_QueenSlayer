@@ -12,7 +12,7 @@ public:
 	Vehicle();
 	~Vehicle();
 
-	void Initialize(Input* input,Model* model,const Vector3& position);
+	void Initialize(Input* input,Model* model,const Vector3& position,UseScene useScene);
 	void Update();
 	void Draw(const ViewProjection& viewProjection);
 
@@ -25,6 +25,7 @@ public: // 関数
 
 
 public://ゲッター
+	const WorldTransform& GetWorldTransform() { return worldTransform_; }
 	//ローカル座標
 	const Vector3& GetLocalPosition() { return localPos_; }
 	// ワールド座標を取得
@@ -49,8 +50,13 @@ private:
 	WorldTransform worldTransform_;
 	// モデル
 	Model* model_ = nullptr;
+	//テクスチャハンドル
+	uint32_t textureHandle_;
 	//ステージシーン
 	StageScene* stageScene_ = nullptr;
+	//使われるシーン
+	UseScene useScene_;
+
 
 private: // 調整可能数値
 	// スピード
@@ -71,5 +77,8 @@ private: // 調整可能数値
 	bool isDamage_ = false;
 	// 光玉獲得フラグ
 	bool isGetShineBall_ = false;
+	// カメラの向き
+	Vector3 cameraDir = {0.0f, 0.0f, 0.0f};
+
 
 };

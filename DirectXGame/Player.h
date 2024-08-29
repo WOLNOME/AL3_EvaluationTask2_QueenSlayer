@@ -17,7 +17,7 @@ public:
 	Player();
 	~Player();
 
-	void Initialize(const Vector3& position, Input* input, Audio* audio);
+	void Initialize(const Vector3& position, Input* input, Audio* audio, UseScene useScene);
 	void Update();
 	void Draw(ViewProjection& viewProjection);
 	void AudioPlay();
@@ -51,7 +51,7 @@ public: // セッター
 
 public:
 	// 最大体力
-	const int kMaxHP_ = 8;
+	const int kMaxHP_ = 1;
 	const int kMaxSPGauge_ = 6;
 
 private:
@@ -103,6 +103,12 @@ private:
 	// 必殺弾命中時ヒットストップの時間
 	const int kHitStopTime_ = 8;
 	int hitStopTimer_ = 0;
+
+	// 使われるシーン
+	UseScene useScene_;
+
+	// カメラの向き
+	Vector3 cameraDir = {0.0f, 0.0f, 0.0f};
 
 private: // SE関連
 	// 弾発射時効果音

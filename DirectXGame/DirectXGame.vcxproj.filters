@@ -192,6 +192,12 @@
     <ClCompile Include="TitleUI.cpp">
       <Filter>ソース ファイル\program</Filter>
     </ClCompile>
+    <ClCompile Include="GameOverCamera.cpp">
+      <Filter>ソース ファイル\program\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Spotlight.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3d\ViewProjection.h">
@@ -372,6 +378,12 @@
       <Filter>ヘッダー ファイル\program\camera</Filter>
     </ClInclude>
     <ClInclude Include="TitleUI.h">
+      <Filter>ヘッダー ファイル\program</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOverCamera.h">
+      <Filter>ヘッダー ファイル\program\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Spotlight.h">
       <Filter>ヘッダー ファイル\program</Filter>
     </ClInclude>
   </ItemGroup>

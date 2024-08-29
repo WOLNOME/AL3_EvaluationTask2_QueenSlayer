@@ -1,6 +1,7 @@
 #pragma once
 #include <Model.h>
 #include <WorldTransform.h>
+#include <memory>
 
 /// <summary>
 /// 天球
@@ -10,7 +11,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(Model* model, const Vector3& position);
+	void Initialize(const Vector3& position,uint32_t textureHandle);
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -24,5 +25,7 @@ private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 	// モデル
-	Model* model_ = nullptr;
+	std::unique_ptr<Model> model_ = nullptr;
+	//テクスチャハンドル
+	uint32_t textureHandle_;
 };

@@ -1,5 +1,6 @@
 #include "TitleScene.h"
 #include "ImGuiManager.h"
+#include "TextureManager.h"
 
 TitleScene::TitleScene() {
 	NextScene = TITLE;
@@ -21,9 +22,9 @@ void TitleScene::Init(Input* input, Audio* audio) {
 	viewProjection_.farZ = 2000.0f;
 	viewProjection_.Initialize();
 
-	// 3Dモデルの生成
-	modelSkydome_.reset(Model::CreateFromOBJ("skydome", true));
-	modelGround_.reset(Model::CreateFromOBJ("ground", true));
+	//モデルテクスチャ
+	textureHandleSkydome_ = TextureManager::Load("skydome/sky_sphere.png");
+	textureHandleGround_ = TextureManager::Load("ground/ground.png");
 	// 2Dスプライトの生成
 
 	// インスタンスの生成
@@ -35,8 +36,8 @@ void TitleScene::Init(Input* input, Audio* audio) {
 	titleUI_ = std::make_unique<TitleUI>(input_);
 
 	// インスタンス初期化
-	skydome_->Initialize(modelSkydome_.get(), {0.0f, 0.0f, 0.0f});
-	ground_->Initialize(modelGround_.get(), {0.0f, 0.0f, 0.0f});
+	skydome_->Initialize({0.0f, 0.0f, 0.0f},textureHandleSkydome_);
+	ground_->Initialize({0.0f, 0.0f, 0.0f},textureHandleGround_);
 	background_->Initialize({0.0f, 0.0f, 0.0f});
 	enemy_->Initialize({0.0f, 1.5f, 0.0f}, audio_, UseScene::USETITLE);
 	titleUI_->Initialize();

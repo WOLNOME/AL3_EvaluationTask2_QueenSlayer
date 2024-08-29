@@ -47,10 +47,10 @@ private:
 	Input* input_ = nullptr;
 	//オーディオ
 	Audio* audio_ = nullptr;
-	//3Dモデル
-	std::unique_ptr<Model> modelSkydome_ = nullptr;
-	std::unique_ptr<Model> modelGround_ = nullptr;
-	std::unique_ptr<Model> modelShineBall_ = nullptr;
+	
+	//モデルのテクスチャハンドル
+	uint32_t textureHandleSkydome_;
+	uint32_t textureHandleGround_;
 	//ビュープロジェクション
 	ViewProjection viewProjection_;
 	// デバッグカメラ

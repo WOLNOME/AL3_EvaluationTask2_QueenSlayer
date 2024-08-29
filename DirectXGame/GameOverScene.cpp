@@ -1,7 +1,8 @@
 #include "GameOverScene.h"
+#include "TextureManager.h"
 
 GameOverScene::GameOverScene() {
-	NextScene = GAMEOVER; 
+	NextScene = GAMEOVER;
 	isExit = false;
 }
 
@@ -13,14 +14,36 @@ GameOverScene::~GameOverScene() {
 void GameOverScene::Init(Input* input, Audio* audio) {
 	// 入力
 	input_ = input;
-	//オーディオ
+	// オーディオ
 	audio_ = audio;
+
+	// ビュープロジェクションの初期化
+	viewProjection_.farZ = 2000.0f;
+	viewProjection_.Initialize();
+
+	// モデルテクスチャ
+	textureHandleSkydome_ = TextureManager::Load("black.png");
+	textureHandleGround_ = TextureManager::Load("black.png");
+	// 2Dスプライトの生成
+
+	// インスタンスの生成
+	gameOverCamera_ = std::make_unique<GameOverCamera>();
+	skydome_ = std::make_unique<Skydome>();
+	ground_ = std::make_unique<Ground>();
+	spotlight_ = std::make_unique<Spotlight>();
+	player_ = std::make_unique<Player>();
+
+	// インスタンス初期化
+	gameOverCamera_->Initialize();
+	skydome_->Initialize({0.0f, 0.0f, 0.0f}, textureHandleSkydome_);
+	ground_->Initialize({0.0f, 0.0f, 0.0f}, textureHandleGround_);
+	spotlight_->Initialize({0.0f, 0.0f, 0.0f});
+	player_->Initialize({0.0f, 0.3f, 0.0f}, input_, audio_, UseScene::USEGAMEOVER);
 
 	// BGMのサウンドハンドル
 	soundHandleBGM_ = audio_->LoadWave("Audio/gameOverBGM.wav");
 	// 最初からBGM再生
 	isSoundPlayBGM_ = true;
-
 }
 
 void GameOverScene::Update() {
@@ -28,6 +51,20 @@ void GameOverScene::Update() {
 	if (input_->TriggerKey(DIK_TAB)) {
 		NextScene = TITLE;
 	}
+
+	// カメラの更新処理
+	gameOverCamera_->Update();
+	viewProjection_.matView = gameOverCamera_->GetViewProjection().matView;
+	viewProjection_.matProjection = gameOverCamera_->GetViewProjection().matProjection;
+	// ビュープロジェクション行列の更新と転送
+	viewProjection_.TransferMatrix();
+
+	// 各オブジェクトの更新処理
+	ground_->Update();
+	skydome_->Update();
+	spotlight_->Update();
+	player_->Update();
+
 }
 
 void GameOverScene::Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* dxCommon_) {
@@ -52,6 +89,13 @@ void GameOverScene::Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* 
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
+
+	// オブジェクト
+	ground_->Draw(viewProjection_);
+	skydome_->Draw(viewProjection_);
+
+	spotlight_->Draw(viewProjection_);
+	player_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

@@ -11,7 +11,7 @@ public:
 	ShineBall();
 	~ShineBall();
 
-	void Initialize(Model* model, const Vector3& position, const Vector3& velocity);
+	void Initialize(const Vector3& position, const Vector3& velocity);
 	void Update();
 	void Draw(const ViewProjection& viewProjection);
 
@@ -36,7 +36,7 @@ private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 	// モデル
-	Model* model_ = nullptr;
+	std::unique_ptr<Model> model_ = nullptr;
 	// ステージシーン
 	StageScene* stageScene_ = nullptr;
 

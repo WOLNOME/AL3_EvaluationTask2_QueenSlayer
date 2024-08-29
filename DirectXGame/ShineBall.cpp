@@ -1,15 +1,13 @@
 #include "ShineBall.h"
 #include "CollisionConfig.h"
-#include <cassert>
 
 ShineBall::ShineBall() {}
 
 ShineBall::~ShineBall() {}
 
-void ShineBall::Initialize(Model* model, const Vector3& position, const Vector3& velocity) {
-	// NULLポインタチェック
-	assert(model);
-	model_ = model;
+void ShineBall::Initialize(const Vector3& position, const Vector3& velocity) {
+	//モデル生成
+	model_.reset(Model::CreateFromOBJ("shineBall", true));
 	// ワールドトランスフォーム初期化
 	worldTransform_.Initialize();
 	// 引数で受け取った初期座標をセット

@@ -1,17 +1,14 @@
 #pragma once
-#include <Model.h>
-#include <WorldTransform.h>
+#include "Model.h"
+#include "WorldTransform.h"
 #include <memory>
 
-/// <summary>
-/// 地面
-/// </summary>
-class Ground {
+class Spotlight {
 public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(const Vector3& position,uint32_t textureHandle);
+	void Initialize(const Vector3& position);
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -26,7 +23,10 @@ private:
 	WorldTransform worldTransform_;
 	// モデル
 	std::unique_ptr<Model> model_ = nullptr;
-	//テクスチャ
+	// テクスチャ
 	uint32_t textureHandle_;
+
+private:
+	float alpha_ = 1.0f;
 
 };

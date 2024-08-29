@@ -62,7 +62,7 @@ void Particle::Initialize(const WorldTransform* worldTransform, uint32_t texture
 	}
 	// 1度のみの初期化処理
 	else {
-		// パーティクルの数を取得(最大30個まで)
+		// パーティクルの数を取得(最大100個まで)
 		particleNum_ = particleNum;
 		// 受け取ったワールドトランスフォームを親に設定する
 		for (uint32_t i = 0; i < particleNum_; i++) {
@@ -148,6 +148,24 @@ void Particle::Initialize(const WorldTransform* worldTransform, uint32_t texture
 				particle_[i].velocity.z = 0.2f;
 			}
 			break;
+		case BRIZZARD:
+			for (uint32_t i = 0; i < particleNum_; i++) {
+				//位置設定
+				srand((uint32_t)time(nullptr) + (uint32_t)std::powf((float)i, 3));
+				particle_[i].worldTransform.translation_.x = float(rand() % ((int)kBlizzardEmitterRad_ * 2) - kBlizzardEmitterRad_);
+				srand((uint32_t)time(nullptr) + (uint32_t)std::powf((float)i, 4));
+				particle_[i].worldTransform.translation_.y = kBlizzardHeight_;
+				srand((uint32_t)time(nullptr) + (uint32_t)std::powf((float)i, 2));
+				particle_[i].worldTransform.translation_.z = float(rand() % ((int)kBlizzardEmitterRad_ * 2) - kBlizzardEmitterRad_);
+				//速度
+				srand((uint32_t)time(nullptr) + (uint32_t)std::powf((float)i, 3));
+				particle_[i].velocity.x = float(rand() % 8 - 4) * (1.0f / 30.0f);
+				srand((uint32_t)time(nullptr) + (uint32_t)std::powf((float)i, 4));
+				particle_[i].velocity.y = float(rand() % 10 - 11) * (1.0f / 30.0f);
+				srand((uint32_t)time(nullptr) + (uint32_t)std::powf((float)i, 2));
+				particle_[i].velocity.z = float(rand() % 8 - 4) * (1.0f / 30.0f);
+			}
+			break;
 		default:
 			break;
 		}
@@ -186,6 +204,24 @@ void Particle::Update() {
 				particle_[i].worldTransform.translation_.x = 0.0f;
 				particle_[i].worldTransform.translation_.y = 0.0f;
 				particle_[i].worldTransform.translation_.z = 0.0f;
+			}
+		}
+		break;
+	case BRIZZARD:
+		for (uint32_t i = 0; i < particleNum_; i++) {
+			// 加算処理
+			particle_[i].worldTransform.translation_.x += particle_[i].velocity.x;
+			particle_[i].worldTransform.translation_.y += particle_[i].velocity.y;
+			particle_[i].worldTransform.translation_.z += particle_[i].velocity.z;
+			// 高度下限処理
+			if (particle_[i].worldTransform.translation_.y < 0.0f) {
+				// 位置設定
+				srand((uint32_t)time(nullptr) + (uint32_t)std::powf((float)i, 3));
+				particle_[i].worldTransform.translation_.x = float(rand() % ((int)kBlizzardEmitterRad_ * 2) - kBlizzardEmitterRad_);
+				srand((uint32_t)time(nullptr) + (uint32_t)std::powf((float)i, 4));
+				particle_[i].worldTransform.translation_.y = kBlizzardHeight_;
+				srand((uint32_t)time(nullptr) + (uint32_t)std::powf((float)i, 2));
+				particle_[i].worldTransform.translation_.z = float(rand() % ((int)kBlizzardEmitterRad_ * 2) - kBlizzardEmitterRad_);
 			}
 		}
 		break;

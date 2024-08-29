@@ -24,6 +24,7 @@ enum UseScene {
 	USESTAGE,
 	USEDIRECTION,
 	USEGAMEOVER,
+	USERESULT,
 };
 
 // 構造体

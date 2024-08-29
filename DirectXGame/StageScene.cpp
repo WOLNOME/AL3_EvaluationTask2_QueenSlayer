@@ -52,7 +52,7 @@ void StageScene::Init(Input* input, Audio* audio) {
 	// UIの生成
 	ui_ = std::make_unique<UI>();
 	//ポーズメニュー生成
-	pause_ = std::make_unique<Pause>(input_);
+	pause_ = std::make_unique<Pause>(input_,audio_);
 
 	// プレイヤーにシーンを渡す
 	player_->SetStageScene(this);
@@ -299,6 +299,8 @@ void StageScene::Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* dxC
 	player_->AudioPlay();
 	//敵周り効果音
 	enemy_->AudioPlay();
+	//ポーズ
+	pause_->AudioPlay();
 
 
 #pragma endregion

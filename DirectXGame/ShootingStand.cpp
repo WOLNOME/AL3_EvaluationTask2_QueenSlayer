@@ -46,6 +46,13 @@ void ShootingStand::Initialize(Model* model, UseScene useScene) {
 		// パーティクル初期化
 		particle_->Initialize(&worldTransform_, textureHandleParticle_, ParticleKind::SMOKE, 40, false);
 		break;
+	case USERESULT:
+		// NULLポインタチェック
+		assert(model);
+		model_ = model;
+		worldTransform_.Initialize();
+		worldTransform_.translation_.y = ssPos;
+		break;
 	default:
 		break;
 	}
@@ -90,6 +97,10 @@ void ShootingStand::Update(const Vector3 underPosition, const Vector3 cameraDir)
 		// 行列の更新と転送
 		worldTransform_.UpdateMatrix();
 		break;
+	case USERESULT:
+		// 行列の更新と転送
+		worldTransform_.UpdateMatrix();
+		break;
 	default:
 		break;
 	}
@@ -115,6 +126,10 @@ void ShootingStand::Draw(const ViewProjection& viewProjection) {
 		model_->Draw(worldTransform_, viewProjection,textureHandle_);
 		// パーティクル
 		particle_->Draw(viewProjection);
+		break;
+	case USERESULT:
+		// 砲台本体描画
+		model_->Draw(worldTransform_, viewProjection);
 		break;
 	default:
 		break;

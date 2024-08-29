@@ -63,8 +63,8 @@ void Reticle::Update(ViewProjection& viewProjection) {
 }
 
 void Reticle::Draw(ViewProjection& viewProjection) {
-#ifdef _DEBUG
 	viewProjection;
+#ifdef _DEBUG
 	// 3Dモデル
 	//model3DReticle_->Draw(worldTransform3DReticle_, viewProjection);
 #endif // _DEBUG

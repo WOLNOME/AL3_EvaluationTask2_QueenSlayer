@@ -119,6 +119,7 @@
     <ClCompile Include="Function.cpp" />
     <ClCompile Include="GameOverCamera.cpp" />
     <ClCompile Include="GameOverScene.cpp" />
+    <ClCompile Include="GameOverUI.cpp" />
     <ClCompile Include="Gradation.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="Head.cpp" />
@@ -128,6 +129,8 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerBullet.cpp" />
     <ClCompile Include="PlayerSpecialBullet.cpp" />
+    <ClCompile Include="ResultCamera.cpp" />
+    <ClCompile Include="ResultUI.cpp" />
     <ClCompile Include="Spotlight.cpp" />
     <ClCompile Include="TitleCamera.cpp" />
     <ClCompile Include="ResultScene.cpp" />
@@ -180,6 +183,7 @@
     <ClInclude Include="Function.h" />
     <ClInclude Include="GameOverCamera.h" />
     <ClInclude Include="GameOverScene.h" />
+    <ClInclude Include="GameOverUI.h" />
     <ClInclude Include="Gradation.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="Head.h" />
@@ -193,6 +197,8 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerBullet.h" />
     <ClInclude Include="PlayerSpecialBullet.h" />
+    <ClInclude Include="ResultCamera.h" />
+    <ClInclude Include="ResultUI.h" />
     <ClInclude Include="Spotlight.h" />
     <ClInclude Include="TitleCamera.h" />
     <ClInclude Include="ResultScene.h" />

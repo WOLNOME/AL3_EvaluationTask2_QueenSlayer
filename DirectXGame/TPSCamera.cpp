@@ -3,7 +3,6 @@
 #include "StageScene.h"
 #include "TextureManager.h"
 #include "WinApp.h"
-#include <imgui.h>
 
 void TPSCamera::Initialize(Input* input) {
 	// 入力の設定

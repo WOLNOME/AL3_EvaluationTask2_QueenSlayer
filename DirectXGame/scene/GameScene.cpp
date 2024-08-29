@@ -37,6 +37,7 @@ void GameScene::Initialize() {
 void GameScene::Update() {
 	// シーンの更新処理
 	m_pScene->Update();
+
 	// 各シーンからNextSceneの情報を受け取る
 	if (NextScene_ != m_pScene->GetNextScene()) {
 		NextScene_ = m_pScene->GetNextScene();
@@ -67,15 +68,17 @@ void GameScene::Draw() {
 void GameScene::ChangeScene() {
 	// シーン切り替えアニメーションとか作るならこの関数に書く
 
-	// もしNextSceneが入力されているならシーンを切り替える
-	if (!isInNow_ && !isOutNow_ && NextScene_ != CurrentScene_) {
+	// もしNextSceneが入力されているならシーン遷移アニメーションに入る
+	if (!isInNow_ && NextScene_ != CurrentScene_) {
+		AnimationFrame_ = 0;
 		isInNow_ = true;
+		isOutNow_ = false;
 		gradation_->Initialize(KindAni::ADMISSION);
 		gradation_->SetIsDraw(true);
 	}
 
 	// インアニメーション
-	if (isInNow_ && !isOutNow_) {
+	if (isInNow_) {
 		AnimationFrame_++;
 
 		// アニメーション処理
@@ -126,10 +129,11 @@ void GameScene::ChangeScene() {
 		}
 		// アニメーションの初期化
 		gradation_->Initialize(KindAni::EXIT);
+		AnimationFrame_ = 0;
 	}
 
 	// アウトアニメーション
-	if (!isInNow_ && isOutNow_ && NextScene_ == CurrentScene_) {
+	if (isOutNow_ && NextScene_ == CurrentScene_) {
 		AnimationFrame_++;
 
 		// アニメーション処理

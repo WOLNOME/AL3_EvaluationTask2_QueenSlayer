@@ -22,7 +22,7 @@ void TitleScene::Init(Input* input, Audio* audio) {
 	viewProjection_.farZ = 2000.0f;
 	viewProjection_.Initialize();
 
-	//モデルテクスチャ
+	// モデルテクスチャ
 	textureHandleSkydome_ = TextureManager::Load("skydome/sky_sphere.png");
 	textureHandleGround_ = TextureManager::Load("ground/ground.png");
 	// 2Dスプライトの生成
@@ -33,11 +33,11 @@ void TitleScene::Init(Input* input, Audio* audio) {
 	ground_ = std::make_unique<Ground>();
 	background_ = std::make_unique<Background>();
 	enemy_ = std::make_unique<Enemy>();
-	titleUI_ = std::make_unique<TitleUI>(input_);
+	titleUI_ = std::make_unique<TitleUI>(input_, audio_);
 
 	// インスタンス初期化
-	skydome_->Initialize({0.0f, 0.0f, 0.0f},textureHandleSkydome_);
-	ground_->Initialize({0.0f, 0.0f, 0.0f},textureHandleGround_);
+	skydome_->Initialize({0.0f, 0.0f, 0.0f}, textureHandleSkydome_);
+	ground_->Initialize({0.0f, 0.0f, 0.0f}, textureHandleGround_);
 	background_->Initialize({0.0f, 0.0f, 0.0f});
 	enemy_->Initialize({0.0f, 1.5f, 0.0f}, audio_, UseScene::USETITLE);
 	titleUI_->Initialize();
@@ -57,8 +57,6 @@ void TitleScene::Init(Input* input, Audio* audio) {
 }
 
 void TitleScene::Update() {
-	// timerインクリメント
-	timer_++;
 
 	// タイトルカメラの更新
 	titleCamera_->Update();
@@ -77,14 +75,15 @@ void TitleScene::Update() {
 	titleUI_->Update();
 
 	// プレイボタンが押されたら
-	if (timer_ >= 80 && titleUI_->GetIsPlay()) {
+	if (titleUI_->GetIsPlay()) {
 		NextScene = SCENE::STAGE;
 	}
-	//イグジットボタンが押されたら
-	if (timer_ >= 80 && titleUI_->GetIsExit()) {
-		isExit = true;
+	// イグジットボタンが押されたら
+	if (titleUI_->GetIsExit()) {
+		if (NextScene == SCENE::TITLE) {
+			isExit = true;
+		}
 	}
-
 }
 
 void TitleScene::Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* dxCommon_) {
@@ -148,6 +147,7 @@ void TitleScene::Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* dxC
 		voiceHandleBGM_ = audio_->PlayWave(soundHandleBGM_, true, soundVolumeBGM_);
 		isSoundPlayBGM_ = false;
 	}
+	titleUI_->AudioPlay();
 
 #pragma endregion
 }

@@ -32,6 +32,7 @@ void GameOverScene::Init(Input* input, Audio* audio) {
 	ground_ = std::make_unique<Ground>();
 	spotlight_ = std::make_unique<Spotlight>();
 	player_ = std::make_unique<Player>();
+	gameOverUI_ = std::make_unique<GameOverUI>(input_,audio_);
 
 	// インスタンス初期化
 	gameOverCamera_->Initialize();
@@ -39,6 +40,7 @@ void GameOverScene::Init(Input* input, Audio* audio) {
 	ground_->Initialize({0.0f, 0.0f, 0.0f}, textureHandleGround_);
 	spotlight_->Initialize({0.0f, 0.0f, 0.0f});
 	player_->Initialize({0.0f, 0.3f, 0.0f}, input_, audio_, UseScene::USEGAMEOVER);
+	gameOverUI_->Initialize();
 
 	// BGMのサウンドハンドル
 	soundHandleBGM_ = audio_->LoadWave("Audio/gameOverBGM.wav");
@@ -47,11 +49,6 @@ void GameOverScene::Init(Input* input, Audio* audio) {
 }
 
 void GameOverScene::Update() {
-	// このキーを押すと参照したシーンに移動
-	if (input_->TriggerKey(DIK_TAB)) {
-		NextScene = TITLE;
-	}
-
 	// カメラの更新処理
 	gameOverCamera_->Update();
 	viewProjection_.matView = gameOverCamera_->GetViewProjection().matView;
@@ -64,7 +61,17 @@ void GameOverScene::Update() {
 	skydome_->Update();
 	spotlight_->Update();
 	player_->Update();
+	gameOverUI_->Update();
 
+	if (gameOverUI_->GetIsRetry()) {
+		if (NextScene == GAMEOVER) {
+			NextScene = SCENE::STAGE;
+		}
+	} else if (gameOverUI_->GetIsRetire()) {
+		if (NextScene == GAMEOVER) {
+			NextScene = SCENE::TITLE;
+		}
+	}
 }
 
 void GameOverScene::Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* dxCommon_) {
@@ -110,6 +117,8 @@ void GameOverScene::Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* 
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
 
+	gameOverUI_->DrawUI();
+
 	// スプライト描画後処理
 	Sprite::PostDraw();
 
@@ -125,6 +134,7 @@ void GameOverScene::Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* 
 		voiceHandleBGM_ = audio_->PlayWave(soundHandleBGM_, true, soundVolumeBGM_);
 		isSoundPlayBGM_ = false;
 	}
+	gameOverUI_->AudioPlay();
 
 #pragma endregion
 }

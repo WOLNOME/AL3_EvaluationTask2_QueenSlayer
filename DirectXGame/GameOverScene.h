@@ -6,6 +6,7 @@
 #include "Ground.h"
 #include "Skydome.h"
 #include "Spotlight.h"
+#include "GameOverUI.h"
 #include "Model.h"
 #include "Sprite.h"
 #include "GameOverCamera.h"
@@ -42,8 +43,10 @@ private:
 	std::unique_ptr<Skydome> skydome_ = nullptr;
 	std::unique_ptr<Spotlight> spotlight_ = nullptr;
 	std::unique_ptr<Player> player_ = nullptr;
+	std::unique_ptr<GameOverUI> gameOverUI_ = nullptr;
 
 private://変数
+	int timer_ = 0;
 
 	// BGM関連
 	uint32_t soundHandleBGM_;

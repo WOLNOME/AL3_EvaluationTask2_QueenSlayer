@@ -82,6 +82,24 @@
     <Filter Include="ヘッダー ファイル\program\camera">
       <UniqueIdentifier>{0f5beab2-9d4f-47ed-bad1-b2e8f24748f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\program\UI">
+      <UniqueIdentifier>{d10523ce-0c81-4cd0-946b-d891888b244a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\program\UI">
+      <UniqueIdentifier>{18665db1-2a82-40fb-8e33-1e89658b67a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\program\object">
+      <UniqueIdentifier>{24864d98-8b21-4b36-b0b8-9e60a0385871}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\program\object">
+      <UniqueIdentifier>{a67e32d4-5b3f-43fc-a68f-7605083089fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\program\system">
+      <UniqueIdentifier>{1d99ce64-18dc-445e-910c-6b1e7fe538bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\program\system">
+      <UniqueIdentifier>{4e812fd3-398a-447a-891c-3acd2c369361}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="base\DirectXCommon.cpp">
@@ -114,12 +132,6 @@
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル\program</Filter>
     </ClCompile>
-    <ClCompile Include="Skydome.cpp">
-      <Filter>ソース ファイル\program</Filter>
-    </ClCompile>
-    <ClCompile Include="Ground.cpp">
-      <Filter>ソース ファイル\program</Filter>
-    </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>ソース ファイル\program\player</Filter>
     </ClCompile>
@@ -144,9 +156,6 @@
     <ClCompile Include="PlayerBullet.cpp">
       <Filter>ソース ファイル\program\player</Filter>
     </ClCompile>
-    <ClCompile Include="Reticle.cpp">
-      <Filter>ソース ファイル\program</Filter>
-    </ClCompile>
     <ClCompile Include="Collider.cpp">
       <Filter>ソース ファイル\program\collision</Filter>
     </ClCompile>
@@ -156,17 +165,8 @@
     <ClCompile Include="EnemyBullet.cpp">
       <Filter>ソース ファイル\program\enemy</Filter>
     </ClCompile>
-    <ClCompile Include="ShineBall.cpp">
-      <Filter>ソース ファイル\program</Filter>
-    </ClCompile>
     <ClCompile Include="PlayerSpecialBullet.cpp">
       <Filter>ソース ファイル\program\player</Filter>
-    </ClCompile>
-    <ClCompile Include="Background.cpp">
-      <Filter>ソース ファイル\program</Filter>
-    </ClCompile>
-    <ClCompile Include="UI.cpp">
-      <Filter>ソース ファイル\program</Filter>
     </ClCompile>
     <ClCompile Include="Particle.cpp">
       <Filter>ソース ファイル\program</Filter>
@@ -180,23 +180,50 @@
     <ClCompile Include="Gradation.cpp">
       <Filter>ソース ファイル\program</Filter>
     </ClCompile>
-    <ClCompile Include="Pause.cpp">
-      <Filter>ソース ファイル\program</Filter>
-    </ClCompile>
     <ClCompile Include="TPSCamera.cpp">
       <Filter>ソース ファイル\program\camera</Filter>
     </ClCompile>
     <ClCompile Include="TitleCamera.cpp">
       <Filter>ソース ファイル\program\camera</Filter>
     </ClCompile>
-    <ClCompile Include="TitleUI.cpp">
-      <Filter>ソース ファイル\program</Filter>
-    </ClCompile>
     <ClCompile Include="GameOverCamera.cpp">
       <Filter>ソース ファイル\program\camera</Filter>
     </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>ソース ファイル\program\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleUI.cpp">
+      <Filter>ソース ファイル\program\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOverUI.cpp">
+      <Filter>ソース ファイル\program\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Background.cpp">
+      <Filter>ソース ファイル\program\object</Filter>
+    </ClCompile>
+    <ClCompile Include="Ground.cpp">
+      <Filter>ソース ファイル\program\object</Filter>
+    </ClCompile>
+    <ClCompile Include="Reticle.cpp">
+      <Filter>ソース ファイル\program\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ShineBall.cpp">
+      <Filter>ソース ファイル\program\object</Filter>
+    </ClCompile>
+    <ClCompile Include="Skydome.cpp">
+      <Filter>ソース ファイル\program\object</Filter>
+    </ClCompile>
     <ClCompile Include="Spotlight.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\program\object</Filter>
+    </ClCompile>
+    <ClCompile Include="Pause.cpp">
+      <Filter>ソース ファイル\program\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ResultUI.cpp">
+      <Filter>ソース ファイル\program\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ResultCamera.cpp">
+      <Filter>ソース ファイル\program\camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -299,12 +326,6 @@
     <ClInclude Include="TitleScene.h">
       <Filter>ヘッダー ファイル\scene</Filter>
     </ClInclude>
-    <ClInclude Include="Skydome.h">
-      <Filter>ヘッダー ファイル\program</Filter>
-    </ClInclude>
-    <ClInclude Include="Ground.h">
-      <Filter>ヘッダー ファイル\program</Filter>
-    </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>ヘッダー ファイル\program\player</Filter>
     </ClInclude>
@@ -329,9 +350,6 @@
     <ClInclude Include="PlayerBullet.h">
       <Filter>ヘッダー ファイル\program\player</Filter>
     </ClInclude>
-    <ClInclude Include="Reticle.h">
-      <Filter>ヘッダー ファイル\program</Filter>
-    </ClInclude>
     <ClInclude Include="Collider.h">
       <Filter>ヘッダー ファイル\program\collision</Filter>
     </ClInclude>
@@ -344,17 +362,8 @@
     <ClInclude Include="EnemyBullet.h">
       <Filter>ヘッダー ファイル\program\enemy</Filter>
     </ClInclude>
-    <ClInclude Include="ShineBall.h">
-      <Filter>ヘッダー ファイル\program</Filter>
-    </ClInclude>
     <ClInclude Include="PlayerSpecialBullet.h">
       <Filter>ヘッダー ファイル\program\player</Filter>
-    </ClInclude>
-    <ClInclude Include="UI.h">
-      <Filter>ヘッダー ファイル\program</Filter>
-    </ClInclude>
-    <ClInclude Include="Background.h">
-      <Filter>ヘッダー ファイル\program</Filter>
     </ClInclude>
     <ClInclude Include="Particle.h">
       <Filter>ヘッダー ファイル\program</Filter>
@@ -365,26 +374,53 @@
     <ClInclude Include="GameOverScene.h">
       <Filter>ヘッダー ファイル\scene</Filter>
     </ClInclude>
-    <ClInclude Include="Gradation.h">
-      <Filter>ヘッダー ファイル\program</Filter>
-    </ClInclude>
-    <ClInclude Include="Pause.h">
-      <Filter>ヘッダー ファイル\program</Filter>
-    </ClInclude>
     <ClInclude Include="TPSCamera.h">
       <Filter>ヘッダー ファイル\program\camera</Filter>
     </ClInclude>
     <ClInclude Include="TitleCamera.h">
       <Filter>ヘッダー ファイル\program\camera</Filter>
     </ClInclude>
-    <ClInclude Include="TitleUI.h">
-      <Filter>ヘッダー ファイル\program</Filter>
-    </ClInclude>
     <ClInclude Include="GameOverCamera.h">
       <Filter>ヘッダー ファイル\program\camera</Filter>
     </ClInclude>
+    <ClInclude Include="TitleUI.h">
+      <Filter>ヘッダー ファイル\program\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>ヘッダー ファイル\program\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOverUI.h">
+      <Filter>ヘッダー ファイル\program\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Background.h">
+      <Filter>ヘッダー ファイル\program\object</Filter>
+    </ClInclude>
+    <ClInclude Include="Ground.h">
+      <Filter>ヘッダー ファイル\program\object</Filter>
+    </ClInclude>
+    <ClInclude Include="Reticle.h">
+      <Filter>ヘッダー ファイル\program\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ShineBall.h">
+      <Filter>ヘッダー ファイル\program\object</Filter>
+    </ClInclude>
+    <ClInclude Include="Skydome.h">
+      <Filter>ヘッダー ファイル\program\object</Filter>
+    </ClInclude>
     <ClInclude Include="Spotlight.h">
+      <Filter>ヘッダー ファイル\program\object</Filter>
+    </ClInclude>
+    <ClInclude Include="Gradation.h">
       <Filter>ヘッダー ファイル\program</Filter>
+    </ClInclude>
+    <ClInclude Include="Pause.h">
+      <Filter>ヘッダー ファイル\program\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ResultCamera.h">
+      <Filter>ヘッダー ファイル\program\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="ResultUI.h">
+      <Filter>ヘッダー ファイル\program\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

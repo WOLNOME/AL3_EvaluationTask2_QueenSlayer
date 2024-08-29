@@ -8,6 +8,7 @@ enum ParticleKind {
 	DIFFUSION,
 	POP,
 	SMOKE,
+	BRIZZARD,
 };
 
 //パーティクルデータ
@@ -30,7 +31,7 @@ public:
 
 private:
 	//パーティクルデータ
-	ParticleData particle_[50];
+	ParticleData particle_[100];
 
 private:
 	// パーティクルの数
@@ -43,4 +44,10 @@ private:
 	const Vector3 kGravity_ = {0.0f, -0.025f, 0.0f};
 	//煙最大高度
 	const float kSmokeMaxHeight_ = 2.5f;
+	//吹雪高さ
+	const float kBlizzardHeight_ = 7.0f;
+	//吹雪エミッター半径
+	const float kBlizzardEmitterRad_ = 8.0f;
+
+
 };

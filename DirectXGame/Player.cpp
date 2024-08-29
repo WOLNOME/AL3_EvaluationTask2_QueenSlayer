@@ -24,6 +24,8 @@ Player::~Player() {
 		break;
 	case USEDIRECTION:
 		break;
+	case USERESULT:
+		break;
 	default:
 		break;
 	}
@@ -90,6 +92,23 @@ void Player::Initialize(const Vector3& position, Input* input, Audio* audio, Use
 		stand_->SetParent(&vehicle_->GetWorldTransform());
 		// 砲台の初期化
 		stand_->Initialize(modelStand_.get(), useScene_);
+		break;
+	case USERESULT:
+		// 車両モデルの生成
+		modelVehicle_.reset(Model::CreateFromOBJ("playerUnder", true));
+		// 砲台モデルの生成
+		modelStand_.reset(Model::CreateFromOBJ("playerAbove", true));
+		// 車両の生成
+		vehicle_ = std::make_unique<Vehicle>();
+		// 車両の初期化
+		vehicle_->Initialize(input_, modelVehicle_.get(), position, useScene_);
+		// 砲台の生成
+		stand_ = std::make_unique<ShootingStand>();
+		// 砲台と車両をペアレント設定
+		stand_->SetParent(&vehicle_->GetWorldTransform());
+		// 砲台の初期化
+		stand_->Initialize(modelStand_.get(), useScene_);
+
 		break;
 	default:
 		break;
@@ -197,6 +216,12 @@ void Player::Update() {
 		// 砲台の更新
 		stand_->Update({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f});
 		break;
+	case USERESULT:
+		// 車両の更新
+		vehicle_->Update();
+		// 砲台の更新
+		stand_->Update({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f});
+		break;
 	default:
 		break;
 	}
@@ -226,6 +251,12 @@ void Player::Draw(ViewProjection& viewProjection) {
 	case USEDIRECTION:
 		break;
 	case USEGAMEOVER:
+		// 砲台描画
+		stand_->Draw(viewProjection);
+		// 車両描画
+		vehicle_->Draw(viewProjection);
+		break;
+	case USERESULT:
 		// 砲台描画
 		stand_->Draw(viewProjection);
 		// 車両描画

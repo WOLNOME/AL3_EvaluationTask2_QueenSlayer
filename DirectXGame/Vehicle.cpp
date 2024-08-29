@@ -43,6 +43,15 @@ void Vehicle::Initialize(Input* input, Model* model, const Vector3& position,Use
 		worldTransform_.translation_ = position;
 
 		break;
+	case USERESULT:
+		// NULLポインタチェック
+		assert(model);
+		model_ = model;
+		// ワールドトランスフォーム設定
+		worldTransform_.Initialize();
+		// 引数で受け取った座標をセット
+		worldTransform_.translation_ = position;
+		break;
 	default:
 		break;
 	}
@@ -226,6 +235,10 @@ void Vehicle::Update() {
 		// 行列の再計算と転送
 		worldTransform_.UpdateMatrix();
 		break;
+	case USERESULT:
+		// 行列の再計算と転送
+		worldTransform_.UpdateMatrix();
+		break;
 	default:
 		break;
 	}
@@ -246,6 +259,10 @@ void Vehicle::Draw(const ViewProjection& viewProjection) {
 	case USEGAMEOVER:
 		// 車両本体描画
 		model_->Draw(worldTransform_, viewProjection,textureHandle_);
+		break;
+	case USERESULT:
+		// 車両本体描画
+		model_->Draw(worldTransform_, viewProjection);
 		break;
 	default:
 		break;

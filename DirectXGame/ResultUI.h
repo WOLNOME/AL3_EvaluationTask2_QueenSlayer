@@ -1,26 +1,20 @@
 #pragma once
-#include "Input.h"
 #include "Audio.h"
-#include "Sprite.h"
 #include "Function.h"
+#include "Input.h"
+#include "Sprite.h"
 #include "memory"
 
-// 現在の状態
-enum TitleSituation {
-	TITLEMODE,
-	HOWTOPLAYMODE,
-};
-// タイトル画面にあるボタン
-enum TitleButton {
-	PLAYBUTTONTITLE,
-	HOWTOPLAYBUTTONTITLE,
-	EXITBUTTONTITLE,
+// ゲームオーバー画面にあるボタン
+enum ResultButton {
+	EXITBUTTONRESULT,
+	RETRYBUTTONRESULT,
 };
 
-class TitleUI {
+class ResultUI {
 public:
-	TitleUI(Input* input,Audio* audio);
-	~TitleUI();
+	ResultUI(Input* input, Audio* audio);
+	~ResultUI();
 
 	void Initialize();
 	void Update();
@@ -30,59 +24,41 @@ public:
 
 public: // 関数
 public: // ゲッター
-	bool GetIsPlay() { return isPlay_; }
+	bool GetIsRetry() { return isRetry_; }
 	bool GetIsExit() { return isExit_; }
 
 public: // セッター
 private:
 	// インプット
 	Input* input_ = nullptr;
-	//オーディオ
+	// オーディオ
 	Audio* audio_ = nullptr;
 
-
 	// テクスチャハンドル
-	uint32_t textureHandlePlayButton_;
-	uint32_t textureHandleHowToPlayButton_;
 	uint32_t textureHandleExitButton_;
-	uint32_t textureHandleBackWhite_;
-	uint32_t textureHandleTitleRogo_;
+	uint32_t textureHandleRetryButton_;
+	uint32_t textureHandleGameClear_;
 	uint32_t textureHandleOperationUI_;
-	uint32_t textureHandleHTPSlide_[4];
 
 	// スプライト
-	std::unique_ptr<Sprite> spritePlayButton_;
-	std::unique_ptr<Sprite> spriteHowToPlayButton_;
 	std::unique_ptr<Sprite> spriteExitButton_;
-	std::unique_ptr<Sprite> spriteBackWhite_;
-	std::unique_ptr<Sprite> spriteTitleRogo_;
+	std::unique_ptr<Sprite> spriteRetryButton_;
+	std::unique_ptr<Sprite> spriteGameClear_;
 	std::unique_ptr<Sprite> spriteOperationUI_;
-	std::unique_ptr<Sprite> spriteHTPSlide_[4];
 
 	// サイズ
-	Vector2 sizePlayButton_;
-	Vector2 sizeHowToPlayButton_;
 	Vector2 sizeExitButton_;
+	Vector2 sizeRetryButton_;
 
 	// ポジション
-	Vector2 positionPlayButton_;
-	Vector2 positionHowToPlayButton_;
 	Vector2 positionExitButton_;
-
-	// 回転
-	float rotationTitleRogo_;
+	Vector2 positionRetryButton_;
 
 private:
-	TitleSituation titleSituation_;
-	TitleButton selectButton_;
-	bool isPlay_;
+	ResultButton selectButton_;
+	bool isRetry_;
 	bool isExit_;
-	int slidePage_;
-	const float kWhiteBackAlpha_ = 0.15f;
 	const float kStrngthButtonRatio_ = 1.2f;
-	const float kRotateSpeed_ = (7.0f / 180.0f) * pi * (1.0f / 150.0f);
-	float rotateSpeed_;
-	float rotateAmount_;
 
 	const float kSlectJump_ = 2.0f;
 	const float kGravity_ = -0.1f;

@@ -31,7 +31,7 @@ public:
 
 private:
 	//パーティクルデータ
-	ParticleData particle_[100];
+	ParticleData particle_[50];
 
 private:
 	// パーティクルの数

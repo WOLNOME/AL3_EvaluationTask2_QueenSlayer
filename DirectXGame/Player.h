@@ -51,7 +51,7 @@ public: // セッター
 
 public:
 	// 最大体力
-	const int kMaxHP_ = 1;
+	const int kMaxHP_ = 7;
 	const int kMaxSPGauge_ = 6;
 
 private:

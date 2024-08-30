@@ -14,6 +14,7 @@ const float pi =(float)M_PI;
 enum SCENE {
 	TITLE,
 	STAGE, 
+	DIRECTIION,
 	GAMEOVER,
 	RESULT,
 };

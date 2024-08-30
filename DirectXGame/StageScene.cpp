@@ -197,7 +197,7 @@ void StageScene::Update() {
 
 		// クリアシーン遷移処理
 		if (enemy_->GetHP() <= 0) {
-			NextScene = RESULT;
+			NextScene = DIRECTIION;
 		}
 		// ゲームオーバー遷移処理
 		else if (player_->GetHP() <= 0) {

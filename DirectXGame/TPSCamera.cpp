@@ -2,6 +2,7 @@
 #include "Function.h"
 #include "StageScene.h"
 #include "TextureManager.h"
+#include "ImGuiManager.h"
 #include "WinApp.h"
 
 void TPSCamera::Initialize(Input* input) {

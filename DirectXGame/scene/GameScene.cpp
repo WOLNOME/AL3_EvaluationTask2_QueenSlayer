@@ -1,13 +1,14 @@
 #include "GameScene.h"
 #include "AxisIndicator.h"
 #include "BaseScene.h"
+#include "TitleScene.h"
+#include "StageScene.h"
+#include "DirectionScene.h"
 #include "GameOverScene.h"
+#include "ResultScene.h"
 #include "ImGuiManager.h"
 #include "PrimitiveDrawer.h"
-#include "ResultScene.h"
-#include "StageScene.h"
 #include "TextureManager.h"
-#include "TitleScene.h"
 #include <cassert>
 
 GameScene::GameScene() {}
@@ -110,6 +111,11 @@ void GameScene::ChangeScene() {
 			m_pScene->Init(input_, audio_);
 			CurrentScene_ = m_pScene->GetNextScene();
 			;
+			break;
+		case SCENE::DIRECTIION:
+			m_pScene = std::make_unique<DirectionScene>(); // 演出シーンを現在のシーンにする
+			m_pScene->Init(input_, audio_);
+			CurrentScene_ = m_pScene->GetNextScene();
 			break;
 		case SCENE::GAMEOVER:
 			m_pScene = std::make_unique<GameOverScene>(); // ゲームオーバーシーンを現在のシーンにする

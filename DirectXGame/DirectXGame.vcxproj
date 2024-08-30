@@ -114,6 +114,8 @@
     <ClCompile Include="Chest.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
+    <ClCompile Include="DirectionCamera.cpp" />
+    <ClCompile Include="DirectionScene.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyBullet.cpp" />
     <ClCompile Include="Function.cpp" />
@@ -178,6 +180,8 @@
     <ClInclude Include="Collider.h" />
     <ClInclude Include="CollisionConfig.h" />
     <ClInclude Include="CollisionManager.h" />
+    <ClInclude Include="DirectionCamera.h" />
+    <ClInclude Include="DirectionScene.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyBullet.h" />
     <ClInclude Include="Function.h" />

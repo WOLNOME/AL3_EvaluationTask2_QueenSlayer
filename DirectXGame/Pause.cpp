@@ -2,9 +2,10 @@
 #include "TextureManager.h"
 #include "WinApp.h"
 
-Pause::Pause(Input* input,Audio* audio) {
+Pause::Pause(Input* input, Audio* audio, GamePad* pad) {
 	// インプット
 	input_ = input;
+	pad_ = pad;
 	// オーディオ
 	audio_ = audio;
 
@@ -23,6 +24,7 @@ Pause::Pause(Input* input,Audio* audio) {
 	textureHandleHTPSlide_[1] = TextureManager::Load("Pause/howToPlayPage1.png");
 	textureHandleHTPSlide_[2] = TextureManager::Load("Pause/howToPlayPage2.png");
 	textureHandleHTPSlide_[3] = TextureManager::Load("Pause/howToPlayPage3.png");
+	textureHandleHTPSlide_[4] = TextureManager::Load("Pause/howToPlayPage4.png");
 
 	// スプライト生成
 	spriteContinueButton_.reset(Sprite::Create(textureHandleContinueButton_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
@@ -35,6 +37,7 @@ Pause::Pause(Input* input,Audio* audio) {
 	spriteHTPSlide_[1].reset(Sprite::Create(textureHandleHTPSlide_[1], {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
 	spriteHTPSlide_[2].reset(Sprite::Create(textureHandleHTPSlide_[2], {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
 	spriteHTPSlide_[3].reset(Sprite::Create(textureHandleHTPSlide_[3], {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
+	spriteHTPSlide_[4].reset(Sprite::Create(textureHandleHTPSlide_[4], {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
 
 	// ボタンサイズ取得
 	sizeContinueButton_ = spriteContinueButton_->GetSize();
@@ -48,7 +51,7 @@ Pause::Pause(Input* input,Audio* audio) {
 }
 
 Pause::~Pause() {
-	//音ストップ
+	// 音ストップ
 	audio_->StopWave(voiceHandleCursorMoveSE_);
 	audio_->StopWave(voiceHandleDecideSE_);
 }
@@ -87,7 +90,7 @@ void Pause::Update() {
 			// スプライトの位置に反映
 			spriteContinueButton_->SetPosition({positionContinueButton_.x, positionContinueButton_.y + position_.y});
 			// 選択変更
-			if (input_->TriggerKey(DIK_DOWN)) {
+			if (input_->TriggerKey(DIK_DOWN) || pad_->TriggerLStickDOWN()) {
 				selectButton_ = HOWTOPLAYBUTTON;
 				// スプライトサイズもとに戻す
 				spriteContinueButton_->SetSize(sizeContinueButton_);
@@ -97,7 +100,7 @@ void Pause::Update() {
 				isSoundPlayCursorMoveSE_ = true;
 			}
 			// 選択
-			if (input_->TriggerKey(DIK_SPACE)) {
+			if (input_->TriggerKey(DIK_SPACE) || pad_->TriggerA()) {
 				isContinue_ = true;
 				// サウンド再生
 				isSoundPlayDecideSE_ = true;
@@ -118,7 +121,7 @@ void Pause::Update() {
 			position_.y += velocity_.y;
 			// スプライトの位置に反映
 			spriteHowToPlayButton_->SetPosition({positionHowToPlayButton_.x, positionHowToPlayButton_.y + position_.y});
-			if (input_->TriggerKey(DIK_UP)) {
+			if (input_->TriggerKey(DIK_UP) || pad_->TriggerLStickUP()) {
 				selectButton_ = CONTINUEBUTTON;
 				// スプライトサイズもとに戻す
 				spriteHowToPlayButton_->SetSize(sizeHowToPlayButton_);
@@ -126,7 +129,7 @@ void Pause::Update() {
 				spriteHowToPlayButton_->SetPosition(positionHowToPlayButton_);
 				// サウンド再生
 				isSoundPlayCursorMoveSE_ = true;
-			} else if (input_->TriggerKey(DIK_DOWN)) {
+			} else if (input_->TriggerKey(DIK_DOWN) || pad_->TriggerLStickDOWN()) {
 				selectButton_ = BACKTOTITLEBUTTON;
 				// スプライトサイズもとに戻す
 				spriteHowToPlayButton_->SetSize(sizeHowToPlayButton_);
@@ -136,7 +139,7 @@ void Pause::Update() {
 				isSoundPlayCursorMoveSE_ = true;
 			}
 			// 選択
-			if (input_->TriggerKey(DIK_SPACE)) {
+			if (input_->TriggerKey(DIK_SPACE) || pad_->TriggerA()) {
 				pauseSituation_ = HOWTOPLAY;
 				// サウンド再生
 				isSoundPlayDecideSE_ = true;
@@ -157,7 +160,7 @@ void Pause::Update() {
 			// スプライトの位置に反映
 			spriteBackToTitleButton_->SetPosition({positionBackToTitleButton_.x, positionBackToTitleButton_.y + position_.y});
 			// 選択変更
-			if (input_->TriggerKey(DIK_UP)) {
+			if (input_->TriggerKey(DIK_UP) || pad_->TriggerLStickUP()) {
 				selectButton_ = HOWTOPLAYBUTTON;
 				// スプライトサイズもとに戻す
 				spriteBackToTitleButton_->SetSize(sizeBackToTitleButton_);
@@ -167,7 +170,7 @@ void Pause::Update() {
 				isSoundPlayCursorMoveSE_ = true;
 			}
 			// 選択
-			if (input_->TriggerKey(DIK_SPACE)) {
+			if (input_->TriggerKey(DIK_SPACE) || pad_->TriggerA()) {
 				isExit_ = true;
 				// サウンド再生
 				isSoundPlayDecideSE_ = true;
@@ -179,24 +182,24 @@ void Pause::Update() {
 		break;
 	case HOWTOPLAY:
 		// 左右キーでページ切り替え
-		if (input_->TriggerKey(DIK_RIGHT)) {
+		if (input_->TriggerKey(DIK_RIGHT) || pad_->TriggerLStickRIGHT()) {
 			// 0,1,2ページならインクリメント
-			if (slidePage_ >= 0 && slidePage_ < 3) {
+			if (slidePage_ >= 0 && slidePage_ < kHowToPlayPageNum - 1) {
 				slidePage_++;
 				// サウンド再生
 				isSoundPlayCursorMoveSE_ = true;
 			}
 			// 3ページならメニュー画面へ
-			else if (slidePage_ == 3) {
+			else if (slidePage_ == kHowToPlayPageNum - 1) {
 				pauseSituation_ = MENU;
 				// ページも0に戻す
 				slidePage_ = 0;
 				// サウンド再生
 				isSoundPlayDecideSE_ = true;
 			}
-		} else if (input_->TriggerKey(DIK_LEFT)) {
+		} else if (input_->TriggerKey(DIK_LEFT) || pad_->TriggerLStickLEFT()) {
 			// 1,2,3ページならデクリメント
-			if (slidePage_ >= 1 && slidePage_ <= 3) {
+			if (slidePage_ >= 1 && slidePage_ <= kHowToPlayPageNum - 1) {
 				slidePage_--;
 				// サウンド再生
 				isSoundPlayCursorMoveSE_ = true;

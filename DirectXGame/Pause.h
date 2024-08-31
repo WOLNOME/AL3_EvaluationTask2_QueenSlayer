@@ -1,9 +1,12 @@
 #pragma once
 #include "Input.h"
 #include "Audio.h"
+#include "GamePad.h"
 #include "Sprite.h"
 #include "Function.h"
 #include "memory"
+
+const int kHowToPlayPageNum = 5;
 
 //現在の状態
 enum PauseSituation {
@@ -19,7 +22,7 @@ enum MenuButton {
 
 class Pause {
 public:
-	Pause(Input* input, Audio* audio);
+	Pause(Input* input, Audio* audio,GamePad* pad);
 	~Pause();
 
 	void Initialize();
@@ -37,6 +40,7 @@ public://セッター
 private:
 	//インプット
 	Input* input_ = nullptr;
+	GamePad* pad_ = nullptr;
 	// オーディオ
 	Audio* audio_ = nullptr;
 
@@ -47,7 +51,7 @@ private:
 	uint32_t textureHandleBackBlack_;
 	uint32_t textureHandlePauseMark_;
 	uint32_t textureHandleOperationUI_;
-	uint32_t textureHandleHTPSlide_[4];
+	uint32_t textureHandleHTPSlide_[kHowToPlayPageNum];
 
 	//スプライト
 	std::unique_ptr<Sprite> spriteContinueButton_;
@@ -56,7 +60,7 @@ private:
 	std::unique_ptr<Sprite> spriteBackBlack_;
 	std::unique_ptr<Sprite> spritePauseMark_;
 	std::unique_ptr<Sprite> spriteOperationUI_;
-	std::unique_ptr<Sprite> spriteHTPSlide_[4];
+	std::unique_ptr<Sprite> spriteHTPSlide_[kHowToPlayPageNum];
 
 	//ボタンのサイズ
 	Vector2 sizeContinueButton_;

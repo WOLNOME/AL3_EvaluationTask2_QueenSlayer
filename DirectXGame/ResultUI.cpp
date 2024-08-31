@@ -2,9 +2,10 @@
 #include "TextureManager.h"
 #include "WinApp.h"
 
-ResultUI::ResultUI(Input* input, Audio* audio) {
+ResultUI::ResultUI(Input* input, Audio* audio, GamePad* pad) {
 	// インプット
 	input_ = input;
+	pad_ = pad;
 	// オーディオ
 	audio_ = audio;
 
@@ -71,7 +72,7 @@ void ResultUI::Update() {
 		// スプライトの位置に反映
 		spriteExitButton_->SetPosition({positionExitButton_.x, positionExitButton_.y + position_.y});
 		// 選択変更
-		if (input_->TriggerKey(DIK_DOWN)) {
+		if (input_->TriggerKey(DIK_DOWN)||pad_->TriggerLStickDOWN()) {
 			selectButton_ = RETRYBUTTONRESULT;
 			// スプライトサイズもとに戻す
 			spriteExitButton_->SetSize(sizeExitButton_);
@@ -81,7 +82,7 @@ void ResultUI::Update() {
 			isSoundPlayCursorMoveSE_ = true;
 		}
 		// 選択
-		if (input_->TriggerKey(DIK_SPACE)) {
+		if (input_->TriggerKey(DIK_SPACE) || pad_->TriggerA()) {
 			isExit_ = true;
 			// サウンド再生
 			isSoundPlayDecideSE_ = true;
@@ -102,7 +103,7 @@ void ResultUI::Update() {
 		// スプライトの位置に反映
 		spriteRetryButton_->SetPosition({positionRetryButton_.x, positionRetryButton_.y + position_.y});
 		// 選択変更
-		if (input_->TriggerKey(DIK_UP)) {
+		if (input_->TriggerKey(DIK_UP) || pad_->TriggerLStickUP()) {
 			selectButton_ = EXITBUTTONRESULT;
 			// スプライトサイズもとに戻す
 			spriteRetryButton_->SetSize(sizeRetryButton_);
@@ -112,7 +113,7 @@ void ResultUI::Update() {
 			isSoundPlayCursorMoveSE_ = true;
 		}
 		// 選択
-		if (input_->TriggerKey(DIK_SPACE)) {
+		if (input_->TriggerKey(DIK_SPACE) || pad_->TriggerA()) {
 			isRetry_ = true;
 			// サウンド再生
 			isSoundPlayDecideSE_ = true;

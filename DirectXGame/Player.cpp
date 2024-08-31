@@ -31,7 +31,7 @@ Player::~Player() {
 	}
 }
 
-void Player::Initialize(const Vector3& position, Input* input, Audio* audio, UseScene useScene) {
+void Player::Initialize(const Vector3& position, Input* input, Audio* audio,GamePad* pad, UseScene useScene) {
 	// 使われるシーン設定
 	useScene_ = useScene;
 
@@ -41,6 +41,7 @@ void Player::Initialize(const Vector3& position, Input* input, Audio* audio, Use
 	case USESTAGE:
 		// 入力
 		input_ = input;
+		pad_ = pad;
 		// オーディオ
 		audio_ = audio;
 		// 車両モデルの生成
@@ -56,7 +57,7 @@ void Player::Initialize(const Vector3& position, Input* input, Audio* audio, Use
 		// 車両にstageSceneをセット
 		vehicle_->SetStageScene(stageScene_);
 		// 車両の初期化
-		vehicle_->Initialize(input_, modelVehicle_.get(), position, useScene_);
+		vehicle_->Initialize(input_,pad_, modelVehicle_.get(), position, useScene_);
 		// 砲台の生成
 		stand_ = std::make_unique<ShootingStand>();
 		// 砲台の初期化
@@ -85,7 +86,7 @@ void Player::Initialize(const Vector3& position, Input* input, Audio* audio, Use
 		// 車両の生成
 		vehicle_ = std::make_unique<Vehicle>();
 		// 車両の初期化
-		vehicle_->Initialize(input_, modelVehicle_.get(), position, useScene_);
+		vehicle_->Initialize(input_,pad_, modelVehicle_.get(), position, useScene_);
 		// 砲台の生成
 		stand_ = std::make_unique<ShootingStand>();
 		// 砲台と車両をペアレント設定
@@ -101,7 +102,7 @@ void Player::Initialize(const Vector3& position, Input* input, Audio* audio, Use
 		// 車両の生成
 		vehicle_ = std::make_unique<Vehicle>();
 		// 車両の初期化
-		vehicle_->Initialize(input_, modelVehicle_.get(), position, useScene_);
+		vehicle_->Initialize(input_,pad_, modelVehicle_.get(), position, useScene_);
 		// 砲台の生成
 		stand_ = std::make_unique<ShootingStand>();
 		// 砲台と車両をペアレント設定
@@ -289,7 +290,7 @@ void Player::Attack() {
 		interval_--;
 	}
 	// 通常弾
-	if (input_->PushKey(DIK_SPACE)) {
+	if (input_->PushKey(DIK_SPACE)||pad_->PushRB()) {
 
 		if (interval_ == 0) {
 
@@ -312,7 +313,7 @@ void Player::Attack() {
 	}
 	// 必殺弾
 	if (isUseSP_) {
-		if (input_->TriggerKey(DIK_B)) {
+		if (input_->TriggerKey(DIK_B)||pad_->TriggerB()) {
 			// 弾を生成
 			PlayerSpecialBullet* newBullet = new PlayerSpecialBullet();
 			// 弾の発射位置を確定

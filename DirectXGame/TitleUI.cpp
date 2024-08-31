@@ -1,10 +1,12 @@
 #include "TitleUI.h"
+#include "ImGuiManager.h"
 #include "TextureManager.h"
 #include "WinApp.h"
 
-TitleUI::TitleUI(Input* input, Audio* audio) {
+TitleUI::TitleUI(Input* input, Audio* audio, GamePad* pad) {
 	// インプット
 	input_ = input;
+	pad_ = pad;
 	// オーディオ
 	audio_ = audio;
 
@@ -108,7 +110,7 @@ void TitleUI::Update() {
 			// スプライトの位置に反映
 			spritePlayButton_->SetPosition({positionPlayButton_.x, positionPlayButton_.y + position_.y});
 			// 選択変更
-			if (input_->TriggerKey(DIK_DOWN)) {
+			if (input_->TriggerKey(DIK_DOWN) || pad_->TriggerLStickDOWN()) {
 				selectButton_ = HOWTOPLAYBUTTONTITLE;
 				// スプライトサイズもとに戻す
 				spritePlayButton_->SetSize(sizePlayButton_);
@@ -118,7 +120,7 @@ void TitleUI::Update() {
 				isSoundPlayCursorMoveSE_ = true;
 			}
 			// 選択
-			if (input_->TriggerKey(DIK_SPACE)) {
+			if (input_->TriggerKey(DIK_SPACE) || pad_->TriggerA()) {
 				isPlay_ = true;
 				// サウンド再生
 				isSoundPlayDecideSE_ = true;
@@ -139,7 +141,7 @@ void TitleUI::Update() {
 			position_.y += velocity_.y;
 			// スプライトの位置に反映
 			spriteHowToPlayButton_->SetPosition({positionHowToPlayButton_.x, positionHowToPlayButton_.y + position_.y});
-			if (input_->TriggerKey(DIK_UP)) {
+			if (input_->TriggerKey(DIK_UP) || pad_->TriggerLStickUP()) {
 				selectButton_ = PLAYBUTTONTITLE;
 				// スプライトサイズもとに戻す
 				spriteHowToPlayButton_->SetSize(sizeHowToPlayButton_);
@@ -147,7 +149,7 @@ void TitleUI::Update() {
 				spriteHowToPlayButton_->SetPosition(positionHowToPlayButton_);
 				// サウンド再生
 				isSoundPlayCursorMoveSE_ = true;
-			} else if (input_->TriggerKey(DIK_DOWN)) {
+			} else if (input_->TriggerKey(DIK_DOWN) || pad_->TriggerLStickDOWN()) {
 				selectButton_ = EXITBUTTONTITLE;
 				// スプライトサイズもとに戻す
 				spriteHowToPlayButton_->SetSize(sizeHowToPlayButton_);
@@ -157,7 +159,7 @@ void TitleUI::Update() {
 				isSoundPlayCursorMoveSE_ = true;
 			}
 			// 選択
-			if (input_->TriggerKey(DIK_SPACE)) {
+			if (input_->TriggerKey(DIK_SPACE) || pad_->TriggerA()) {
 				titleSituation_ = HOWTOPLAYMODE;
 				// サウンド再生
 				isSoundPlayDecideSE_ = true;
@@ -178,7 +180,7 @@ void TitleUI::Update() {
 			// スプライトの位置に反映
 			spriteExitButton_->SetPosition({positionExitButton_.x, positionExitButton_.y + position_.y});
 			// 選択変更
-			if (input_->TriggerKey(DIK_UP)) {
+			if (input_->TriggerKey(DIK_UP) || pad_->TriggerLStickUP()) {
 				selectButton_ = HOWTOPLAYBUTTONTITLE;
 				// スプライトサイズもとに戻す
 				spriteExitButton_->SetSize(sizeExitButton_);
@@ -188,7 +190,7 @@ void TitleUI::Update() {
 				isSoundPlayCursorMoveSE_ = true;
 			}
 			// 選択
-			if (input_->TriggerKey(DIK_SPACE)) {
+			if (input_->TriggerKey(DIK_SPACE) || pad_->TriggerA()) {
 				isExit_ = true;
 				// サウンド再生
 				isSoundPlayDecideSE_ = true;
@@ -200,7 +202,7 @@ void TitleUI::Update() {
 		break;
 	case HOWTOPLAYMODE:
 		// 左右キーでページ切り替え
-		if (input_->TriggerKey(DIK_RIGHT)) {
+		if (input_->TriggerKey(DIK_RIGHT) || pad_->TriggerLStickRIGHT()) {
 			// 0,1,2ページならインクリメント
 			if (slidePage_ >= 0 && slidePage_ < 3) {
 				slidePage_++;
@@ -215,7 +217,7 @@ void TitleUI::Update() {
 				// サウンド再生
 				isSoundPlayDecideSE_ = true;
 			}
-		} else if (input_->TriggerKey(DIK_LEFT)) {
+		} else if (input_->TriggerKey(DIK_LEFT) || pad_->TriggerLStickLEFT()) {
 			// 1,2,3ページならデクリメント
 			if (slidePage_ >= 1 && slidePage_ <= 3) {
 				slidePage_--;
@@ -227,6 +229,131 @@ void TitleUI::Update() {
 	default:
 		break;
 	}
+#ifdef _DEBUG
+	if (pad_->PushA()) {
+	    ImGui::Begin("A");
+	    ImGui::End();
+	}
+	if (pad_->PushB()) {
+		ImGui::Begin("B");
+		ImGui::End();
+	}
+	if (pad_->PushX()) {
+		ImGui::Begin("X");
+		ImGui::End();
+	}
+	if (pad_->PushY()) {
+		ImGui::Begin("Y");
+		ImGui::End();
+	}
+	if (pad_->PushRStickButton()) {
+		ImGui::Begin("RStickButton");
+		ImGui::End();
+	}
+	if (pad_->PushLStickButton()) {
+		ImGui::Begin("LStickButton");
+		ImGui::End();
+	}
+	if (pad_->PushRB()) {
+		ImGui::Begin("RB");
+		ImGui::End();
+	}
+	if (pad_->PushLB()) {
+		ImGui::Begin("LB");
+		ImGui::End();
+	}
+	if (pad_->PushCrossUP()) {
+		ImGui::Begin("CrossUP");
+		ImGui::End();
+	}
+	if (pad_->PushCrossDOWN()) {
+		ImGui::Begin("CrossDOWN");
+		ImGui::End();
+	}
+	if (pad_->PushCrossRIGHT()) {
+		ImGui::Begin("CrossRIGHT");
+		ImGui::End();
+	}
+	if (pad_->PushCrossLEFT()) {
+		ImGui::Begin("CrossLEFT");
+		ImGui::End();
+	}
+	if (pad_->PushSTART()) {
+		ImGui::Begin("START");
+		ImGui::End();
+	}
+	if (pad_->PushBACK()) {
+		ImGui::Begin("BACK");
+		ImGui::End();
+	}
+	if (pad_->TiltLStickUP()) {
+		ImGui::Begin("LstickUP");
+		ImGui::End();
+	}
+	if (pad_->TiltLStickUPRIGHT()) {
+		ImGui::Begin("LstickUPRIGHT");
+		ImGui::End();
+	}
+	if (pad_->TiltLStickRIGHT()) {
+		ImGui::Begin("LstickRIGHT");
+		ImGui::End();
+	}
+	if (pad_->TiltLStickDOWNRIGHT()) {
+		ImGui::Begin("LstickDOWNRIGHT");
+		ImGui::End();
+	}
+	if (pad_->TiltLStickDOWN()) {
+		ImGui::Begin("LstickDOWN");
+		ImGui::End();
+	}
+	if (pad_->TiltLStickDOWNLEFT()) {
+		ImGui::Begin("LstickDOWNLEFT");
+		ImGui::End();
+	}
+	if (pad_->TiltLStickLEFT()) {
+		ImGui::Begin("LstickLEFT");
+		ImGui::End();
+	}
+	if (pad_->TiltLStickUPLEFT()) {
+		ImGui::Begin("LstickUPLEFT");
+		ImGui::End();
+	}
+
+	if (pad_->TriggerRStickUP()) {
+		ImGui::Begin("RstickUP");
+		ImGui::End();
+	}
+	if (pad_->TriggerRStickUPRIGHT()) {
+		ImGui::Begin("RstickUPRIGHT");
+		ImGui::End();
+	}
+	if (pad_->TriggerRStickRIGHT()) {
+		ImGui::Begin("RstickRIGHT");
+		ImGui::End();
+	}
+	if (pad_->TriggerRStickDOWNRIGHT()) {
+		ImGui::Begin("RstickDOWNRIGHT");
+		ImGui::End();
+	}
+	if (pad_->TriggerRStickDOWN()) {
+		ImGui::Begin("RstickDOWN");
+		ImGui::End();
+	}
+	if (pad_->TriggerRStickDOWNLEFT()) {
+		ImGui::Begin("RstickDOWNLEFT");
+		ImGui::End();
+	}
+	if (pad_->TriggerRStickLEFT()) {
+		ImGui::Begin("RstickLEFT");
+		ImGui::End();
+	}
+	if (pad_->TriggerRStickUPLEFT()) {
+		ImGui::Begin("RstickUPLEFT");
+		ImGui::End();
+	}
+	
+
+#endif // _DEBUG
 }
 
 void TitleUI::Draw() {}

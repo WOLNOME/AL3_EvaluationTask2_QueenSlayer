@@ -1,6 +1,7 @@
 #pragma once
 #include "BaseScene.h"
 #include "Input.h"
+#include "GamePad.h"
 #include "Audio.h"
 #include "Player.h"
 #include "Ground.h"
@@ -18,7 +19,7 @@ public:
 	~ResultScene() override;
 
 public:
-	void Init(Input* input, Audio* audio) override;
+	void Init(Input* input, Audio* audio, GamePad* pad) override;
 	void Update() override;
 	void Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* dxCommon_) override;
 
@@ -29,6 +30,7 @@ public:
 private:
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
+	GamePad* pad_ = nullptr;
 	//ワールドトランスフォーム
 	WorldTransform worldTransformParticle_;
 	// ビュープロジェクション

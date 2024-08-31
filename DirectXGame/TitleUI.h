@@ -1,5 +1,6 @@
 #pragma once
 #include "Input.h"
+#include "GamePad.h"
 #include "Audio.h"
 #include "Sprite.h"
 #include "Function.h"
@@ -19,7 +20,7 @@ enum TitleButton {
 
 class TitleUI {
 public:
-	TitleUI(Input* input,Audio* audio);
+	TitleUI(Input* input,Audio* audio,GamePad* pad);
 	~TitleUI();
 
 	void Initialize();
@@ -39,6 +40,8 @@ private:
 	Input* input_ = nullptr;
 	//オーディオ
 	Audio* audio_ = nullptr;
+	//パッド
+	GamePad* pad_ = nullptr;
 
 
 	// テクスチャハンドル

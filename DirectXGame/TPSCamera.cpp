@@ -1,13 +1,14 @@
 #include "TPSCamera.h"
 #include "Function.h"
+#include "ImGuiManager.h"
 #include "StageScene.h"
 #include "TextureManager.h"
-#include "ImGuiManager.h"
 #include "WinApp.h"
 
-void TPSCamera::Initialize(Input* input) {
+void TPSCamera::Initialize(Input* input, GamePad* pad) {
 	// 入力の設定
 	input_ = input;
+	pad_ = pad;
 	// ワールドトランスフォームの初期設定
 	worldTransform_.Initialize();
 	worldTransform_.translation_.x = toCenterDirectionLocal_.x + length_ * cosf(lat) * cosf(lon);
@@ -19,11 +20,11 @@ void TPSCamera::Initialize(Input* input) {
 	// directionの初期化
 	direction_ = Normalize(Subtract(toCenterDirectionLocal_, worldTransform_.translation_));
 
-	//ロックオンスプライトのテクスチャを読み込む
-	textureHandleLockOnTarget_ = TextureManager::Load("lockOnTarget.png"); 
-	//2Dスプライト
+	// ロックオンスプライトのテクスチャを読み込む
+	textureHandleLockOnTarget_ = TextureManager::Load("lockOnTarget.png");
+	// 2Dスプライト
 	spriteLockOnTarget_.reset(Sprite::Create(textureHandleLockOnTarget_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
-	//2Dスプライトの元のサイズ取得
+	// 2Dスプライトの元のサイズ取得
 	lockOnTargetSize_ = spriteLockOnTarget_->GetSize();
 }
 
@@ -32,7 +33,7 @@ void TPSCamera::Update() {
 	// カメラ切り替え
 	if (!isLockOn && !isTransition) {
 		// ロックオン状態にする
-		if (input_->TriggerKey(DIK_LSHIFT)) {
+		if (input_->TriggerKey(DIK_LSHIFT) || pad_->TriggerLB()) {
 			// フラグ切り替え
 			isLockOn = true;
 			isTransition = true;
@@ -41,7 +42,7 @@ void TPSCamera::Update() {
 		}
 	} else if (isLockOn && !isTransition) {
 		// ロックオン状態解除
-		if (input_->TriggerKey(DIK_LSHIFT)) {
+		if (input_->TriggerKey(DIK_LSHIFT) || pad_->TriggerLB()) {
 			// フラグ切り替え
 			isLockOn = false;
 			/// 今のカメラの座標をlatとlonに教える
@@ -89,7 +90,7 @@ void TPSCamera::Update() {
 }
 
 void TPSCamera::DrawUI() {
-	//ロックオン遷移状態か、ロックオン状態の時のみ
+	// ロックオン遷移状態か、ロックオン状態の時のみ
 	if (isTransition || isLockOn) {
 		spriteLockOnTarget_->Draw();
 	}
@@ -101,7 +102,7 @@ void TPSCamera::LockOnCameraProcess() {
 		// カウントをインクリメント
 		countTransition_++;
 
-		//ロックオンUIのサイズを小さくする
+		// ロックオンUIのサイズを小さくする
 		Vector2 newLockOnTargetSize;
 		newLockOnTargetSize.x = lockOnTargetSize_.x - (lockOnTargetSize_.x - (lockOnTargetSize_.x * kLockOnTargetGoalSize_)) * ((float)countTransition_ / kTransitionFrame);
 		newLockOnTargetSize.y = lockOnTargetSize_.y - (lockOnTargetSize_.y - (lockOnTargetSize_.y * kLockOnTargetGoalSize_)) * ((float)countTransition_ / kTransitionFrame);
@@ -145,7 +146,7 @@ void TPSCamera::LockOnCameraProcess() {
 			isTransition = false;
 			// カウントリセット
 			countTransition_ = 0;
-			//ロックオンUIサイズセット
+			// ロックオンUIサイズセット
 			spriteLockOnTarget_->SetSize({lockOnTargetSize_.x * kLockOnTargetGoalSize_, lockOnTargetSize_.y * kLockOnTargetGoalSize_});
 		}
 	}
@@ -155,7 +156,7 @@ void TPSCamera::LockOnCameraProcess() {
 		switch (lockOnParts) {
 		case HEAD:
 			// ロックオン部位の切り替え
-			if (input_->TriggerKey(DIK_DOWN)) {
+			if (input_->TriggerKey(DIK_DOWN) || pad_->TriggerRStickDOWN()) {
 				// フラグ切り替え
 				isLockOn = true;
 				isTransition = true;
@@ -165,14 +166,14 @@ void TPSCamera::LockOnCameraProcess() {
 			break;
 		case CHEST:
 			// ロックオン部位の切り替え
-			if (input_->TriggerKey(DIK_UP)) {
+			if (input_->TriggerKey(DIK_UP) || pad_->TriggerRStickUP()) {
 				// フラグ切り替え
 				isLockOn = true;
 				isTransition = true;
 				// ロックオンパーツの指定
 				lockOnParts = HEAD;
 			}
-			if (input_->TriggerKey(DIK_DOWN)) {
+			if (input_->TriggerKey(DIK_DOWN) || pad_->TriggerRStickDOWN()) {
 				// フラグ切り替え
 				isLockOn = true;
 				isTransition = true;
@@ -182,7 +183,7 @@ void TPSCamera::LockOnCameraProcess() {
 			break;
 		case STOMACH:
 			// ロックオン部位の切り替え
-			if (input_->TriggerKey(DIK_UP)) {
+			if (input_->TriggerKey(DIK_UP) || pad_->TriggerRStickUP()) {
 				// フラグ切り替え
 				isLockOn = true;
 				isTransition = true;
@@ -228,16 +229,34 @@ void TPSCamera::LockOnCameraProcess() {
 
 void TPSCamera::NormalCameraProcess() {
 	// 移動の加算
-	if (input_->PushKey(DIK_UP)) {
-		lat -= speedLat_;
-	}
-	if (input_->PushKey(DIK_DOWN)) {
-		lat += speedLat_;
-	}
-	if (input_->PushKey(DIK_RIGHT)) {
+	if ((input_->PushKey(DIK_UP) && input_->PushKey(DIK_RIGHT) && input_->PushKey(DIK_DOWN) && input_->PushKey(DIK_LEFT))) {
+	} else if ((input_->PushKey(DIK_UP) && input_->PushKey(DIK_RIGHT) && input_->PushKey(DIK_DOWN))) {
 		lon -= speedLon_;
-	}
-	if (input_->PushKey(DIK_LEFT)) {
+	} else if ((input_->PushKey(DIK_RIGHT) && input_->PushKey(DIK_DOWN) && input_->PushKey(DIK_LEFT))) {
+		lat += speedLat_;
+	} else if ((input_->PushKey(DIK_UP) && input_->PushKey(DIK_DOWN) && input_->PushKey(DIK_LEFT))) {
+		lon += speedLon_;
+	} else if ((input_->PushKey(DIK_UP) && input_->PushKey(DIK_RIGHT) && input_->PushKey(DIK_LEFT))) {
+		lat -= speedLat_;
+	} else if ((input_->PushKey(DIK_UP) && input_->PushKey(DIK_RIGHT)) || pad_->TiltRStickUPRIGHT()) {
+		lat -= speedLat_;
+		lon -= speedLon_;
+	} else if ((input_->PushKey(DIK_RIGHT) && input_->PushKey(DIK_DOWN)) || pad_->TiltRStickDOWNRIGHT()) {
+		lat += speedLat_;
+		lon -= speedLon_;
+	} else if ((input_->PushKey(DIK_DOWN) && input_->PushKey(DIK_LEFT)) || pad_->TiltRStickDOWNLEFT()) {
+		lat += speedLat_;
+		lon += speedLon_;
+	} else if ((input_->PushKey(DIK_LEFT) && input_->PushKey(DIK_UP)) || pad_->TiltRStickUPLEFT()) {
+		lat -= speedLat_;
+		lon += speedLon_;
+	} else if (input_->PushKey(DIK_UP) || pad_->TiltRStickUP()) {
+		lat -= speedLat_;
+	} else if (input_->PushKey(DIK_DOWN) || pad_->TiltRStickDOWN()) {
+		lat += speedLat_;
+	} else if (input_->PushKey(DIK_RIGHT) || pad_->TiltRStickRIGHT()) {
+		lon -= speedLon_;
+	} else if (input_->PushKey(DIK_LEFT) || pad_->TiltRStickLEFT()) {
 		lon += speedLon_;
 	}
 	// 移動制限

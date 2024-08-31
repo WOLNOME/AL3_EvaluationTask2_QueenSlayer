@@ -1,6 +1,7 @@
 #pragma once
 #include <Model.h>
 #include "Input.h"
+#include "GamePad.h"
 #include "ViewProjection.h"
 #include "BaseScene.h"
 #include "Player.h"
@@ -24,7 +25,7 @@ public:
 	StageScene();
 	~StageScene()override;
 public:
-	void Init(Input* input,Audio* audio) override;
+	void Init(Input* input, Audio* audio, GamePad* pad) override;
 	void Update() override;
 	void Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* dxCommon_) override;
 
@@ -47,6 +48,8 @@ private:
 	Input* input_ = nullptr;
 	//オーディオ
 	Audio* audio_ = nullptr;
+	//パッド
+	GamePad* pad_ = nullptr;
 	
 	//モデルのテクスチャハンドル
 	uint32_t textureHandleSkydome_;

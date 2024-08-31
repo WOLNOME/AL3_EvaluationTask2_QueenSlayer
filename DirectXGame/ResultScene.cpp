@@ -1,7 +1,7 @@
 #include "ResultScene.h"
 #include "TextureManager.h"
 
-ResultScene::ResultScene() { 
+ResultScene::ResultScene() {
 	NextScene = RESULT;
 	isExit = false;
 }
@@ -11,13 +11,14 @@ ResultScene::~ResultScene() {
 	audio_->StopWave(voiceHandleBGM_);
 }
 
-void ResultScene::Init(Input* input, Audio* audio) {
+void ResultScene::Init(Input* input, Audio* audio, GamePad* pad) {
 	// 入力
 	input_ = input;
-	//オーディオ
+	pad_ = pad;
+	// オーディオ
 	audio_ = audio;
 
-	//ワールドトランスフォーム初期化
+	// ワールドトランスフォーム初期化
 	worldTransformParticle_.Initialize();
 
 	// ビュープロジェクションの初期化
@@ -34,14 +35,14 @@ void ResultScene::Init(Input* input, Audio* audio) {
 	skydome_ = std::make_unique<Skydome>();
 	ground_ = std::make_unique<Ground>();
 	player_ = std::make_unique<Player>();
-	resultUI_ = std::make_unique<ResultUI>(input_,audio_);
+	resultUI_ = std::make_unique<ResultUI>(input_, audio_,pad_);
 	particle_ = std::make_unique<Particle>();
 
 	// インスタンス初期化
 	resultCamera_->Initialize();
 	skydome_->Initialize({0.0f, 0.0f, 0.0f}, textureHandleSkydome_);
 	ground_->Initialize({0.0f, 0.0f, 0.0f}, textureHandleGround_);
-	player_->Initialize({0.0f, 0.3f, 0.0f}, input_, audio_, UseScene::USERESULT);
+	player_->Initialize({0.0f, 0.3f, 0.0f}, input_, audio_, pad_, UseScene::USERESULT);
 	resultUI_->Initialize();
 	particle_->Initialize(&worldTransformParticle_, 0, ParticleKind::BRIZZARD, 50, false);
 
@@ -49,7 +50,6 @@ void ResultScene::Init(Input* input, Audio* audio) {
 	soundHandleBGM_ = audio_->LoadWave("Audio/resultBGM.wav");
 	// 最初からBGM再生
 	isSoundPlayBGM_ = true;
-
 }
 
 void ResultScene::Update() {

@@ -1,6 +1,7 @@
 #pragma once
 #include "Audio.h"
 #include "Function.h"
+#include "GamePad.h"
 #include "Input.h"
 #include "Sprite.h"
 #include "memory"
@@ -13,7 +14,7 @@ enum ResultButton {
 
 class ResultUI {
 public:
-	ResultUI(Input* input, Audio* audio);
+	ResultUI(Input* input, Audio* audio, GamePad* pad);
 	~ResultUI();
 
 	void Initialize();
@@ -31,6 +32,7 @@ public: // セッター
 private:
 	// インプット
 	Input* input_ = nullptr;
+	GamePad* pad_ = nullptr;
 	// オーディオ
 	Audio* audio_ = nullptr;
 

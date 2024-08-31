@@ -122,6 +122,7 @@
     <ClCompile Include="GameOverCamera.cpp" />
     <ClCompile Include="GameOverScene.cpp" />
     <ClCompile Include="GameOverUI.cpp" />
+    <ClCompile Include="GamePad.cpp" />
     <ClCompile Include="Gradation.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="Head.cpp" />
@@ -188,6 +189,7 @@
     <ClInclude Include="GameOverCamera.h" />
     <ClInclude Include="GameOverScene.h" />
     <ClInclude Include="GameOverUI.h" />
+    <ClInclude Include="GamePad.h" />
     <ClInclude Include="Gradation.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="Head.h" />

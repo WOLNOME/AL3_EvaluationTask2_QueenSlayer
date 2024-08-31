@@ -8,6 +8,7 @@
 #include "ShootingStand.h"
 #include "Vehicle.h"
 #include "WorldTransform.h"
+#include "GamePad.h"
 
 // 前方宣言
 class StageScene;
@@ -17,7 +18,7 @@ public:
 	Player();
 	~Player();
 
-	void Initialize(const Vector3& position, Input* input, Audio* audio, UseScene useScene);
+	void Initialize(const Vector3& position, Input* input, Audio* audio,GamePad* pad, UseScene useScene);
 	void Update();
 	void Draw(ViewProjection& viewProjection);
 	void AudioPlay();
@@ -57,6 +58,7 @@ public:
 private:
 	// 入力
 	Input* input_ = nullptr;
+	GamePad* pad_ = nullptr;
 	// オーディオ
 	Audio* audio_ = nullptr;
 	// ステージシーン

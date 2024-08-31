@@ -58,7 +58,7 @@ private:
 
 public: // 定数
 	//最大HP
-	const int kMaxHP_ = 750;
+	const int kMaxHP_ = 650;
 
 private:
 	// 入力

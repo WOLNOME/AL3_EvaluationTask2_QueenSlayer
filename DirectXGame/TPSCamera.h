@@ -1,6 +1,7 @@
 #pragma once
 #include "Function.h"
 #include "Input.h"
+#include "GamePad.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "Sprite.h"
@@ -22,7 +23,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(Input* input);
+	void Initialize(Input* input, GamePad* pad);
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -45,6 +46,7 @@ public: // セッター
 private:
 	// 入力
 	Input* input_ = nullptr;
+	GamePad* pad_ = nullptr;
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 	// ビュープロジェクション

@@ -1,5 +1,6 @@
 #pragma once
 #include "Audio.h"
+#include "GamePad.h"
 #include "Background.h"
 #include "BaseScene.h"
 #include "Enemy.h"
@@ -18,7 +19,7 @@ public:
 	~TitleScene() override;
 
 public:
-	void Init(Input* input, Audio* audio) override;
+	void Init(Input* input, Audio* audio,GamePad* pad) override;
 	void Update() override;
 	void Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* dxCommon_) override;
 
@@ -29,6 +30,7 @@ public: // ゲッター
 public: // セッター
 private:
 	Input* input_ = nullptr;
+	GamePad* pad_ = nullptr;
 	Audio* audio_ = nullptr;
 	// ビュープロジェクション
 	ViewProjection viewProjection_;

@@ -2,6 +2,7 @@
 #include "Collider.h"
 #include "Function.h"
 #include "Input.h"
+#include "GamePad.h"
 #include "Model.h"
 #include "WorldTransform.h"
 
@@ -12,7 +13,7 @@ public:
 	Vehicle();
 	~Vehicle();
 
-	void Initialize(Input* input,Model* model,const Vector3& position,UseScene useScene);
+	void Initialize(Input* input, GamePad* pad, Model* model, const Vector3& position, UseScene useScene);
 	void Update();
 	void Draw(const ViewProjection& viewProjection);
 
@@ -46,6 +47,7 @@ public://セッター
 private:
 	//入力
 	Input* input_ = nullptr;
+	GamePad* pad_ = nullptr;
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 	// モデル

@@ -1,7 +1,7 @@
 #include "Vehicle.h"
+#include "CollisionConfig.h"
 #include "ImGuiManager.h"
 #include "StageScene.h"
-#include "CollisionConfig.h"
 #include "TextureManager.h"
 #include <cassert>
 
@@ -9,8 +9,8 @@ Vehicle::Vehicle() {}
 
 Vehicle::~Vehicle() {}
 
-void Vehicle::Initialize(Input* input, Model* model, const Vector3& position,UseScene useScene) {
-	//使用されるシーン設定
+void Vehicle::Initialize(Input* input, GamePad* pad, Model* model, const Vector3& position, UseScene useScene) {
+	// 使用されるシーン設定
 	useScene_ = useScene;
 
 	switch (useScene_) {
@@ -19,6 +19,7 @@ void Vehicle::Initialize(Input* input, Model* model, const Vector3& position,Use
 	case USESTAGE:
 		// 入力
 		input_ = input;
+		pad_ = pad;
 		// NULLポインタチェック
 		assert(model);
 		model_ = model;
@@ -55,7 +56,6 @@ void Vehicle::Initialize(Input* input, Model* model, const Vector3& position,Use
 	default:
 		break;
 	}
-	
 }
 
 void Vehicle::Update() {
@@ -87,28 +87,28 @@ void Vehicle::Update() {
 		} else if (input_->PushKey(DIK_A) && input_->PushKey(DIK_W) && input_->PushKey(DIK_D)) {
 			radian_ = (0.0f / 4.0f) * pi;
 			isMove = true;
-		} else if (input_->PushKey(DIK_W) && input_->PushKey(DIK_D)) {
+		} else if ((input_->PushKey(DIK_W) && input_->PushKey(DIK_D)) || pad_->TiltLStickUPRIGHT()) {
 			radian_ = (1.0f / 4.0f) * pi;
 			isMove = true;
-		} else if (input_->PushKey(DIK_D) && input_->PushKey(DIK_S)) {
+		} else if ((input_->PushKey(DIK_D) && input_->PushKey(DIK_S)) || pad_->TiltLStickDOWNRIGHT()) {
 			radian_ = (3.0f / 4.0f) * pi;
 			isMove = true;
-		} else if (input_->PushKey(DIK_S) && input_->PushKey(DIK_A)) {
+		} else if ((input_->PushKey(DIK_S) && input_->PushKey(DIK_A)) || pad_->TiltLStickDOWNLEFT()) {
 			radian_ = (5.0f / 4.0f) * pi;
 			isMove = true;
-		} else if (input_->PushKey(DIK_A) && input_->PushKey(DIK_W)) {
+		} else if ((input_->PushKey(DIK_A) && input_->PushKey(DIK_W)) || pad_->TiltLStickUPLEFT()) {
 			radian_ = (7.0f / 4.0f) * pi;
 			isMove = true;
-		} else if (input_->PushKey(DIK_W)) {
+		} else if (input_->PushKey(DIK_W) || pad_->TiltLStickUP()) {
 			radian_ = (0.0f / 4.0f) * pi;
 			isMove = true;
-		} else if (input_->PushKey(DIK_D)) {
+		} else if (input_->PushKey(DIK_D) || pad_->TiltLStickRIGHT()) {
 			radian_ = (2.0f / 4.0f) * pi;
 			isMove = true;
-		} else if (input_->PushKey(DIK_S)) {
+		} else if (input_->PushKey(DIK_S) || pad_->TiltLStickDOWN()) {
 			radian_ = (4.0f / 4.0f) * pi;
 			isMove = true;
-		} else if (input_->PushKey(DIK_A)) {
+		} else if (input_->PushKey(DIK_A) || pad_->TiltLStickLEFT()) {
 			radian_ = (6.0f / 4.0f) * pi;
 			isMove = true;
 		}
@@ -242,8 +242,6 @@ void Vehicle::Update() {
 	default:
 		break;
 	}
-
-	
 }
 
 void Vehicle::Draw(const ViewProjection& viewProjection) {
@@ -258,7 +256,7 @@ void Vehicle::Draw(const ViewProjection& viewProjection) {
 		break;
 	case USEGAMEOVER:
 		// 車両本体描画
-		model_->Draw(worldTransform_, viewProjection,textureHandle_);
+		model_->Draw(worldTransform_, viewProjection, textureHandle_);
 		break;
 	case USERESULT:
 		// 車両本体描画
@@ -267,14 +265,13 @@ void Vehicle::Draw(const ViewProjection& viewProjection) {
 	default:
 		break;
 	}
-	
 }
 
 void Vehicle::OnCollision() { isDamage_ = true; }
 
 void Vehicle::OnSpecialCollision() { isGetShineBall_ = true; }
 
-Vector3 Vehicle::GetWorldPosition() { 
+Vector3 Vehicle::GetWorldPosition() {
 	// ワールド座標
 	Vector3 worldPos;
 	worldPos.x = worldTransform_.matWorld_.m[3][0];

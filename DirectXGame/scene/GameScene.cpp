@@ -20,11 +20,12 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
+	pad_ = std::make_unique<GamePad>(input_);
 
 	// シーンの生成
 	m_pScene = std::make_unique<TitleScene>();
 	// シーンの初期化
-	m_pScene->Init(input_, audio_);
+	m_pScene->Init(input_, audio_,pad_.get());
 	CurrentScene_ = TITLE;
 	NextScene_ = TITLE;
 
@@ -36,6 +37,8 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
+	// インプットからパッドの入力を受け取る
+	pad_->SetCommandUpdate();
 	// シーンの更新処理
 	m_pScene->Update();
 
@@ -102,30 +105,30 @@ void GameScene::ChangeScene() {
 		switch (NextScene_) { // 引数のシーン
 		case SCENE::TITLE:
 			m_pScene = std::make_unique<TitleScene>(); // タイトルシーンを現在のシーンにする
-			m_pScene->Init(input_, audio_);
+			m_pScene->Init(input_, audio_,pad_.get());
 			CurrentScene_ = m_pScene->GetNextScene();
 			;
 			break;
 		case SCENE::STAGE:
 			m_pScene = std::make_unique<StageScene>(); // ステージシーンを現在のシーンにする
-			m_pScene->Init(input_, audio_);
+			m_pScene->Init(input_, audio_,pad_.get());
 			CurrentScene_ = m_pScene->GetNextScene();
 			;
 			break;
 		case SCENE::DIRECTIION:
 			m_pScene = std::make_unique<DirectionScene>(); // 演出シーンを現在のシーンにする
-			m_pScene->Init(input_, audio_);
+			m_pScene->Init(input_, audio_,pad_.get());
 			CurrentScene_ = m_pScene->GetNextScene();
 			break;
 		case SCENE::GAMEOVER:
 			m_pScene = std::make_unique<GameOverScene>(); // ゲームオーバーシーンを現在のシーンにする
-			m_pScene->Init(input_, audio_);
+			m_pScene->Init(input_, audio_, pad_.get());
 			CurrentScene_ = m_pScene->GetNextScene();
 			;
 			break;
 		case SCENE::RESULT:
 			m_pScene = std::make_unique<ResultScene>(); // リザルトシーンを現在のシーンにする
-			m_pScene->Init(input_, audio_);
+			m_pScene->Init(input_, audio_, pad_.get());
 			CurrentScene_ = m_pScene->GetNextScene();
 			;
 			break;

@@ -3,10 +3,10 @@
 #include "TextureManager.h"
 #include "time.h"
 
-StageScene::StageScene() { 
+StageScene::StageScene() {
 	NextScene = STAGE;
 	isExit = false;
- }
+}
 
 StageScene::~StageScene() {
 	// 解放
@@ -17,13 +17,14 @@ StageScene::~StageScene() {
 	audio_->StopWave(voiceHandleBGM_);
 }
 
-void StageScene::Init(Input* input, Audio* audio) {
+void StageScene::Init(Input* input, Audio* audio, GamePad* pad) {
 	// 入力
 	input_ = input;
+	pad_ = pad;
 	// オーディオ
 	audio_ = audio;
-	
-	//テクスチャハンドル
+
+	// テクスチャハンドル
 	textureHandleSkydome_ = TextureManager::Load("skydome/sky_sphere.png");
 	textureHandleGround_ = TextureManager::Load("ground/ground.png");
 
@@ -51,8 +52,8 @@ void StageScene::Init(Input* input, Audio* audio) {
 	collisionManager_ = std::make_unique<CollisionManager>();
 	// UIの生成
 	ui_ = std::make_unique<UI>();
-	//ポーズメニュー生成
-	pause_ = std::make_unique<Pause>(input_,audio_);
+	// ポーズメニュー生成
+	pause_ = std::make_unique<Pause>(input_, audio_, pad_);
 
 	// プレイヤーにシーンを渡す
 	player_->SetStageScene(this);
@@ -64,32 +65,29 @@ void StageScene::Init(Input* input, Audio* audio) {
 	ui_->SetStageScene(this);
 
 	// TPSカメラの初期化
-	tpsCamera_->Initialize(input_);
+	tpsCamera_->Initialize(input_, pad_);
 	// レティクル初期化
 	reticle_->Initialize();
 	// 自キャラの初期化
-	player_->Initialize({0.0f, 0.3f, 20.0f}, input_,audio_,UseScene::USESTAGE);
+	player_->Initialize({0.0f, 0.3f, 20.0f}, input_, audio_, pad_, UseScene::USESTAGE);
 	// 敵キャラの初期化
-	enemy_->Initialize({0.0f, 1.5f, 0.0f},audio_,UseScene::USESTAGE);
+	enemy_->Initialize({0.0f, 1.5f, 0.0f}, audio_, UseScene::USESTAGE);
 	// 天球の初期化
-	skydome_->Initialize({0.0f, 0.0f, 0.0f},textureHandleSkydome_);
+	skydome_->Initialize({0.0f, 0.0f, 0.0f}, textureHandleSkydome_);
 	// 地面の初期化
-	ground_->Initialize({0.0f, 0.0f, 0.0f},textureHandleGround_);
+	ground_->Initialize({0.0f, 0.0f, 0.0f}, textureHandleGround_);
 	// 背景の初期化
 	background_->Initialize({0.0f, 0.0f, 0.0f});
 	// UIの初期化
 	ui_->Initialize();
 
-
 	// BGMのサウンドハンドル
 	soundHandleBGM_ = audio_->LoadWave("Audio/stageBGM.wav");
-	//最初からBGM再生
+	// 最初からBGM再生
 	isSoundPlayBGM_ = true;
 
-
-	//変数系
+	// 変数系
 	isPause_ = false;
-
 }
 
 void StageScene::Update() {
@@ -110,30 +108,30 @@ void StageScene::Update() {
 		}
 	}
 #endif // _DEBUG
-	//ポーズメニュー移行処理
-	if (input_->TriggerKey(DIK_ESCAPE)) {
+	// ポーズメニュー移行処理
+	if (input_->TriggerKey(DIK_ESCAPE)||pad_->TriggerSTART()) {
 		if (!isPause_) {
 			isPause_ = true;
-			//ポーズメニュー初期化
+			// ポーズメニュー初期化
 			pause_->Initialize();
 		} else {
 			isPause_ = false;
 		}
 	}
-	//ポーズメニュー中処理
+	// ポーズメニュー中処理
 	if (isPause_) {
-		//ポーズの更新
+		// ポーズの更新
 		pause_->Update();
-		//コンティニューボタン押したら
+		// コンティニューボタン押したら
 		if (pause_->GetIsContinue()) {
 			isPause_ = false;
 		}
-		//BackToTitleボタン押したら
+		// BackToTitleボタン押したら
 		if (pause_->GetIsBackToTitle()) {
 			NextScene = SCENE::TITLE;
 		}
 	}
-	//通常ゲーム処理
+	// 通常ゲーム処理
 	else {
 		// 必殺弾が当たったらヒットストップ掛ける
 		if (player_->GetIsSpecialBulletDirection()) {
@@ -270,15 +268,14 @@ void StageScene::Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* dxC
 
 	// 2Dレティクル描画
 	reticle_->DrawUI();
-	//ロックオンUI描画
+	// ロックオンUI描画
 	tpsCamera_->DrawUI();
 	// UI描画
 	ui_->Draw();
-	//ポーズ中スプライト処理
+	// ポーズ中スプライト処理
 	if (isPause_) {
 		pause_->DrawUI();
 	}
-	
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -295,13 +292,12 @@ void StageScene::Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* dxC
 		voiceHandleBGM_ = audio_->PlayWave(soundHandleBGM_, true, soundVolumeBGM_);
 		isSoundPlayBGM_ = false;
 	}
-	//プレイヤー周り効果音
+	// プレイヤー周り効果音
 	player_->AudioPlay();
-	//敵周り効果音
+	// 敵周り効果音
 	enemy_->AudioPlay();
-	//ポーズ
+	// ポーズ
 	pause_->AudioPlay();
-
 
 #pragma endregion
 }

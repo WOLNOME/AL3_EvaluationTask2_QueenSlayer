@@ -531,6 +531,27 @@ float AngleOf2VectorZ(const Vector3& v1, const Vector3& v2) {
 	return theta;
 }
 
+float AngleOf2Vector(const Vector2& v1, const Vector2& v2) { 
+	// 引数のベクトルをxy成分に分解(長さの計算する手間省くため正規化)
+	Vector2 longHand = Normalize(v1);
+	Vector2 hourHand = Normalize(v2);
+	// 内積とベクトル長さを使ってcosθを求める
+	float cos_theta = Dot(longHand, hourHand);
+	// cosθからθを求める
+	float theta = std::acos(cos_theta);
+	// 2ベクトルの外積を求め、hourHandが左にあるならマイナス
+	if (Cross(longHand, hourHand) > 0.0f) {
+		theta = -theta;
+	}
+	// cosθの値で場合分け(NAN回避処理)
+	if (cos_theta >= 1.0f) {
+		theta = 0.0f;
+	} else if (cos_theta <= -1.0f) {
+		theta = pi;
+	}
+	return theta;
+}
+
 Vector3 Multiply(const float& s, const Vector3& v) {
 	Vector3 c;
 	c.x = s * v.x;

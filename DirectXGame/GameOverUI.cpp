@@ -2,9 +2,10 @@
 #include "TextureManager.h"
 #include "WinApp.h"
 
-GameOverUI::GameOverUI(Input* input,Audio* audio) {
+GameOverUI::GameOverUI(Input* input, Audio* audio, GamePad* pad) {
 	// インプット
 	input_ = input;
+	pad_ = pad;
 	// オーディオ
 	audio_ = audio;
 
@@ -71,7 +72,7 @@ void GameOverUI::Update() {
 		// スプライトの位置に反映
 		spriteRetryButton_->SetPosition({positionRetryButton_.x, positionRetryButton_.y + position_.y});
 		// 選択変更
-		if (input_->TriggerKey(DIK_DOWN)) {
+		if (input_->TriggerKey(DIK_DOWN)||pad_->TriggerLStickDOWN()) {
 			selectButton_ = RETIREBUTTONGAMEOVER;
 			// スプライトサイズもとに戻す
 			spriteRetryButton_->SetSize(sizeRetryButton_);
@@ -81,7 +82,7 @@ void GameOverUI::Update() {
 			isSoundPlayCursorMoveSE_ = true;
 		}
 		// 選択
-		if (input_->TriggerKey(DIK_SPACE)) {
+		if (input_->TriggerKey(DIK_SPACE) || pad_->TriggerA()) {
 			isRetry_ = true;
 			// サウンド再生
 			isSoundPlayDecideSE_ = true;
@@ -102,7 +103,7 @@ void GameOverUI::Update() {
 		// スプライトの位置に反映
 		spriteRetireButton_->SetPosition({positionRetireButton_.x, positionRetireButton_.y + position_.y});
 		// 選択変更
-		if (input_->TriggerKey(DIK_UP)) {
+		if (input_->TriggerKey(DIK_UP)||pad_->TriggerLStickUP()) {
 			selectButton_ = RETRYBUTTONGAMEOVER;
 			// スプライトサイズもとに戻す
 			spriteRetireButton_->SetSize(sizeRetireButton_);
@@ -112,7 +113,7 @@ void GameOverUI::Update() {
 			isSoundPlayCursorMoveSE_ = true;
 		}
 		// 選択
-		if (input_->TriggerKey(DIK_SPACE)) {
+		if (input_->TriggerKey(DIK_SPACE) || pad_->TriggerA()) {
 			isRetire_ = true;
 			// サウンド再生
 			isSoundPlayDecideSE_ = true;

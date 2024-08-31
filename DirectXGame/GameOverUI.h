@@ -2,6 +2,7 @@
 #include "Audio.h"
 #include "Function.h"
 #include "Input.h"
+#include "GamePad.h"
 #include "Sprite.h"
 #include "memory"
 
@@ -13,7 +14,7 @@ enum GameOverButton {
 
 class GameOverUI {
 public:
-	GameOverUI(Input* input, Audio* audio);
+	GameOverUI(Input* input, Audio* audio,GamePad* pad);
 	~GameOverUI();
 
 	void Initialize();
@@ -31,6 +32,7 @@ public: // セッター
 private:
 	// インプット
 	Input* input_ = nullptr;
+	GamePad* pad_ = nullptr;
 	// オーディオ
 	Audio* audio_ = nullptr;
 

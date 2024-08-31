@@ -12,9 +12,10 @@ TitleScene::~TitleScene() {
 	audio_->StopWave(voiceHandleBGM_);
 }
 
-void TitleScene::Init(Input* input, Audio* audio) {
+void TitleScene::Init(Input* input, Audio* audio, GamePad* pad) {
 	// 入力
 	input_ = input;
+	pad_ = pad;
 	// オーディオ
 	audio_ = audio;
 
@@ -33,7 +34,7 @@ void TitleScene::Init(Input* input, Audio* audio) {
 	ground_ = std::make_unique<Ground>();
 	background_ = std::make_unique<Background>();
 	enemy_ = std::make_unique<Enemy>();
-	titleUI_ = std::make_unique<TitleUI>(input_, audio_);
+	titleUI_ = std::make_unique<TitleUI>(input_, audio_,pad_);
 
 	// インスタンス初期化
 	skydome_->Initialize({0.0f, 0.0f, 0.0f}, textureHandleSkydome_);

@@ -12,9 +12,10 @@ DirectionScene::~DirectionScene() {
 	audio_->StopWave(voiceHandleExplosionSE_);
 }
 
-void DirectionScene::Init(Input* input, Audio* audio) {
+void DirectionScene::Init(Input* input, Audio* audio, GamePad* pad) {
 	// 入力
 	input_ = input;
+	pad_ = pad;
 	// オーディオ
 	audio_ = audio;
 
@@ -71,7 +72,7 @@ void DirectionScene::Update() {
 	// タイマーインクリメント
 	timer_++;
 	//スキップ
-	if (input_->TriggerKey(DIK_SPACE)) {
+	if (input_->TriggerKey(DIK_SPACE)||pad_->TriggerSTART()) {
 		if (NextScene == SCENE::DIRECTIION) {
 			NextScene = SCENE::RESULT;
 		}

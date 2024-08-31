@@ -11,9 +11,10 @@ GameOverScene::~GameOverScene() {
 	audio_->StopWave(voiceHandleBGM_);
 }
 
-void GameOverScene::Init(Input* input, Audio* audio) {
+void GameOverScene::Init(Input* input, Audio* audio, GamePad* pad) {
 	// 入力
 	input_ = input;
+	pad_ = pad;
 	// オーディオ
 	audio_ = audio;
 
@@ -32,14 +33,14 @@ void GameOverScene::Init(Input* input, Audio* audio) {
 	ground_ = std::make_unique<Ground>();
 	spotlight_ = std::make_unique<Spotlight>();
 	player_ = std::make_unique<Player>();
-	gameOverUI_ = std::make_unique<GameOverUI>(input_,audio_);
+	gameOverUI_ = std::make_unique<GameOverUI>(input_,audio_,pad_);
 
 	// インスタンス初期化
 	gameOverCamera_->Initialize();
 	skydome_->Initialize({0.0f, 0.0f, 0.0f}, textureHandleSkydome_);
 	ground_->Initialize({0.0f, 0.0f, 0.0f}, textureHandleGround_);
 	spotlight_->Initialize({0.0f, 0.0f, 0.0f});
-	player_->Initialize({0.0f, 0.3f, 0.0f}, input_, audio_, UseScene::USEGAMEOVER);
+	player_->Initialize({0.0f, 0.3f, 0.0f}, input_, audio_,pad_, UseScene::USEGAMEOVER);
 	gameOverUI_->Initialize();
 
 	// BGMのサウンドハンドル

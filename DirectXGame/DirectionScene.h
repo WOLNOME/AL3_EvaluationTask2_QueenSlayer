@@ -20,7 +20,7 @@ public:
 	~DirectionScene() override;
 
 public:
-	void Init(Input* input, Audio* audio) override;
+	void Init(Input* input, Audio* audio, GamePad* pad) override;
 	void Update() override;
 	void Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* dxCommon_) override;
 
@@ -31,6 +31,7 @@ public:
 private:
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
+	GamePad* pad_ = nullptr;
 	/// ワールドトランスフォーム
 	WorldTransform worldTransformEnemyHead_;
 	WorldTransform worldTransformEnemyChest_;

@@ -57,7 +57,7 @@ void TitleScene::Init(Input* input, Audio* audio, GamePad* pad) {
 	isSoundPlayBGM_ = true;
 }
 
-void TitleScene::Update() {
+void TitleScene::Update(Device device) {
 
 	// タイトルカメラの更新
 	titleCamera_->Update();
@@ -73,7 +73,7 @@ void TitleScene::Update() {
 	enemy_->Update();
 
 	// スプライトの更新処理
-	titleUI_->Update();
+	titleUI_->Update(device);
 
 	// プレイボタンが押されたら
 	if (titleUI_->GetIsPlay()) {

@@ -24,7 +24,7 @@ public:
 	~TitleUI();
 
 	void Initialize();
-	void Update();
+	void Update(Device device);
 	void Draw();
 	void DrawUI();
 	void AudioPlay();
@@ -43,6 +43,8 @@ private:
 	//パッド
 	GamePad* pad_ = nullptr;
 
+	Device device_;
+
 
 	// テクスチャハンドル
 	uint32_t textureHandlePlayButton_;
@@ -50,8 +52,9 @@ private:
 	uint32_t textureHandleExitButton_;
 	uint32_t textureHandleBackWhite_;
 	uint32_t textureHandleTitleRogo_;
-	uint32_t textureHandleOperationUI_;
-	uint32_t textureHandleHTPSlide_[4];
+	uint32_t textureHandleOperationKeyBoardUI_;
+	uint32_t textureHandleOperationGamePadUI_;
+	uint32_t textureHandleHTPSlide_[kHowToPlayPageNum];
 
 	// スプライト
 	std::unique_ptr<Sprite> spritePlayButton_;
@@ -59,8 +62,9 @@ private:
 	std::unique_ptr<Sprite> spriteExitButton_;
 	std::unique_ptr<Sprite> spriteBackWhite_;
 	std::unique_ptr<Sprite> spriteTitleRogo_;
-	std::unique_ptr<Sprite> spriteOperationUI_;
-	std::unique_ptr<Sprite> spriteHTPSlide_[4];
+	std::unique_ptr<Sprite> spriteOperationKeyBoardUI_;
+	std::unique_ptr<Sprite> spriteOperationGamePadUI_;
+	std::unique_ptr<Sprite> spriteHTPSlide_[kHowToPlayPageNum];
 
 	// サイズ
 	Vector2 sizePlayButton_;

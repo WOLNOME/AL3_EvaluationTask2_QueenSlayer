@@ -68,7 +68,8 @@ void DirectionScene::Init(Input* input, Audio* audio, GamePad* pad) {
 	particleStomach_->Initialize(&worldTransformEnemyStomachInitPos_, 0, ParticleKind::POP, 30, false);
 }
 
-void DirectionScene::Update() {
+void DirectionScene::Update(Device device) {
+	device;
 	// タイマーインクリメント
 	timer_++;
 	//スキップ

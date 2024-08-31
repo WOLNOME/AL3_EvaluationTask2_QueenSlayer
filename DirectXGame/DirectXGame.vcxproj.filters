@@ -232,7 +232,7 @@
       <Filter>ソース ファイル\program\camera</Filter>
     </ClCompile>
     <ClCompile Include="GamePad.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\program\system</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -438,7 +438,7 @@
       <Filter>ヘッダー ファイル\program\camera</Filter>
     </ClInclude>
     <ClInclude Include="GamePad.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\program\system</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

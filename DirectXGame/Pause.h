@@ -6,8 +6,6 @@
 #include "Function.h"
 #include "memory"
 
-const int kHowToPlayPageNum = 5;
-
 //現在の状態
 enum PauseSituation {
 	MENU,

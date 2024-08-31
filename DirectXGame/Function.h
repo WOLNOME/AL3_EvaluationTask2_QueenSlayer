@@ -9,6 +9,8 @@
 
 //よく使う数値
 const float pi =(float)M_PI;
+const int kHowToPlayPageNum = 5;
+
 
 // 列挙型
 enum SCENE {
@@ -17,6 +19,12 @@ enum SCENE {
 	DIRECTIION,
 	GAMEOVER,
 	RESULT,
+};
+
+//使ってるデバイス
+enum Device {
+	KEYBOARD,
+	GAMEPAD,
 };
 
 // 使われるシーン

@@ -49,7 +49,8 @@ void GameOverScene::Init(Input* input, Audio* audio, GamePad* pad) {
 	isSoundPlayBGM_ = true;
 }
 
-void GameOverScene::Update() {
+void GameOverScene::Update(Device device) {
+	device;
 	// カメラの更新処理
 	gameOverCamera_->Update();
 	viewProjection_.matView = gameOverCamera_->GetViewProjection().matView;

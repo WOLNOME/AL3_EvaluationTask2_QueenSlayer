@@ -52,7 +52,8 @@ void ResultScene::Init(Input* input, Audio* audio, GamePad* pad) {
 	isSoundPlayBGM_ = true;
 }
 
-void ResultScene::Update() {
+void ResultScene::Update(Device device) {
+	device;
 	// カメラの更新処理
 	resultCamera_->Update();
 	viewProjection_.matView = resultCamera_->GetViewProjection().matView;

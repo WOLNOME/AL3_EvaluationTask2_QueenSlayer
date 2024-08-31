@@ -1,5 +1,5 @@
 #pragma once
-
+#include "BaseScene.h"
 #include "Audio.h"
 #include "DebugCamera.h"
 #include "DirectXCommon.h"
@@ -18,7 +18,6 @@ class BaseScene;
 /// ゲームシーン
 /// </summary>
 class GameScene {
-
 public: // メンバ関数
 	/// <summary>
 	/// コンストクラタ
@@ -71,6 +70,9 @@ private: // メンバ変数
 
 	//アプリ終了フラグ
 	bool isExit_ = false;
+
+	//現在使用しているデバイス
+	Device nowDevice;
 
 	/// <summary>
 	/// ゲームシーン用

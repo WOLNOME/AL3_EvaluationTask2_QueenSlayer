@@ -20,7 +20,7 @@ public:
 
 public:
 	void Init(Input* input, Audio* audio,GamePad* pad) override;
-	void Update() override;
+	void Update(Device device) override;
 	void Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon* dxCommon_) override;
 
 public: // ゲッター

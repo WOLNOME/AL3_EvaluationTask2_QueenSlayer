@@ -20,11 +20,13 @@ TitleUI::TitleUI(Input* input, Audio* audio, GamePad* pad) {
 	textureHandleExitButton_ = TextureManager::Load("Title/exitButton.png");
 	textureHandleBackWhite_ = TextureManager::Load("white.png");
 	textureHandleTitleRogo_ = TextureManager::Load("Title/titleRogo.png");
-	textureHandleOperationUI_ = TextureManager::Load("Title/operationUI.png");
+	textureHandleOperationKeyBoardUI_ = TextureManager::Load("Title/operationKeyBoardUI.png");
+	textureHandleOperationGamePadUI_ = TextureManager::Load("Title/operationGamePadUI.png");
 	textureHandleHTPSlide_[0] = TextureManager::Load("Title/howToPlayPage0.png");
 	textureHandleHTPSlide_[1] = TextureManager::Load("Title/howToPlayPage1.png");
 	textureHandleHTPSlide_[2] = TextureManager::Load("Title/howToPlayPage2.png");
 	textureHandleHTPSlide_[3] = TextureManager::Load("Title/howToPlayPage3.png");
+	textureHandleHTPSlide_[4] = TextureManager::Load("Title/howToPlayPage4.png");
 
 	// スプライト生成
 	spritePlayButton_.reset(Sprite::Create(textureHandlePlayButton_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
@@ -32,11 +34,13 @@ TitleUI::TitleUI(Input* input, Audio* audio, GamePad* pad) {
 	spriteExitButton_.reset(Sprite::Create(textureHandleExitButton_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f + 200.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
 	spriteBackWhite_.reset(Sprite::Create(textureHandleBackWhite_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, kWhiteBackAlpha_), {0.5f, 0.5f}));
 	spriteTitleRogo_.reset(Sprite::Create(textureHandleTitleRogo_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f - 180.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
-	spriteOperationUI_.reset(Sprite::Create(textureHandleOperationUI_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
+	spriteOperationKeyBoardUI_.reset(Sprite::Create(textureHandleOperationKeyBoardUI_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
+	spriteOperationGamePadUI_.reset(Sprite::Create(textureHandleOperationGamePadUI_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
 	spriteHTPSlide_[0].reset(Sprite::Create(textureHandleHTPSlide_[0], {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
 	spriteHTPSlide_[1].reset(Sprite::Create(textureHandleHTPSlide_[1], {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
 	spriteHTPSlide_[2].reset(Sprite::Create(textureHandleHTPSlide_[2], {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
 	spriteHTPSlide_[3].reset(Sprite::Create(textureHandleHTPSlide_[3], {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
+	spriteHTPSlide_[4].reset(Sprite::Create(textureHandleHTPSlide_[4], {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
 
 	// ボタンサイズ取得
 	sizePlayButton_ = spritePlayButton_->GetSize();
@@ -76,10 +80,11 @@ void TitleUI::Initialize() {
 	rotateAmount_ = rotationTitleRogo_;
 }
 
-void TitleUI::Update() {
+void TitleUI::Update(Device device) {
 	// 変数をリセット
 	isPlay_ = false;
 	isExit_ = false;
+	device_ = device;
 
 	// 状況毎の処理
 	switch (titleSituation_) {
@@ -204,13 +209,13 @@ void TitleUI::Update() {
 		// 左右キーでページ切り替え
 		if (input_->TriggerKey(DIK_RIGHT) || pad_->TriggerLStickRIGHT()) {
 			// 0,1,2ページならインクリメント
-			if (slidePage_ >= 0 && slidePage_ < 3) {
+			if (slidePage_ >= 0 && slidePage_ < kHowToPlayPageNum - 1) {
 				slidePage_++;
 				// サウンド再生
 				isSoundPlayCursorMoveSE_ = true;
 			}
 			// 3ページならメニュー画面へ
-			else if (slidePage_ == 3) {
+			else if (slidePage_ == kHowToPlayPageNum - 1) {
 				titleSituation_ = TitleSituation::TITLEMODE;
 				// ページも0に戻す
 				slidePage_ = 0;
@@ -219,7 +224,7 @@ void TitleUI::Update() {
 			}
 		} else if (input_->TriggerKey(DIK_LEFT) || pad_->TriggerLStickLEFT()) {
 			// 1,2,3ページならデクリメント
-			if (slidePage_ >= 1 && slidePage_ <= 3) {
+			if (slidePage_ >= 1 && slidePage_ <= kHowToPlayPageNum - 1) {
 				slidePage_--;
 				// サウンド再生
 				isSoundPlayCursorMoveSE_ = true;
@@ -231,8 +236,8 @@ void TitleUI::Update() {
 	}
 #ifdef _DEBUG
 	if (pad_->PushA()) {
-	    ImGui::Begin("A");
-	    ImGui::End();
+		ImGui::Begin("A");
+		ImGui::End();
 	}
 	if (pad_->PushB()) {
 		ImGui::Begin("B");
@@ -351,7 +356,6 @@ void TitleUI::Update() {
 		ImGui::Begin("RstickUPLEFT");
 		ImGui::End();
 	}
-	
 
 #endif // _DEBUG
 }
@@ -367,7 +371,11 @@ void TitleUI::DrawUI() {
 		spritePlayButton_->Draw();
 		spriteHowToPlayButton_->Draw();
 		spriteExitButton_->Draw();
-		spriteOperationUI_->Draw();
+		if (device_ == Device::KEYBOARD) {
+			spriteOperationKeyBoardUI_->Draw();
+		} else if (device_ == Device::GAMEPAD) {
+			spriteOperationGamePadUI_->Draw();
+		}
 		break;
 	case HOWTOPLAYMODE:
 		spriteHTPSlide_[slidePage_]->Draw();

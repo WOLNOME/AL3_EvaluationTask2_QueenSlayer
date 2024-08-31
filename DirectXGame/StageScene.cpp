@@ -90,7 +90,8 @@ void StageScene::Init(Input* input, Audio* audio, GamePad* pad) {
 	isPause_ = false;
 }
 
-void StageScene::Update() {
+void StageScene::Update(Device device) {
+	device;
 	// デスフラグの立った光玉を削除
 	shineBalls_.remove_if([](ShineBall* shineBall) {
 		if (shineBall->isDead()) {

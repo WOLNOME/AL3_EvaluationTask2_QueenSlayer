@@ -1,6 +1,5 @@
 #include "GameScene.h"
 #include "AxisIndicator.h"
-#include "BaseScene.h"
 #include "TitleScene.h"
 #include "StageScene.h"
 #include "DirectionScene.h"
@@ -34,13 +33,25 @@ void GameScene::Initialize() {
 	AnimationFrame_ = 0;
 	isInNow_ = false;
 	isOutNow_ = false;
+
+	//使用しているデバイス
+	nowDevice = Device::GAMEPAD;
+
 }
 
 void GameScene::Update() {
 	// インプットからパッドの入力を受け取る
 	pad_->SetCommandUpdate();
+	//現在使用しているデバイスを取得
+	for (BYTE key = 1; key < 256; key++) {
+		if (pad_->GetAllCommand()) {
+			nowDevice = Device::GAMEPAD;
+		} else if (input_->TriggerKey(key)) {
+			nowDevice = Device::KEYBOARD;
+		}
+	}
 	// シーンの更新処理
-	m_pScene->Update();
+	m_pScene->Update(nowDevice);
 
 	// 各シーンからNextSceneの情報を受け取る
 	if (NextScene_ != m_pScene->GetNextScene()) {

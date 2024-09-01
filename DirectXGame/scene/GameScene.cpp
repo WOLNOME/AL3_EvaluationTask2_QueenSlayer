@@ -1,13 +1,13 @@
 #include "GameScene.h"
 #include "AxisIndicator.h"
-#include "TitleScene.h"
-#include "StageScene.h"
 #include "DirectionScene.h"
 #include "GameOverScene.h"
-#include "ResultScene.h"
 #include "ImGuiManager.h"
 #include "PrimitiveDrawer.h"
+#include "ResultScene.h"
+#include "StageScene.h"
 #include "TextureManager.h"
+#include "TitleScene.h"
 #include <cassert>
 
 GameScene::GameScene() {}
@@ -24,7 +24,7 @@ void GameScene::Initialize() {
 	// シーンの生成
 	m_pScene = std::make_unique<TitleScene>();
 	// シーンの初期化
-	m_pScene->Init(input_, audio_,pad_.get());
+	m_pScene->Init(input_, audio_, pad_.get());
 	CurrentScene_ = TITLE;
 	NextScene_ = TITLE;
 
@@ -34,22 +34,22 @@ void GameScene::Initialize() {
 	isInNow_ = false;
 	isOutNow_ = false;
 
-	//使用しているデバイス
+	// 使用しているデバイス
 	nowDevice = Device::GAMEPAD;
-
 }
 
 void GameScene::Update() {
 	// インプットからパッドの入力を受け取る
 	pad_->SetCommandUpdate();
-	//現在使用しているデバイスを取得
-	for (BYTE key = 1; key < 256; key++) {
-		if (pad_->GetAllCommand()) {
-			nowDevice = Device::GAMEPAD;
-		} else if (input_->TriggerKey(key)) {
+	// 現在使用しているデバイスを取得
+	if (pad_->GetIsInput()) {
+		nowDevice = Device::GAMEPAD;
+	}
+	/*for (BYTE key : input_->GetAllKey()) {
+		if (key) {
 			nowDevice = Device::KEYBOARD;
 		}
-	}
+	}*/
 	// シーンの更新処理
 	m_pScene->Update(nowDevice);
 
@@ -116,19 +116,19 @@ void GameScene::ChangeScene() {
 		switch (NextScene_) { // 引数のシーン
 		case SCENE::TITLE:
 			m_pScene = std::make_unique<TitleScene>(); // タイトルシーンを現在のシーンにする
-			m_pScene->Init(input_, audio_,pad_.get());
+			m_pScene->Init(input_, audio_, pad_.get());
 			CurrentScene_ = m_pScene->GetNextScene();
 			;
 			break;
 		case SCENE::STAGE:
 			m_pScene = std::make_unique<StageScene>(); // ステージシーンを現在のシーンにする
-			m_pScene->Init(input_, audio_,pad_.get());
+			m_pScene->Init(input_, audio_, pad_.get());
 			CurrentScene_ = m_pScene->GetNextScene();
 			;
 			break;
 		case SCENE::DIRECTIION:
 			m_pScene = std::make_unique<DirectionScene>(); // 演出シーンを現在のシーンにする
-			m_pScene->Init(input_, audio_,pad_.get());
+			m_pScene->Init(input_, audio_, pad_.get());
 			CurrentScene_ = m_pScene->GetNextScene();
 			break;
 		case SCENE::GAMEOVER:

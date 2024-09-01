@@ -47,9 +47,11 @@ void DirectionScene::Init(Input* input, Audio* audio, GamePad* pad) {
 	modelEnemyChest_.reset(Model::CreateFromOBJ("enemyChest", true));
 	modelEnemyStomach_.reset(Model::CreateFromOBJ("enemyStomach", true));
 	// スプライトテクスチャ
-	textureHandleSkipUI_ = TextureManager::Load("Direction/skipUI.png");
+	textureHandleSkipKeyBoardUI_ = TextureManager::Load("Direction/skipKeyBoardUI.png");
+	textureHandleSkipGamePadUI_ = TextureManager::Load("Direction/skipGamePadUI.png");
 	// 2Dスプライト
-	spriteSkipUI_.reset(Sprite::Create(textureHandleSkipUI_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
+	spriteSkipKeyBoardUI_.reset(Sprite::Create(textureHandleSkipKeyBoardUI_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
+	spriteSkipGamePadUI_.reset(Sprite::Create(textureHandleSkipGamePadUI_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
 	// インスタンス生成
 	directionCamera_ = std::make_unique<DirectionCamera>();
 	skydome_ = std::make_unique<Skydome>();
@@ -69,11 +71,11 @@ void DirectionScene::Init(Input* input, Audio* audio, GamePad* pad) {
 }
 
 void DirectionScene::Update(Device device) {
-	device;
+	device_ = device;
 	// タイマーインクリメント
 	timer_++;
-	//スキップ
-	if (input_->TriggerKey(DIK_SPACE)||pad_->TriggerSTART()) {
+	// スキップ
+	if (input_->TriggerKey(DIK_SPACE) || pad_->TriggerSTART()) {
 		if (NextScene == SCENE::DIRECTIION) {
 			NextScene = SCENE::RESULT;
 		}
@@ -218,8 +220,11 @@ void DirectionScene::Draw(ID3D12GraphicsCommandList* commandList, DirectXCommon*
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
-
-	spriteSkipUI_->Draw();
+	if (device_ == KEYBOARD) {
+		spriteSkipKeyBoardUI_->Draw();
+	} else if (device_ == GAMEPAD) {
+		spriteSkipGamePadUI_->Draw();
+	}
 
 	// スプライト描画後処理
 	Sprite::PostDraw();

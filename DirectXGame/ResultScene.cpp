@@ -53,7 +53,6 @@ void ResultScene::Init(Input* input, Audio* audio, GamePad* pad) {
 }
 
 void ResultScene::Update(Device device) {
-	device;
 	// カメラの更新処理
 	resultCamera_->Update();
 	viewProjection_.matView = resultCamera_->GetViewProjection().matView;
@@ -65,7 +64,7 @@ void ResultScene::Update(Device device) {
 	ground_->Update();
 	skydome_->Update();
 	player_->Update();
-	resultUI_->Update();
+	resultUI_->Update(device);
 	particle_->Update();
 
 	if (resultUI_->GetIsRetry()) {

@@ -810,37 +810,16 @@ bool GamePad::TriggerRStickUPLEFT() {
 	return false;
 }
 
-bool GamePad::GetAllCommand() {
-	bool result = false; 
-	result = PushA();
-	result = PushB();
-	result = PushX();
-	result = PushY();
-	result = PushCrossUP();
-	result = PushCrossDOWN();
-	result = PushCrossRIGHT();
-	result = PushCrossLEFT();
-	result = PushRStickButton();
-	result = PushRB();
-	result = PushLStickButton();
-	result = PushLB();
-	result = PushSTART();
-	result = PushBACK();
-	result = TiltLStickUP();
-	result = TiltLStickUPRIGHT();
-	result = TiltLStickRIGHT();
-	result = TiltLStickDOWNRIGHT();
-	result = TiltLStickDOWN();
-	result = TiltLStickDOWNLEFT();
-	result = TiltLStickLEFT();
-	result = TiltLStickUPLEFT();
-	result = TiltRStickUP();
-	result = TiltRStickUPRIGHT();
-	result = TiltRStickRIGHT();
-	result = TiltRStickDOWNRIGHT();
-	result = TiltRStickDOWN();
-	result = TiltRStickDOWNLEFT();
-	result = TiltRStickLEFT();
-	result = TiltRStickUPLEFT();
-	return result;
+bool GamePad::GetIsInput() {
+	if (
+		nowCommand.Gamepad.wButtons||
+		nowCommand.Gamepad.sThumbLX||
+		nowCommand.Gamepad.sThumbLY||
+		nowCommand.Gamepad.sThumbRX||
+		nowCommand.Gamepad.sThumbRY
+		) {
+		return true;
+	} else {
+		return false;
+	}
 }

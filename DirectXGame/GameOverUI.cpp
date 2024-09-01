@@ -17,13 +17,15 @@ GameOverUI::GameOverUI(Input* input, Audio* audio, GamePad* pad) {
 	textureHandleRetryButton_ = TextureManager::Load("GameOver/retryButton.png");
 	textureHandleRetireButton_ = TextureManager::Load("GameOver/retireButton.png");
 	textureHandleGameOver_ = TextureManager::Load("GameOver/gameOver.png");
-	textureHandleOperationUI_ = TextureManager::Load("GameOver/operationUI.png");
+	textureHandleOperationKeyBoardUI_ = TextureManager::Load("GameOver/operationKeyBoardUI.png");
+	textureHandleOperationGamePadUI_ = TextureManager::Load("GameOver/operationGamePadUI.png");
 
 	// スプライト生成
 	spriteRetryButton_.reset(Sprite::Create(textureHandleRetryButton_, {WinApp::kWindowWidth / 2.0f + 430, WinApp::kWindowHeight / 2.0f + 150}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
 	spriteRetireButton_.reset(Sprite::Create(textureHandleRetireButton_, {WinApp::kWindowWidth / 2.0f + 430, WinApp::kWindowHeight / 2.0f + 270}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
 	spriteGameOver_.reset(Sprite::Create(textureHandleGameOver_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f - 180.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
-	spriteOperationUI_.reset(Sprite::Create(textureHandleOperationUI_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
+	spriteOperationKeyBoardUI_.reset(Sprite::Create(textureHandleOperationKeyBoardUI_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
+	spriteOperationGamePadUI_.reset(Sprite::Create(textureHandleOperationGamePadUI_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
 
 	// ボタンサイズ取得
 	sizeRetryButton_ = spriteRetryButton_->GetSize();
@@ -51,7 +53,8 @@ void GameOverUI::Initialize() {
 	isRetire_ = false;
 }
 
-void GameOverUI::Update() {
+void GameOverUI::Update(Device device) {
+	device_ = device;
 	// 変数をリセット
 	isRetry_ = false;
 	isRetire_ = false;
@@ -130,7 +133,11 @@ void GameOverUI::DrawUI() {
 	spriteRetryButton_->Draw();
 	spriteRetireButton_->Draw();
 	spriteGameOver_->Draw();
-	spriteOperationUI_->Draw();
+	if (device_ == KEYBOARD) {
+		spriteOperationKeyBoardUI_->Draw();
+	} else if (device_ == GAMEPAD) {
+		spriteOperationGamePadUI_->Draw();
+	}
 }
 
 void GameOverUI::AudioPlay() {

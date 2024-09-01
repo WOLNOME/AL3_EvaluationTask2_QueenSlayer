@@ -50,7 +50,6 @@ void GameOverScene::Init(Input* input, Audio* audio, GamePad* pad) {
 }
 
 void GameOverScene::Update(Device device) {
-	device;
 	// カメラの更新処理
 	gameOverCamera_->Update();
 	viewProjection_.matView = gameOverCamera_->GetViewProjection().matView;
@@ -63,7 +62,7 @@ void GameOverScene::Update(Device device) {
 	skydome_->Update();
 	spotlight_->Update();
 	player_->Update();
-	gameOverUI_->Update();
+	gameOverUI_->Update(device);
 
 	if (gameOverUI_->GetIsRetry()) {
 		if (NextScene == GAMEOVER) {

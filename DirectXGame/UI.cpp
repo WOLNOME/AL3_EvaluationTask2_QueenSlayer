@@ -17,8 +17,10 @@ void UI::Initialize() {
 	texturePlayerYellowSP_ = TextureManager::Load("UI/PlayerYellowSP.png");
 	texturePlayerMaxSP_ = TextureManager::Load("UI/PlayerMaxSP.png");
 	texturePlayerFrameSP_ = TextureManager::Load("UI/PlayerFrameSP.png");
-	textureDefaultUI_ = TextureManager::Load("UI/DefaultUI.png");
-	textureInductionSP_ = TextureManager::Load("UI/inductionSPUI.png");
+	textureDefaultKeyBoardUI_ = TextureManager::Load("UI/DefaultKeyBoardUI.png");
+	textureDefaultGamePadUI_ = TextureManager::Load("UI/DefaultGamePadUI.png");
+	textureInductionSPKeyBoardUI_ = TextureManager::Load("UI/inductionSPKeyBoardUI.png");
+	textureInductionSPGamePadUI_ = TextureManager::Load("UI/inductionSPGamePadUI.png");
 
 	// 2Dスプライト
 	spriteEnemyGreenHP_.reset(Sprite::Create(textureEnemyGreenHP_, {WinApp::kWindowWidth / 2.0f, 85}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
@@ -29,8 +31,10 @@ void UI::Initialize() {
 	spritePlayerYellowSP_.reset(Sprite::Create(texturePlayerYellowSP_, {WinApp::kWindowWidth / 2.0f, 485}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
 	spritePlayerMaxSP_.reset(Sprite::Create(texturePlayerMaxSP_, {WinApp::kWindowWidth / 2.0f, 485}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
 	spritePlayerFrameSP_.reset(Sprite::Create(texturePlayerFrameSP_, {WinApp::kWindowWidth / 2.0f, 485}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
-	spriteDefaultUI_.reset(Sprite::Create(textureDefaultUI_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
-	spriteInductionSP_.reset(Sprite::Create(textureInductionSP_, {WinApp::kWindowWidth / 2.0f, 575}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
+	spriteDefaultKeyBoardUI_.reset(Sprite::Create(textureDefaultKeyBoardUI_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
+	spriteDefaultGamePadUI_.reset(Sprite::Create(textureDefaultGamePadUI_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
+	spriteInductionSPKeyBoardUI_.reset(Sprite::Create(textureInductionSPKeyBoardUI_, {WinApp::kWindowWidth / 2.0f, 575}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
+	spriteInductionSPGamePadUI_.reset(Sprite::Create(textureInductionSPGamePadUI_, {WinApp::kWindowWidth / 2.0f, 575}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
 
 	//サイズ取得
 	enemyGreenHPSize_ = spriteEnemyGreenHP_->GetSize();
@@ -38,7 +42,8 @@ void UI::Initialize() {
 	playerYellowSPSize_ = spritePlayerYellowSP_->GetSize();
 }
 
-void UI::Update() {
+void UI::Update(Device device) {
+	device_ = device;
 	//敵のHPに応じて体力バーを縮める処理
 	Vector2 newEnemyGreenHPSize = enemyGreenHPSize_;
 	newEnemyGreenHPSize.x *= ((float)stageScene_->GetEnemy()->GetHP() / stageScene_->GetEnemy()->kMaxHP_);
@@ -85,11 +90,18 @@ void UI::Draw() {
 		spritePlayerMaxSP_->Draw();
 		//SP誘導UI
 		if (isDisplayInductionSP_) {
-			spriteInductionSP_->Draw();
+			if (device_ == KEYBOARD) {
+				spriteInductionSPKeyBoardUI_->Draw();
+			} else if (device_ == GAMEPAD) {
+				spriteInductionSPGamePadUI_->Draw();
+			}
 		}
-
 	} else {
 		spritePlayerYellowSP_->Draw();
 	}
-	spriteDefaultUI_->Draw();
+	if (device_ == KEYBOARD) {
+		spriteDefaultKeyBoardUI_->Draw();
+	} else if (device_ == GAMEPAD) {
+		spriteDefaultGamePadUI_->Draw();
+	}
 }

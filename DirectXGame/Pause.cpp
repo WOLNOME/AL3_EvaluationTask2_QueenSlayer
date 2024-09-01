@@ -19,7 +19,8 @@ Pause::Pause(Input* input, Audio* audio, GamePad* pad) {
 	textureHandleBackToTitleButton_ = TextureManager::Load("Pause/backToTitleButton.png");
 	textureHandleBackBlack_ = TextureManager::Load("black.png");
 	textureHandlePauseMark_ = TextureManager::Load("Pause/pauseMark.png");
-	textureHandleOperationUI_ = TextureManager::Load("Pause/operationUI.png");
+	textureHandleOperationKeyBoardUI_ = TextureManager::Load("Pause/operationKeyBoardUI.png");
+	textureHandleOperationGamePadUI_ = TextureManager::Load("Pause/operationGamePadUI.png");
 	textureHandleHTPSlide_[0] = TextureManager::Load("Pause/howToPlayPage0.png");
 	textureHandleHTPSlide_[1] = TextureManager::Load("Pause/howToPlayPage1.png");
 	textureHandleHTPSlide_[2] = TextureManager::Load("Pause/howToPlayPage2.png");
@@ -32,7 +33,8 @@ Pause::Pause(Input* input, Audio* audio, GamePad* pad) {
 	spriteBackToTitleButton_.reset(Sprite::Create(textureHandleBackToTitleButton_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f + 200.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
 	spriteBackBlack_.reset(Sprite::Create(textureHandleBackBlack_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, kBlackBackAlpha_), {0.5f, 0.5f}));
 	spritePauseMark_.reset(Sprite::Create(textureHandlePauseMark_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f - 180.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
-	spriteOperationUI_.reset(Sprite::Create(textureHandleOperationUI_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
+	spriteOperationKeyBoardUI_.reset(Sprite::Create(textureHandleOperationKeyBoardUI_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
+	spriteOperationGamePadUI_.reset(Sprite::Create(textureHandleOperationGamePadUI_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
 	spriteHTPSlide_[0].reset(Sprite::Create(textureHandleHTPSlide_[0], {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
 	spriteHTPSlide_[1].reset(Sprite::Create(textureHandleHTPSlide_[1], {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
 	spriteHTPSlide_[2].reset(Sprite::Create(textureHandleHTPSlide_[2], {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
@@ -69,7 +71,8 @@ void Pause::Initialize() {
 	slidePage_ = 0;
 }
 
-void Pause::Update() {
+void Pause::Update(Device device) {
+	device_ = device;
 	// 状況毎の処理
 	switch (pauseSituation_) {
 	case MENU:
@@ -222,7 +225,11 @@ void Pause::DrawUI() {
 		spriteContinueButton_->Draw();
 		spriteHowToPlayButton_->Draw();
 		spriteBackToTitleButton_->Draw();
-		spriteOperationUI_->Draw();
+		if (device_ == KEYBOARD) {
+			spriteOperationKeyBoardUI_->Draw();
+		} else if (device_ == GAMEPAD) {
+			spriteOperationGamePadUI_->Draw();
+		}
 		break;
 	case HOWTOPLAY:
 		spriteHTPSlide_[slidePage_]->Draw();

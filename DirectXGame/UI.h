@@ -11,7 +11,7 @@ public:
 	~UI();
 
 	void Initialize();
-	void Update();
+	void Update(Device device);
 	void Draw();
 
 public://セッター
@@ -30,8 +30,10 @@ private:
 	uint32_t texturePlayerYellowSP_;
 	uint32_t texturePlayerMaxSP_;
 	uint32_t texturePlayerFrameSP_;
-	uint32_t textureDefaultUI_;
-	uint32_t textureInductionSP_;
+	uint32_t textureDefaultKeyBoardUI_;
+	uint32_t textureDefaultGamePadUI_;
+	uint32_t textureInductionSPKeyBoardUI_;
+	uint32_t textureInductionSPGamePadUI_;
 
 	// スプライト
 	std::unique_ptr<Sprite> spriteEnemyGreenHP_ = nullptr;
@@ -42,8 +44,10 @@ private:
 	std::unique_ptr<Sprite> spritePlayerYellowSP_ = nullptr;
 	std::unique_ptr<Sprite> spritePlayerMaxSP_ = nullptr;
 	std::unique_ptr<Sprite> spritePlayerFrameSP_ = nullptr;
-	std::unique_ptr<Sprite> spriteDefaultUI_ = nullptr;
-	std::unique_ptr<Sprite> spriteInductionSP_ = nullptr;
+	std::unique_ptr<Sprite> spriteDefaultKeyBoardUI_ = nullptr;
+	std::unique_ptr<Sprite> spriteDefaultGamePadUI_ = nullptr;
+	std::unique_ptr<Sprite> spriteInductionSPKeyBoardUI_ = nullptr;
+	std::unique_ptr<Sprite> spriteInductionSPGamePadUI_ = nullptr;
 	
 private:
 	//敵のHPバーサイズ
@@ -56,6 +60,8 @@ private:
 	bool isDisplayInductionSP_ = false;
 	const int kBlinkingTimeInductionSP_ = 6;
 	int blinkingTimer_ = 0;
+
+	Device device_;
 
 
 };

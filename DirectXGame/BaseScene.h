@@ -1,5 +1,9 @@
 #pragma once
 #include "GameScene.h"
+#include "Input.h"
+#include "Audio.h"
+#include "GamePad.h"
+#include "DirectXCommon.h"
 #include "Function.h"
 
 class BaseScene {

@@ -49,9 +49,11 @@ private:
 	std::unique_ptr<Model> modelEnemyChest_ = nullptr;
 	std::unique_ptr<Model> modelEnemyStomach_ = nullptr;
 	///スプライトテクスチャ
-	uint32_t textureHandleSkipUI_;
+	uint32_t textureHandleSkipKeyBoardUI_;
+	uint32_t textureHandleSkipGamePadUI_;
 	///2Dスプライト
-	std::unique_ptr<Sprite> spriteSkipUI_ = nullptr;
+	std::unique_ptr<Sprite> spriteSkipKeyBoardUI_ = nullptr;
+	std::unique_ptr<Sprite> spriteSkipGamePadUI_ = nullptr;
 	///インスタンス
 	std::unique_ptr<DirectionCamera> directionCamera_ = nullptr;
 	std::unique_ptr<Ground> ground_ = nullptr;
@@ -75,6 +77,8 @@ private://変数
 	Vector3 velocityEnemyStomach_;
 
 	const Vector3 kGravity_ = {0.0f, -0.02f, 0.0f};
+
+	Device device_;
 
 	// SE関連
 	uint32_t soundHandleExplosionSE_;

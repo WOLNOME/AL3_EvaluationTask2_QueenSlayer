@@ -122,7 +122,7 @@ void StageScene::Update(Device device) {
 	// ポーズメニュー中処理
 	if (isPause_) {
 		// ポーズの更新
-		pause_->Update();
+		pause_->Update(device);
 		// コンティニューボタン押したら
 		if (pause_->GetIsContinue()) {
 			isPause_ = false;
@@ -186,7 +186,7 @@ void StageScene::Update(Device device) {
 				shineBall->Update();
 			}
 			// UIの更新
-			ui_->Update();
+			ui_->Update(device);
 		}
 		// 当たり判定処理
 		CheckAllCollision();

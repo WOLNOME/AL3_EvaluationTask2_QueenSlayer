@@ -73,6 +73,7 @@ private: // メンバ変数
 
 	//現在使用しているデバイス
 	Device nowDevice;
+	XINPUT_STATE out;
 
 	/// <summary>
 	/// ゲームシーン用

@@ -17,13 +17,15 @@ ResultUI::ResultUI(Input* input, Audio* audio, GamePad* pad) {
 	textureHandleExitButton_ = TextureManager::Load("Result/exitButton.png");
 	textureHandleRetryButton_ = TextureManager::Load("Result/retryButton.png");
 	textureHandleGameClear_ = TextureManager::Load("Result/gameClear.png");
-	textureHandleOperationUI_ = TextureManager::Load("Result/operationUI.png");
+	textureHandleOperationKeyBoardUI_ = TextureManager::Load("Result/operationKeyBoardUI.png");
+	textureHandleOperationGamePadUI_ = TextureManager::Load("Result/operationGamePadUI.png");
 
 	// スプライト生成
 	spriteExitButton_.reset(Sprite::Create(textureHandleExitButton_, {WinApp::kWindowWidth / 2.0f + 430, WinApp::kWindowHeight / 2.0f + 150}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
 	spriteRetryButton_.reset(Sprite::Create(textureHandleRetryButton_, {WinApp::kWindowWidth / 2.0f + 430, WinApp::kWindowHeight / 2.0f + 270}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
 	spriteGameClear_.reset(Sprite::Create(textureHandleGameClear_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f - 180.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
-	spriteOperationUI_.reset(Sprite::Create(textureHandleOperationUI_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
+	spriteOperationKeyBoardUI_.reset(Sprite::Create(textureHandleOperationKeyBoardUI_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
+	spriteOperationGamePadUI_.reset(Sprite::Create(textureHandleOperationGamePadUI_, {WinApp::kWindowWidth / 2.0f, WinApp::kWindowHeight / 2.0f}, Vector4(1, 1, 1, 1), {0.5f, 0.5f}));
 
 	// ボタンサイズ取得
 	sizeExitButton_ = spriteExitButton_->GetSize();
@@ -51,7 +53,8 @@ void ResultUI::Initialize() {
 	isExit_ = false;
 }
 
-void ResultUI::Update() {
+void ResultUI::Update(Device device) {
+	device_ = device;
 	// 変数をリセット
 	isRetry_ = false;
 	isExit_ = false;
@@ -130,7 +133,11 @@ void ResultUI::DrawUI() {
 	spriteRetryButton_->Draw();
 	spriteExitButton_->Draw();
 	spriteGameClear_->Draw();
-	spriteOperationUI_->Draw();
+	if (device_ == KEYBOARD) {
+		spriteOperationKeyBoardUI_->Draw();
+	} else if (device_ == GAMEPAD) {
+		spriteOperationGamePadUI_->Draw();
+	}
 }
 
 void ResultUI::AudioPlay() {

@@ -24,7 +24,7 @@ public:
 	~Pause();
 
 	void Initialize();
-	void Update();
+	void Update(Device device);
 	void Draw();
 	void DrawUI();
 	void AudioPlay();
@@ -48,7 +48,8 @@ private:
 	uint32_t textureHandleBackToTitleButton_;
 	uint32_t textureHandleBackBlack_;
 	uint32_t textureHandlePauseMark_;
-	uint32_t textureHandleOperationUI_;
+	uint32_t textureHandleOperationKeyBoardUI_;
+	uint32_t textureHandleOperationGamePadUI_;
 	uint32_t textureHandleHTPSlide_[kHowToPlayPageNum];
 
 	//スプライト
@@ -57,7 +58,8 @@ private:
 	std::unique_ptr<Sprite> spriteBackToTitleButton_;
 	std::unique_ptr<Sprite> spriteBackBlack_;
 	std::unique_ptr<Sprite> spritePauseMark_;
-	std::unique_ptr<Sprite> spriteOperationUI_;
+	std::unique_ptr<Sprite> spriteOperationKeyBoardUI_;
+	std::unique_ptr<Sprite> spriteOperationGamePadUI_;
 	std::unique_ptr<Sprite> spriteHTPSlide_[kHowToPlayPageNum];
 
 	//ボタンのサイズ
@@ -84,6 +86,8 @@ private:
 	const float kGravity_ = -0.1f;
 	Vector2 position_ = {0.0f, 0.0f};
 	Vector2 velocity_ = {0.0f, 0.0f};
+
+	Device device_;
 
 private:
 	// BGM関連

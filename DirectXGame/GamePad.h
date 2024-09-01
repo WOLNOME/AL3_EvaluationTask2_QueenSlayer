@@ -78,7 +78,7 @@ public://コマンド
 
 public:
 	//パッドで入力したかを伝える
-	bool GetAllCommand();
+	bool GetIsInput();
 
 private:
 	//インプット
